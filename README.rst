@@ -50,4 +50,4 @@ Example
 .. |supported-implementations| image:: https://img.shields.io/pypi/implementation/broutils.svg
    :target: https://pypi.python.org/pypi/broutils
 .. |license| image:: https://img.shields.io/badge/License-Apache%202.0-green.svg
-   :target: http://choosealicense.com/licenses/apache-2.0
+   :target: https://choosealicense.com/licenses/apache-2.0

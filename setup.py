@@ -23,7 +23,7 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
 setup(
     name='broutils',
-    version='0.1.1',
+    version='0.1.2',
     description='Bro IDS Python Utilities',
     long_description=readme + '\n\n' + doclink + '\n\n' + history,
     author='Brian Wylie',
