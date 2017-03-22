@@ -1,17 +1,16 @@
-========
-BroUtils
-========
-
-**Python Utilities for Bro IDS:** `Read the
-Docs <http://broutils.rtfd.org>`__
-
-|travis| |Coverage Status| |version|
+BroUtils |travis| |Coverage Status| |version|
 |wheel| |supported-versions| |supported-implementations| |license|
+=========================================================================================
 
-Features
---------
+**Python Utilities for Bro IDS** `Read the
+Docs <http://broutils.rtfd.org>`__
+**Data Management Platform**
 
-* TODO
+BroUtils is a set of utilities to support the ingestion, processing, and analysis of
+Bro IDS data with Python.
+
+|kitware-logo|
+
 
 Install
 -------
@@ -25,16 +24,10 @@ Documentation
 
 `broutils.readthedocs.org <https://broutils.readthedocs.org/>`__
 
-About
------
 
-
-Example
--------
-
-
-
-
+.. |kitware-logo| image:: https://www.kitware.com/img/small_logo_over.png
+    :target: https://kitware.com
+    :alt: Kitware Logo
 .. |travis| image:: https://img.shields.io/travis/Kitware/broutils.svg
    :target: https://travis-ci.org/Kitware/broutils
 .. |Coverage Status| image:: https://coveralls.io/repos/github/Kitware/broutils/badge.svg?branch=master

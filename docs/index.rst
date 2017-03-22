@@ -20,8 +20,8 @@ Contents:
 Feedback
 ========
 
-If you have any suggestions or questions about **Bro Python Utilities** feel free to email me
+If you have any suggestions or questions about **Bro IDS Python Utilities** feel free to email me
 at brian.wylie@kitware.com.
 
-If you encounter any errors or problems with **Bro Python Utilities**, please let me know!
+If you encounter any errors or problems with **Bro IDS Python Utilities**, please let me know!
 Open an Issue at the GitHub https://github.com/kitware/broutils main repository.
