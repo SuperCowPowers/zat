@@ -1,8 +1,7 @@
-BroUtils |travis| |Coverage Status| |version| |wheel| |supported-versions| |supported-implementations| |license|
+BroUtils |travis| |Coverage Status| |supported-versions| |license|
 ================================================================================================================
 
-**Python Utilities for Bro IDS** `Read the
-Docs <http://broutils.rtfd.org>`__
+**Python Utilities for Bro IDS**
 
 BroUtils is a set of utilities to support the ingestion, processing, and analysis of
 Bro IDS data with Python.
