@@ -5,7 +5,7 @@ BroUtils
 **Python Utilities for Bro IDS:** `Read the
 Docs <http://broutils.rtfd.org>`__
 
-|travis| |Coverage Status| |landscape| |version|
+|travis| |Coverage Status| |version|
 |wheel| |supported-versions| |supported-implementations| |license|
 
 Features
