@@ -35,6 +35,7 @@ setup(
     package_dir={'broutils': 'broutils'},
     include_package_data=True,
     install_requires=[
+        'watchdog'
     ],
     license='Apache',
     zip_safe=False,
