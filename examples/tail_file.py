@@ -5,7 +5,7 @@ import sys
 import argparse
 
 # Local imports
-from broutils.utils import file_tailer, signal_utils
+from brothon.utils import file_tailer, signal_utils
 
 def my_exit():
     """Exit on Signal"""

@@ -17,6 +17,7 @@ clean-build:
 	rm -fr build/
 	rm -fr dist/
 	rm -fr *.egg-info
+	rm -fr .tox
 
 clean-pyc:
 	find . -name '*.pyc' -exec rm -f {} +
@@ -24,7 +25,7 @@ clean-pyc:
 	find . -name '*~' -exec rm -f {} +
 
 lint:
-	flake8 broutils test
+	flake8 brothon test
 
 test:
 	py.test
@@ -33,15 +34,15 @@ test-all:
 	tox
 
 coverage:
-	coverage run --source broutils setup.py test
+	coverage run --source brothon setup.py test
 	coverage report -m
 	coverage html
 	open htmlcov/index.html
 
 docs:
-	rm -f docs/broutils.rst
+	rm -f docs/brothon.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ broutils
+	sphinx-apidoc -o docs/ brothon
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	open docs/_build/html/index.html

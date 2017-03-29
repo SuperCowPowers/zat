@@ -4,10 +4,10 @@ Installation
 
 At the command line either via easy_install or pip::
 
-    $ easy_install broutils
-    $ pip install broutils
+    $ easy_install BroThon
+    $ pip install BroThon
 
 Or, if you have virtualenvwrapper installed::
 
-    $ mkvirtualenv broutils
-    $ pip install broutils
+    $ mkvirtualenv BroThon
+    $ pip install BroThon

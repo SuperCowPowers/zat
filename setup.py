@@ -18,28 +18,28 @@ doclink = """
 Documentation
 -------------
 
-The full documentation is at http://broutils.rtfd.org."""
+The full documentation is at http://BroThon.rtfd.org."""
 history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
 setup(
-    name='broutils',
+    name='BroThon',
     version='0.1.2',
     description='Bro IDS Python Utilities',
     long_description=readme + '\n\n' + doclink + '\n\n' + history,
     author='Brian Wylie',
     author_email='brian.wylie@kitware.com',
-    url='https://github.com/kitware/broutils',
+    url='https://github.com/kitware/BroThon',
     packages=[
-        'broutils',
+        'BroThon',
     ],
-    package_dir={'broutils': 'broutils'},
+    package_dir={'BroThon': 'BroThon'},
     include_package_data=True,
     install_requires=[
         'watchdog'
     ],
     license='Apache',
     zip_safe=False,
-    keywords='broutils',
+    keywords='BroThon',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
