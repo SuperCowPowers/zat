@@ -1,10 +1,9 @@
 BroThon |travis| |Coverage Status| |supported-versions| |license|
 ================================================================================================================
 
-**Python Utilities for Bro IDS**
+**Bro + Python = BroThon!**
 
-BroThon is a set of utilities to support the ingestion, processing, and analysis of
-Bro IDS data with Python.
+The BroThon package supports the ingestion, processing, and analysis of Bro IDS data with Python.
 
 |kitware-logo|
 
@@ -14,7 +13,7 @@ Install
 
 ::
 
-    $ pip install BroThon
+    $ pip install brothon
 
 Documentation
 -------------
