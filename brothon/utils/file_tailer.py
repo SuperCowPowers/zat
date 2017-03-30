@@ -24,12 +24,13 @@ class FileTailer(object):
         self._full_read = full_read
         self._tail = tail
 
-    def readlines(self):
+    def readlines(self, offset=0):
         """Open the file for reading and yield lines as they are added"""
         try:
             with open(self._filepath) as fp:
                 # For full read go through existing lines in file
                 if self._full_read:
+                    fp.seek(offset)
                     for row in fp.readlines():
                         yield row
 
