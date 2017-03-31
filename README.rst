@@ -11,6 +11,7 @@ Use Cases Currently Supported
 -----------------------------
 - Easy ingestion of Bro Logs into Python (including logs that are actively being written to)
 - Bro Logs to Pandas Dataframes
+- Dynamically monitor files.log and make VirusTotal Queries
 - See `BroThon Examples <https://brothon.readthedocs.io/en/latest/examples.html>`__ for more.
 
 

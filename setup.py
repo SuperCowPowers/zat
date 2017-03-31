@@ -36,6 +36,7 @@ setup(
     include_package_data=True,
     data_files=get_data_and_example_files(),
     install_requires=[
+        'requests',
         'watchdog'
     ],
     license='Apache',
