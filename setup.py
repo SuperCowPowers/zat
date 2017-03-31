@@ -14,6 +14,16 @@ version = package.__version__
 author = package.__author__
 email = package.__email__
 
+# Data and Example Files
+def get_data_and_example_files():
+    cur_dir = os.path.abspath(os.path.dirname(__file__))
+    data_files = [(os.path.join('.',d), [os.path.join(d,f) for f in files])
+        for d, folders, files in os.walk('data')]
+    example_files = [(os.path.join('.',d), [os.path.join(d,f) for f in files])
+        for d, folders, files in os.walk('examples')]
+    print data_files + example_files
+    return data_files + example_files
+
 setup(
     name=package_name,
     version=version,
@@ -24,7 +34,7 @@ setup(
     url='https://github.com/kitware/BroThon',
     packages=find_packages(),
     include_package_data=True,
-    package_data={package_name: ['../data/*.log', '../examples/*.py']},
+    data_files=get_data_and_example_files(),
     install_requires=[
         'watchdog'
     ],
