@@ -104,4 +104,4 @@ Tips
 
 To run a subset of tests::
 
-	 $ py.test BroThon
+	 $ py.test brothon

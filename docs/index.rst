@@ -11,8 +11,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   installation
-   usage
+   examples
    contributing
    authors
    history
