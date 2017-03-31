@@ -117,7 +117,7 @@ def test():
     """Test for BroLogReader Python Class"""
 
     # Grab a test file
-    data_path = file_utils.relative_dir(__file__, '../../data')
+    data_path = file_utils.relative_dir(__file__, '../data')
 
     # For each file, create the Class and test the reader
     files = ['conn.log', 'dns.log', 'http.log', 'dhcp.log', 'files.log', 'weird.log']

@@ -5,11 +5,11 @@ matrix:
     LD_PRELOAD=/lib/x86_64-linux-gnu/libSegFault.so
   include:
     - python: "2.7"
-      env: TOXENV=py27
+      env: TOXENV=py27,coveralls,docs
     - python: "3.5"
       env: TOXENV=py35
     - python: "3.6"
-      env: TOXENV=py36,coveralls, docs
+      env: TOXENV=py36
     - python: "pypy"
       env: TOXENV=pypy
 
