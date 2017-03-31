@@ -1,9 +1,7 @@
 """VTQuery Class"""
 
 from __future__ import print_function
-import os
 import collections
-import ConfigParser
 import pprint
 
 # Third Party
@@ -27,11 +25,13 @@ class VTQuery(object):
     def __init__(self, apikey=None, summary=True, max_cache_size=1000, max_cache_time=300):
         """VTQuery Init"""
 
-        # Grab API key from configuration file
-        config_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.ini')
-        conf = ConfigParser.ConfigParser()
-        conf.read(config_path)
-        self.apikey = apikey or conf.get('brothon', 'vt_apikey')
+        # Public VT API Key
+        # Note: The Virus Total key below is a low-volume public key.
+        #       Please call this method with your own VT API key :)
+        if apikey is None:
+            print('Using public VT API Key: Please set apikey=<your key> when creating this class')
+        pub_vt_apikey = 'ab0933e5b4d8032031bbce54b4170453e62c229dcf93fb99b0b80f09e415f809'
+        self.apikey = apikey or pub_vt_apikey
         self.exclude = ['scan_id', 'md5', 'sha1', 'sha256', 'resource', 'response_code', 'permalink',
                         'verbose_msg', 'scans'] if summary else []
 
