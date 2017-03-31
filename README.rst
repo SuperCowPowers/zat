@@ -7,6 +7,12 @@ The BroThon package supports the ingestion, processing, and analysis of Bro IDS 
 
 |kitware-logo|
 
+Use Cases Currently Supported
+-----------------------------
+- Easy ingestion of Bro Logs into Python (including logs that are actively being written to)
+- Bro Logs to Pandas Dataframes
+- See `BroThon Examples <https://brothon.readthedocs.io/en/latest/examples.html>`__ for more.
+
 
 Install
 -------
