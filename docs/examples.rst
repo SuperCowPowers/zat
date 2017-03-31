@@ -64,10 +64,10 @@ Example Output
 
 ::
 
-				host      id.orig_h  id.orig_p  response_body_len status_code             uri
+				   host      id.orig_h  id.orig_p  response_body_len status_code             uri
 	chopraresidency.com  192.168.84.10       1030                372         200         /foo.js
 	blogs.redheberg.com  192.168.84.10       1031               2111         200     /mltools.js
 		santiyesefi.com  192.168.84.10       1034                327         404     /mltools.js
-		tudespacho.net  192.168.84.10       1033              12350         200  /32002245.html
-		tudespacho.net  192.168.84.10       1033               5176         200      /98765.pdf
+		 tudespacho.net  192.168.84.10       1033              12350         200  /32002245.html
+		 tudespacho.net  192.168.84.10       1033               5176         200      /98765.pdf
 	...
