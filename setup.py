@@ -1,7 +1,7 @@
 #!/usr/bin/env python
+"""Setup.py for BroThon"""
 
 import os
-import sys
 
 from setuptools import setup, find_packages
 
@@ -14,15 +14,15 @@ version = package.__version__
 author = package.__author__
 email = package.__email__
 
+
 # Data and Example Files
 def get_data_and_example_files():
-    cur_dir = os.path.abspath(os.path.dirname(__file__))
-    data_files = [(os.path.join('.',d), [os.path.join(d,f) for f in files])
-        for d, folders, files in os.walk('data')]
-    example_files = [(os.path.join('.',d), [os.path.join(d,f) for f in files])
-        for d, folders, files in os.walk('examples')]
-    print data_files + example_files
+    data_files = [(os.path.join('.', d), [os.path.join(d, f) for f in files])
+                  for d, _, files in os.walk('data')]
+    example_files = [(os.path.join('.', d), [os.path.join(d, f) for f in files])
+                     for d, _, files in os.walk('examples')]
     return data_files + example_files
+
 
 setup(
     name=package_name,

@@ -6,8 +6,8 @@ To use Bro Python Utilities in a project::
 
 	import brothon
 
-Example 1
----------
+BroLog to Python
+----------------
 See brothon/examples/bro_log_pprint.py for full code listing.
 
 .. code-block:: python
