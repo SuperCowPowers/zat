@@ -3,15 +3,7 @@
 import os
 import sys
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
-
-
-if sys.argv[-1] == 'publish':
-    os.system('python setup.py sdist upload')
-    sys.exit()
+from setuptools import setup, find_packages
 
 readme = open('README.rst').read()
 
@@ -22,17 +14,26 @@ version = package.__version__
 author = package.__author__
 email = package.__email__
 
+# Data and Example Files
+def get_data_and_example_files():
+    cur_dir = os.path.abspath(os.path.dirname(__file__))
+    data_files = [(d, [os.path.join(d,f) for f in files])
+        for d, folders, files in os.walk('data')]
+    example_files = [(d, [os.path.join(d,f) for f in files])
+        for d, folders, files in os.walk('examples')]
+    return data_files + example_files
+
 setup(
     name=package_name,
     version=version,
-    description='Bro IDS Python Utilities',
+    description='Bro + Python = Brothon!',
     long_description=readme,
     author=author,
     author_email=email,
     url='https://github.com/kitware/BroThon',
-    packages=[ 'brothon', 'brothon.utils' ],
-    package_dir={'brothon': 'brothon'},
+    packages=find_packages(),
     include_package_data=True,
+    data_files=get_data_and_example_files(),
     install_requires=[
         'watchdog'
     ],

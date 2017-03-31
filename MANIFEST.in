@@ -1,8 +1,0 @@
-include README.rst LICENSE
-
-recursive-include data *
-recursive-include docs *
-recursive-include examples *
-prune docs/_build
-
-global-exclude __pycache__/*
