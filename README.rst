@@ -89,19 +89,19 @@ Documentation
 
 
 .. |kitware-logo| image:: https://www.kitware.com/img/small_logo_over.png
-    :target: https://www.kitware.com
-    :alt: Kitware Logo
+   :target: https://www.kitware.com
+   :alt: Kitware Logo
 .. |travis| image:: https://img.shields.io/travis/Kitware/BroThon.svg
-    :target: https://travis-ci.org/Kitware/BroThon
+   :target: https://travis-ci.org/Kitware/BroThon
 .. |Coverage Status| image:: https://coveralls.io/repos/github/Kitware/BroThon/badge.svg?branch=master
-    :target: https://coveralls.io/github/Kitware/BroThon?branch=master
+   :target: https://coveralls.io/github/Kitware/BroThon?branch=master
 .. |version| image:: https://img.shields.io/pypi/v/BroThon.svg
-    :target: https://pypi.python.org/pypi/BroThon
+   :target: https://pypi.python.org/pypi/BroThon
 .. |wheel| image:: https://img.shields.io/pypi/wheel/BroThon.svg
-    :target: https://pypi.python.org/pypi/BroThon
+   :target: https://pypi.python.org/pypi/BroThon
 .. |supported-versions| image:: https://img.shields.io/pypi/pyversions/BroThon.svg
-    :target: https://pypi.python.org/pypi/BroThon
+   :target: https://pypi.python.org/pypi/BroThon
 .. |supported-implementations| image:: https://img.shields.io/pypi/implementation/BroThon.svg
-    :target: https://pypi.python.org/pypi/BroThon
+   :target: https://pypi.python.org/pypi/BroThon
 .. |license| image:: https://img.shields.io/badge/License-Apache%202.0-green.svg
-    :target: https://choosealicense.com/licenses/apache-2.0
+   :target: https://choosealicense.com/licenses/apache-2.0

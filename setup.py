@@ -14,20 +14,21 @@ if sys.argv[-1] == 'publish':
     sys.exit()
 
 readme = open('README.rst').read()
-doclink = """
-Documentation
--------------
 
-The full documentation is at http://brothon.rtfd.org."""
-history = open('HISTORY.rst').read().replace('.. :changelog:', '')
+# Pull in the package info
+package_name = 'brothon'
+package = __import__(package_name)
+version = package.__version__
+author = package.__author__
+email = package.__email__
 
 setup(
-    name='brothon',
-    version='0.1.2',
+    name=package_name,
+    version=version,
     description='Bro IDS Python Utilities',
-    long_description=readme + '\n\n' + doclink + '\n\n' + history,
-    author='Brian Wylie',
-    author_email='brian.wylie@kitware.com',
+    long_description=readme,
+    author=author,
+    author_email=email,
     url='https://github.com/kitware/BroThon',
     packages=[
         'brothon',
