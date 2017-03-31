@@ -30,9 +30,7 @@ setup(
     author=author,
     author_email=email,
     url='https://github.com/kitware/BroThon',
-    packages=[
-        'brothon',
-    ],
+    packages=[ 'brothon', 'brothon.utils' ],
     package_dir={'brothon': 'brothon'},
     include_package_data=True,
     install_requires=[
