@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--test-file', type=str, help='Specify a bro log to run BroLogReader test on')
+    parser.add_argument('-f', '--bro-log', type=str, help='Specify a bro log to run BroLogReader test on')
     args, commands = parser.parse_known_args()
 
     # Check for unknown args
@@ -28,19 +28,19 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # Sanity check that this is a file log
-    if not args.test_file.endswith('files.log'):
+    if not args.bro_log.endswith('files.log'):
         print('This example only works with Bro files.log files..')
         sys.exit(1)
 
     # File may have a tilde in it
-    if args.test_file:
-        args.test_file = os.path.expanduser(args.test_file)
+    if args.bro_log:
+        args.bro_log = os.path.expanduser(args.bro_log)
 
         # Create a VirusTotal Query Class
         vtq = vt_query.VTQuery()
 
         # Run the bro reader on a given log file
-        reader = bro_log_reader.BroLogReader(args.test_file, tail=True)
+        reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)
         for row in reader.readrows():
             file_sha = row.get('sha256', '-') # Bro uses - for empty field
             if file_sha == '-':

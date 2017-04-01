@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--test-file', type=str, help='Specify a file to run FileTailer test on')
+    parser.add_argument('-f', '--bro-log', type=str, help='Specify a file to run FileTailer test on')
     args, commands = parser.parse_known_args()
 
     # Check for unknown args
@@ -31,11 +31,11 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # File may have a tilde in it
-    if args.test_file:
-        args.test_file = os.path.expanduser(args.test_file)
+    if args.bro_log:
+        args.bro_log = os.path.expanduser(args.bro_log)
 
         # Run the tailer on the given file and catch any iterrupts
         with signal_utils.signal_catcher(my_exit):
-            tailer = file_tailer.FileTailer(args.test_file)
+            tailer = file_tailer.FileTailer(args.bro_log)
             for line in tailer.readlines():
                 print(line)

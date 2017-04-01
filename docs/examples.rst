@@ -73,7 +73,7 @@ See brothon/examples/bro_log_pandas.py for full code listing. Notice that it's o
 
 Bro Files Log to VirusTotal Query
 ---------------------------------
-See brothon/examples/bro_log_vtquery.py for full code listing (code simplified below)
+See brothon/examples/file_log_vtquery.py for full code listing (code simplified below)
 
 .. code-block:: python
 
@@ -113,3 +113,48 @@ Each file sha256/sha1 is queried against the VirusTotal Service.
             (u'Trojan-Downloader ( 04c574821 )', 2),
             (u'Exploit:Java/CVE-2012-1723', 1),
             (u'UnclassifiedMalware', 1)]}
+
+Bro HTTP Log User Agents
+------------------------
+See brothon/examples/http_user_agents.py for full code listing (code simplified below)
+
+.. code-block:: python
+
+    from collections import Counter
+    from brothon import bro_log_reader
+    ...
+        # Run the bro reader on a given log file counting up user agents
+        http_agents = Counter()
+        reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)
+        for count, row in enumerate(reader.readrows()):
+            # Track count
+            http_agents[row['user_agent']] += 1
+
+        print('\nLeast Common User Agents:')
+        pprint(http_agents.most_common()[:-50:-1])
+
+
+**Example Output**
+Might be some interesting agents on this list...
+
+::
+
+    Least Common User Agents:
+    [
+     ('NetSupport Manager/1.0', 1),
+     ('Mozilla/4.0 (Windows XP 5.1) Java/1.6.0_23', 1),
+     ('Mozilla/5.0 (X11; Linux i686 on x86_64; rv:10.0.2) Gecko/20100101 Firefox/10.0.2', 1),
+     ('oh sure', 2),
+     ('Fastream NETFile Server', 2),
+     ('Mozilla/5.0 (X11; Linux i686; rv:2.0.1) Gecko/20100101 Firefox/4.0.1', 3),
+     ('Mozilla/5.0 (Windows NT 6.1; rv:7.0.1) Gecko/20100101 Firefox/7.0.1', 4),
+     ('NESSUS::SOAP', 5),
+     ('webmin', 6),
+     ('Nessus SOAP v0.0.1 (Nessus.org)', 10),
+     ('Mozilla/4.0 (compatible; gallery_203.nasl; Googlebot)', 31),
+     ("mercuryboard_user_agent_sql_injection.nasl'", 31),
+     ('Mozilla/5.0 (X11; Linux i686; rv:10.0.2) Gecko/20100101 Firefox/10.0.2', 46),
+     ('*/*', 49),
+     ('Nessus', 52),
+     ...
+     ('Mozilla/5.0 (compatible; Nmap Scripting Engine; http://nmap.org/book/nse.html)', 6166),
