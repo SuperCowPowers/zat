@@ -89,6 +89,7 @@ See brothon/examples/file_log_vtquery.py for full code listing (code simplified 
 
 
 **Example Output**
+
 Each file sha256/sha1 is queried against the VirusTotal Service.
 
 ::
@@ -135,6 +136,7 @@ See brothon/examples/http_user_agents.py for full code listing (code simplified 
 
 
 **Example Output**
+
 Might be some interesting agents on this list...
 
 ::
