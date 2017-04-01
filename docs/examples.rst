@@ -21,8 +21,7 @@ See brothon/examples/bro_log_pprint.py for full code listing.
             pprint(row)
 
 
-**Example Output**
-You get back a nice Python Dictionary with timestamps and types properly converted.
+**Example Output:** You get back a nice Python Dictionary with timestamps and types properly converted.
 
 ::
 
@@ -88,9 +87,7 @@ See brothon/examples/file_log_vtquery.py for full code listing (code simplified 
             pprint(vtq.query(row['sha256']))
 
 
-**Example Output**
-
-Each file sha256/sha1 is queried against the VirusTotal Service.
+**Example Output:** Each file sha256/sha1 is queried against the VirusTotal Service.
 
 ::
 
@@ -135,9 +132,7 @@ See brothon/examples/http_user_agents.py for full code listing (code simplified 
         pprint(http_agents.most_common()[:-50:-1])
 
 
-**Example Output**
-
-Might be some interesting agents on this list...
+**Example Output:** Might be some interesting agents on this list...
 
 ::
 
