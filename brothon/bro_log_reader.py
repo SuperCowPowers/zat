@@ -90,8 +90,7 @@ class BroLogReader(file_tailer.FileTailer):
 
     def make_dict(self, field_names, field_values, field_types):
         ''' Internal method that makes sure any dictionary elements
-            are properly cast into the correct types, instead of
-            just treating everything like a string from the csv file
+            are properly cast into the correct types.
         '''
         data_dict = {}
         for key, value, field_type in zip(field_names, field_values, field_types):
@@ -100,6 +99,8 @@ class BroLogReader(file_tailer.FileTailer):
                 data_dict[key] = datetime.datetime.fromtimestamp(float(value))
             elif field_type == 'string':
                 data_dict[key] = value
+            elif field_type == 'bool':
+                data_dict[key] = True if value == 'T' else False
             else:  # Try to cast to int or float
                 data_dict[key] = self._cast_value(value)
         return data_dict
