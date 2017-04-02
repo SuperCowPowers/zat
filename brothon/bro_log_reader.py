@@ -42,7 +42,7 @@ class BroLogReader(file_tailer.FileTailer):
             as a dictionary of {key:value, ...} based on Bro header.
         '''
         # Read in the Bro Headers
-        offset, field_names, _ = self._parse_bro_header(self._filepath)
+        offset, field_names, field_types = self._parse_bro_header(self._filepath)
 
         # Use parent class to yield each row as a dictionary
         for line in self._parent_class.readlines(offset=offset):
@@ -51,7 +51,7 @@ class BroLogReader(file_tailer.FileTailer):
                 raise StopIteration
 
             # Yield the line as a dict
-            yield self._cast_dict(dict(zip(field_names, line.strip().split(self._delimiter))))
+            yield self.make_dict(field_names, line.strip().split(self._delimiter), field_types)
 
     def _parse_bro_header(self, bro_log):
         """Parse the Bro log header section.
@@ -88,23 +88,26 @@ class BroLogReader(file_tailer.FileTailer):
         # Return the header info
         return offset, field_names, field_types
 
-    def _cast_dict(self, data_dict):
+    def make_dict(self, field_names, field_values, field_types):
         ''' Internal method that makes sure any dictionary elements
             are properly cast into the correct types, instead of
             just treating everything like a string from the csv file
         '''
-        for key, value in data_dict.items():
+        data_dict = {}
+        for key, value, field_type in zip(field_names, field_values, field_types):
             # Check for timestamp
-            if key == 'ts':
+            if field_type == 'time':
                 data_dict[key] = datetime.datetime.fromtimestamp(float(value))
-            else:
+            elif field_type == 'string':
+                data_dict[key] = value
+            else:  # Try to cast to int or float
                 data_dict[key] = self._cast_value(value)
         return data_dict
 
     @staticmethod
     def _cast_value(value):
         """Try to cast value into a primative type"""
-        test_types = (int, float, str)
+        test_types = (int, float)
         for cast_test in test_types:
             try:
                 return cast_test(value)

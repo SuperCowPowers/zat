@@ -36,7 +36,6 @@ See brothon/examples/bro_log_pprint.py for full code listing.
     'ts': datetime.datetime(2012, 7, 20, 3, 14, 12, 219654),
     'uid': 'CJsdG95nCNF1RXuN5'}
 
-    ...
 
 Creating a Pandas DataFrame!
 ----------------------------
@@ -67,7 +66,6 @@ See brothon/examples/bro_log_pandas.py for full code listing. Notice that it's o
         santiyesefi.com  192.168.84.10       1034                327         404     /mltools.js
          tudespacho.net  192.168.84.10       1033              12350         200  /32002245.html
          tudespacho.net  192.168.84.10       1033               5176         200      /98765.pdf
-...
 
 
 Bro Files Log to VirusTotal Query

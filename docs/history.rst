@@ -14,5 +14,5 @@ History
 * Initial Functionality Release
 * Bro Log Reader and Various Utilities Added
 * Examples include
-** Bro Log to Python
-** Bro Log to Pandas DataFrame
+    * Bro Log to Python
+    * Bro Log to Pandas DataFrame

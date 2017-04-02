@@ -44,7 +44,7 @@ if __name__ == '__main__':
             http_agents[row['user_agent']] += 1
 
             # Every hundred rows report agent counts (least common)
-            if count%1000==0:
+            if count%100==0:
                 print('\n<<<Least Common User Agents>>>')
                 pprint(http_agents.most_common()[:-50:-1])
 
