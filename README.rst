@@ -7,12 +7,23 @@ The BroThon package supports the ingestion, processing, and analysis of Bro IDS 
 
 |kitware-logo|
 
+Why
+---
+Bro IDS already has a flexible, powerful scripting language why should I use BroThon?
+
+**Offloading:** Running more complex tasks (yara sigs on files, state machines, ML models, etc..) should
+be offloaded from Bro IDS so that Bro can focus on the efficient processing of high volume network traffic.
+
+**Python:** Pulling Bro data into Python allows us to leverage a large set of data analysis, statistics,
+machine learning and visualization options.
+
 Example Uses
 ------------
 - Easy ingestion of Bro Logs into Python (including logs that are actively being written to)
 - Bro Logs to Pandas Dataframes (and then dataframes to Machine Learning :)
 - Dynamically monitor files.log and make VirusTotal Queries
 - Dynamically monitor http.log and show 'uncommon' User Agents
+- Running Yara Signatures on Extracted Files
 - See `BroThon Examples <https://brothon.readthedocs.io/en/latest/examples.html>`__ for more details.
 
 
