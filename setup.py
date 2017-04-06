@@ -37,7 +37,8 @@ setup(
     data_files=get_data_and_example_files(),
     install_requires=[
         'requests',
-        'watchdog'
+        'watchdog',
+        'yara'
     ],
     license='Apache',
     zip_safe=False,

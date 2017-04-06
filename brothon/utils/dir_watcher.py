@@ -12,20 +12,22 @@ from brothon.utils import file_utils
 
 
 class DirWatcher(FileSystemEventHandler):
-    """Watches a directory and calls the callback when files are created"""
+    """Watches a directory and calls the callback when files are modified"""
 
-    def __init__(self, data_dir, callback):
+    def __init__(self, data_dir, callback, **kwargs):
         """Initialization"""
         self.callback = callback
+        self.kwargs = kwargs
 
         # Now setup dynamic monitoring of the data directory
         observer = Observer()
         observer.schedule(self, path=data_dir)
         observer.start()
 
-    def on_created(self, event):
-        """File created"""
-        self.callback(event.src_path)
+    def on_any_event(self, event):
+        """File created or modified"""
+        if os.path.isfile(event.src_path):
+            self.callback(event.src_path, **self.kwargs)
 
 
 def my_callback(file_path):
