@@ -29,8 +29,8 @@ class YaraRules(object):
         yara_default = file_utils.relative_dir(__file__, 'yara_rules')
         self.rule_path = rule_path or yara_default
 
-        # Load the yara rules
-        self.yara_rules = self.get_rules_from_disk(self.rule_path)
+        # Load/compile the yara rules
+        self.yara_rules = yara.compile(self.rule_path)
 
     def match(self, file_path):
         """Match the existing set of yara rules against the file
@@ -43,44 +43,7 @@ class YaraRules(object):
             raise RuntimeError('Could not find file: %s' % file_path)
 
         # Get Matches
-        matches = self.yara_rules.match_path(file_path)
-
-        # The matches data is organized in the following way
-        # {'filename1': [match_list], 'filename2': [match_list]}
-        # match_list = list of match
-        # match = {'meta':{'description':'blah}, tags=[], matches:True,
-        #           strings:[string_list]}
-        # string = {'flags':blah, 'identifier':'$', 'data': FindWindow, 'offset'}
-        #
-        # So we're going to flatten a bit
-        # {filename_match_meta_description: string_list}
-        flat_data = collections.defaultdict(list)
-        for filename, match_list in matches.items():
-            for match in match_list:
-                if 'description' in match['meta']:
-                    new_tag = filename+'_'+match['meta']['description']
-                else:
-                    new_tag = filename+'_'+match['rule']
-                for match in match['strings']:
-                    flat_data[new_tag].append(match['data'])
-                # Remove duplicates
-                flat_data[new_tag] = list(set(flat_data[new_tag]))
-
-        return {'matches': flat_data}
-
-    # We want to load this once per module load
-    @staticmethod
-    def get_rules_from_disk(yara_rule_path):
-        ''' Recursively traverse the yara/rules directory for rules '''
-
-        # Try to find the yara rules directory
-        if not os.path.isdir(yara_rule_path):
-            raise RuntimeError('Could not find yara rules directory: %s' % yara_rule_path)
-
-        # Okay load in all the rules under the yara rule path
-        rules = yara.load_rules(rules_rootpath=yara_rule_path, fast_match=True)
-
-        return rules
+        return self.yara_rules.match(file_path)
 
 
 # Unit test: Create the class and test it
@@ -89,10 +52,11 @@ def test():
     from pprint import pprint
 
     # Create and invoke the class
-    my_rules = YaraRules()
+    rule_path = '/home/ubuntu/data/yara_rules/index.yar'
+    my_rules = YaraRules(rule_path=rule_path)
     data_path = file_utils.relative_dir(__file__, 'yara_test')
     file_path = os.path.join(data_path, 'auriga_pe_test')
-    print('Mathes:')
+    print('Matches:')
     pprint(my_rules.match(file_path))
 
 if __name__ == "__main__":

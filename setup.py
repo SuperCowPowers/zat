@@ -38,7 +38,7 @@ setup(
     install_requires=[
         'requests',
         'watchdog',
-        'yara'
+        'yara-python'
     ],
     license='Apache',
     zip_safe=False,
