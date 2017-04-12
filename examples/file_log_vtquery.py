@@ -1,4 +1,4 @@
-"""FileTailer Python Class"""
+"""Run a VirusTotal Query on Extracted File Hashes"""
 from __future__ import print_function
 import os
 import sys
@@ -10,7 +10,7 @@ from brothon import bro_log_reader
 from brothon.utils import vt_query
 
 if __name__ == '__main__':
-    # Example to run the bro log reader on a given file
+    """Run a VirusTotal Query on Extracted File Hashes"""
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()

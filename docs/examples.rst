@@ -153,3 +153,40 @@ See brothon/examples/http_user_agents.py for full code listing (code simplified 
      ('Nessus', 52),
      ...
      ('Mozilla/5.0 (compatible; Nmap Scripting Engine; http://nmap.org/book/nse.html)', 6166),
+
+
+Dynamically run Yara against Bro extracted files
+------------------------------------------------
+See brothon/examples/yara_matches.py for full code listing (code simplified below)
+
+.. code-block:: python
+
+    from brothon import yara_rules, dir_watcher
+    ...
+
+    def yara_match(file_path, rules):
+        """Callback for a newly extacted file"""
+        print('New Extracted File: {:s}'.format(file_path))
+        print('Mathes:')
+        pprint(rules.match(file_path))
+
+    ...
+        # Create a Yara Rules Class
+        print('Loading Yara Rules from {:s}'.format(args.rule_index))
+        my_rules = yara_rules.YaraRules(rule_index=args.rule_index)
+
+        # Create DirWatcher and start watching the Bro extract_files directory
+        print('Watching Extract Files Directory: {:s}'.format(args.extract_dir))
+        dir_watcher.DirWatcher(args.extract_dir, callback=yara_match, rules=my_rules)
+
+
+**Example Output:**
+
+::
+
+    Loading Yara Rules from ../brothon/utils/yara_test/index.yar
+    Watching Extract Files Directory: /home/ubuntu/software/bro/extract_files
+    New Extracted File: /home/ubuntu/software/bro/extract_files/test.tmp
+    Mathes:
+    [AURIGA_driver_APT1]
+
