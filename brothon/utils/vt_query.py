@@ -108,6 +108,13 @@ def test():
     print('\n<<< Unit Test Full>>>')
     pprint.pprint(output)
 
+    # Test some error conditions
+    output = vt_query.query('123')
+    print('\n<<< Unit Test Malformed SHA HASH>>>')
+    pprint.pprint(output)
+    output = vt_query.query('123f79302ba0439f62e15d0526a297975e6bb32ea25c8c70a608916a609e5a9c')
+    print('\n<<< Unit Test Not Found>>>')
+    pprint.pprint(output)
 
 if __name__ == "__main__":
     test()
