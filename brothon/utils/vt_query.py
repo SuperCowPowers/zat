@@ -19,10 +19,10 @@ class VTQuery(object):
             apikey (str): The API key to use for VirusTotal queries (default=None)
             summary (bool): Just return summary information for VTQuery (default=True)
             max_cache_size (int): Maximum size of query cache (default=1000)
-            max_cache_time (int): Time to keep query results in cache (default=300 seconds)
+            max_cache_time (int): Time to keep query results in cache (default=60 minutes)
     """
 
-    def __init__(self, apikey=None, summary=True, max_cache_size=1000, max_cache_time=300):
+    def __init__(self, apikey=None, summary=True, max_cache_size=1000, max_cache_time=60):
         """VTQuery Init"""
 
         # Public VT API Key
@@ -36,7 +36,7 @@ class VTQuery(object):
                         'verbose_msg', 'scans'] if summary else []
 
         # Create query cache
-        self.query_cache = cache.Cache(max_size=max_cache_size, timeout=max_cache_time)
+        self.query_cache = cache.Cache(max_size=max_cache_size, timeout=max_cache_time*60)  # Convert to Seconds
 
     def query(self, file_sha):
         """Query the VirusTotal Service"""
