@@ -10,7 +10,7 @@ from pprint import pprint
 from brothon.utils import yara_rules, dir_watcher, signal_utils
 
 def yara_match(file_path, rules):
-    """Callback for a newly extacted file"""
+    """Callback for a newly extracted file"""
     print('New Extracted File: {:s}'.format(file_path))
     print('Mathes:')
     pprint(rules.match(file_path))

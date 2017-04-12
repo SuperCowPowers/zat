@@ -167,7 +167,7 @@ See brothon/examples/yara_matches.py for full code listing (code simplified belo
     ...
 
     def yara_match(file_path, rules):
-        """Callback for a newly extacted file"""
+        """Callback for a newly extracted file"""
         print('New Extracted File: {:s}'.format(file_path))
         print('Mathes:')
         pprint(rules.match(file_path))
