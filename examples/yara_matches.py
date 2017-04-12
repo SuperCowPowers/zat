@@ -53,6 +53,8 @@ if __name__ == '__main__':
     dir_watcher.DirWatcher(args.extract_dir, callback=yara_match, rules=my_rules)
 
     # Copy a file into the extract directory and then delete it
+    # Note: This is just a 'fake' file drop for testing/example.
+    #       Just remove this bottom piece of code for actual use
     data_path = file_utils.relative_dir(__file__, '../brothon/utils/yara_test')
     test_file = os.path.join(data_path, 'auriga_pe_test')
     temp_file = os.path.join(args.extract_dir, 'test.tmp')
