@@ -15,7 +15,7 @@ class YaraRules(object):
     """YaraRules: Will run a set of Yara Rules against a file.
 
         Args:
-            rule_index (str): The path to a set of yara rule index file
+            rule_index (str): The path to the yara rule index file.
     """
 
     def __init__(self, rule_index):
