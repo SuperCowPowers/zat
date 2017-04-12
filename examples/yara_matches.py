@@ -7,8 +7,7 @@ import argparse
 from pprint import pprint
 
 # Local imports
-from brothon import bro_log_reader
-from brothon.utils import yara_rules, dir_watcher, file_utils
+from brothon.utils import yara_rules, dir_watcher, signal_utils
 
 def yara_match(file_path, rules):
     """Callback for a newly extacted file"""
@@ -16,9 +15,13 @@ def yara_match(file_path, rules):
     print('Mathes:')
     pprint(rules.match(file_path))
 
+def my_exit():
+    """Exit on Signal"""
+    print('Goodbye...')
+    sys.exit()
+
 if __name__ == '__main__':
-    """Run a set of Yara Rule matches on Extracted Files"""
-    from shutil import copyfile
+    # Run a set of Yara Rule matches on Extracted Files
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
@@ -52,12 +55,7 @@ if __name__ == '__main__':
     print('Watching Extract Files Directory: {:s}'.format(args.extract_dir))
     dir_watcher.DirWatcher(args.extract_dir, callback=yara_match, rules=my_rules)
 
-    # Copy a file into the extract directory and then delete it
-    # Note: This is just a 'fake' file drop for testing/example.
-    #       Just remove this bottom piece of code for actual use
-    data_path = file_utils.relative_dir(__file__, '../brothon/utils/yara_test')
-    test_file = os.path.join(data_path, 'auriga_pe_test')
-    temp_file = os.path.join(args.extract_dir, 'test.tmp')
-    copyfile(test_file, temp_file)
-    time.sleep(1)
-    os.remove(temp_file)
+    # Okay so just wait around for files to be dropped by Bro or someone hits Ctrl-C
+    with signal_utils.signal_catcher(my_exit):
+        while True:
+            time.sleep(.5)
