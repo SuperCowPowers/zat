@@ -7,8 +7,8 @@ The BroThon package supports the ingestion, processing, and analysis of Bro IDS 
 
 |kitware-logo|
 
-Why
----
+Why BroThon?
+------------
 Bro IDS already has a flexible, powerful scripting language why should I use BroThon?
 
 **Offloading:** Running more complex tasks (yara sigs on files, state machines, ML models, etc..) should
