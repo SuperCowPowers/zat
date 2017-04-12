@@ -12,7 +12,7 @@ from brothon.utils import file_utils
 
 
 class DirWatcher(FileSystemEventHandler):
-    """Watches a directory and calls the callback when files are modified"""
+    """Watches a directory and calls the callback when files are created/modified"""
 
     def __init__(self, data_dir, callback, **kwargs):
         """Initialization"""

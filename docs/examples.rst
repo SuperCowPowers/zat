@@ -37,9 +37,9 @@ See brothon/examples/bro_log_pprint.py for full code listing.
     'uid': 'CJsdG95nCNF1RXuN5'}
 
 
-Creating a Pandas DataFrame!
-----------------------------
-See brothon/examples/bro_log_pandas.py for full code listing. Notice that it's one line of code to convert to a Pandas DataFrame!
+Creating a Pandas DataFrame
+---------------------------
+See brothon/examples/bro_log_pandas.py for full code listing. Notice that it's one line of code to convert to a Pandas DataFrame.
 
 .. code-block:: python
 
