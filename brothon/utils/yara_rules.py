@@ -15,19 +15,15 @@ class YaraRules(object):
     """YaraRules: Will run a set of Yara Rules against a file.
 
         Args:
-            rule_path (str): The path to a set of yara rules (default=None)
+            rule_path (str): The path to a set of yara rules
     """
 
-    def __init__(self, rule_path=None):
+    def __init__(self, rule_path):
         """YaraRules Init"""
-
-        # Default Yara Rule Path if you want to use different set of yara rules
-        #         create the class with rule_path=/full/path/to/yara/rules
-        # Example:
+        # Note: Download yara rules from their repo
         # $ git clone https://github.com/Yara-Rules/rules rules
         # $ yara_rules = YaraRules(rule_path=/path/to/rules)
-        yara_default = file_utils.relative_dir(__file__, 'yara_rules')
-        self.rule_path = rule_path or yara_default
+        self.rule_path = rule_path
 
         # Load/compile the yara rules
         self.yara_rules = yara.compile(self.rule_path)
@@ -52,7 +48,7 @@ def test():
     from pprint import pprint
 
     # Create and invoke the class
-    rule_path = '/home/ubuntu/data/yara_rules/index.yar'
+    rule_path = file_utils.relative_dir(__file__, 'yara_rules/apt1.yar')
     my_rules = YaraRules(rule_path=rule_path)
     data_path = file_utils.relative_dir(__file__, 'yara_test')
     file_path = os.path.join(data_path, 'auriga_pe_test')
