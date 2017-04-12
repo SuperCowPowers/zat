@@ -155,8 +155,10 @@ See brothon/examples/http_user_agents.py for full code listing (code simplified 
      ('Mozilla/5.0 (compatible; Nmap Scripting Engine; http://nmap.org/book/nse.html)', 6166),
 
 
-Dynamically run Yara against Bro extracted files
-------------------------------------------------
+Yara rules on Bro extracted files
+---------------------------------
+The example will dymancially monitor the extract_files directory and when a file is
+dropped by Bro IDS the code will run a set of Yara rules against that file.
 See brothon/examples/yara_matches.py for full code listing (code simplified below)
 
 .. code-block:: python
