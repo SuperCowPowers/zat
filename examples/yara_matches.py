@@ -1,4 +1,8 @@
-"""Run a set of Yara Rule matches on Extracted Files"""
+"""Run a set of Yara Rule matches on Extracted Files
+           Note: Download yara rules from their repo and give index file as arg
+           $ git clone https://github.com/Yara-Rules/rules rules
+           $ python yara_matches -r /path/to/rules/index.yar -e /path/to/bro/extract_files
+"""
 from __future__ import print_function
 import os
 import sys
@@ -6,8 +10,15 @@ import time
 import argparse
 from pprint import pprint
 
+# Third Party Imports
+try:
+    import yara
+except ImportError:
+    print('\nThis example needs yara. Please do a $pip install yara-python')
+    sys.exit(1)
+
 # Local imports
-from brothon.utils import yara_rules, dir_watcher, signal_utils
+from brothon.utils import dir_watcher, signal_utils
 
 def yara_match(file_path, rules):
     """Callback for a newly extracted file"""
@@ -37,6 +48,9 @@ if __name__ == '__main__':
     # If no args just call help
     if len(sys.argv) == 1:
         parser.print_help()
+        print('\nNote: Download the yara repo and give the index file as an arg')
+        print('$ git clone https://github.com/Yara-Rules/rules')
+        print('$ python yara_matches -r /path/to/rules/index.yar -e /path/to/bro/extract_files')
         sys.exit(1)
 
     # Sanity check that the args exist and are what we expect
@@ -47,9 +61,8 @@ if __name__ == '__main__':
         print('--extract-dir directory not found.. should be /full/path/to/bro/extract_files')
         sys.exit(1)
 
-    # Create a Yara Rules Class
-    print('Loading Yara Rules from {:s}'.format(args.rule_index))
-    my_rules = yara_rules.YaraRules(rule_index=args.rule_index)
+    # Load/compile the yara rules
+    my_rules = yara.compile(args.rule_index)
 
     # Create DirWatcher and start watching the Bro extract_files directory
     print('Watching Extract Files Directory: {:s}'.format(args.extract_dir))

@@ -37,9 +37,11 @@ setup(
     data_files=get_data_and_example_files(),
     install_requires=[
         'requests',
-        'watchdog',
-        'yara-python'
+        'watchdog'
     ],
+    extras_require={
+     'all':  ['yara-python', 'pandas']
+    },
     license='Apache',
     zip_safe=False,
     keywords='Bro IDS, Python, Networking, Security',
