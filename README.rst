@@ -33,6 +33,8 @@ Install
 ::
 
     $ pip install brothon
+    or
+    $ pip install brothon[all]   # Includes additional dependencies to run all examples (yara, pandas, etc)
 
 
 Documentation

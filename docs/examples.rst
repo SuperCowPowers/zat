@@ -163,7 +163,8 @@ See brothon/examples/yara_matches.py for full code listing (code simplified belo
 
 .. code-block:: python
 
-    from brothon import yara_rules, dir_watcher
+    import yara
+    from brothon import dir_watcher
     ...
 
     def yara_match(file_path, rules):
@@ -173,9 +174,8 @@ See brothon/examples/yara_matches.py for full code listing (code simplified belo
         pprint(rules.match(file_path))
 
     ...
-        # Create a Yara Rules Class
-        print('Loading Yara Rules from {:s}'.format(args.rule_index))
-        my_rules = yara_rules.YaraRules(rule_index=args.rule_index)
+        # Load/compile the yara rules
+        my_rules = yara.compile(args.rule_index)
 
         # Create DirWatcher and start watching the Bro extract_files directory
         print('Watching Extract Files Directory: {:s}'.format(args.extract_dir))

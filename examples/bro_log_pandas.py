@@ -8,7 +8,7 @@ import argparse
 try:
     import pandas as pd
 except ImportError:
-    print('\nThis example needs pandas. Please do a $ pip install pandas and rerun this example...')
+    print('\nThis example needs pandas. Please do a $pip install pandas and rerun this example')
     sys.exit(1)
 
 # Local imports
