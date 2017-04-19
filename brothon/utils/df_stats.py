@@ -20,7 +20,10 @@ def contingency_table(dataframe, rownames, colnames, margins=True):
            rownames: the column name or list of columns names that make the keys of the rows
            colnames: the column name or list of columns names that make the keys of the columns
     """
-    return dataframe.pivot_table(index=rownames, columns=colnames, margins=margins, aggfunc=len, fill_value=0)
+    # Taking just the rownames + colnames of the dataframe
+    sub_set = [rownames, colnames]
+    _sub_df = dataframe[sub_set]
+    return _sub_df.pivot_table(index=rownames, columns=colnames, margins=margins, aggfunc=len, fill_value=0)
 
 
 def joint_distribution(dataframe, rownames, colnames):
