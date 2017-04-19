@@ -49,7 +49,7 @@ Easy to Use
 
 More Examples
 -------------
-- Easy ingestion of any Bro Log into Python (including logs that are actively being written to)
+- Easy ingestion of any Bro Log into Python (dynamic tailing and log rotations are all handled)
 - Bro Logs to Pandas Dataframes (and then dataframes to Machine Learning :)
 - Dynamically monitor files.log and make VirusTotal Queries
 - Dynamically monitor http.log and show 'uncommon' User Agents
