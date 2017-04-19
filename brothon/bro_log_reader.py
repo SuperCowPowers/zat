@@ -9,6 +9,7 @@
 """
 from __future__ import print_function
 import os
+import time
 import datetime
 
 # Local Imports
@@ -34,18 +35,49 @@ class BroLogReader(file_tailer.FileTailer):
 
         # Initialize the Parent Class
         self._parent_class = super(BroLogReader, self)
-        self._parent_class.__init__(filepath, full_read=True, tail=self._tail)
 
     def readrows(self):
-        ''' The readrows method reads in the header of the Bro log and
+        """The readrows method reads in the header of the Bro log and
             then uses the parent class to yield each row of the log file
             as a dictionary of {key:value, ...} based on Bro header.
-        '''
+        """
+        # Calling the internal _readrows so we can catch issues/log rotations
+        while True:
+            # Yield the rows from the internal reader
+            try:
+                for row in self._readrows():
+                    yield row
+            except IOError:
+                # If the tail option is set then we do a retry (might just be a log rotation)
+                if self._tail:
+                    print('Could not open file {:s} Retrying...'.format(self._filepath))
+                    time.sleep(5)
+                    continue
+                else:
+                    break
+
+            # If the tail option is set then we do a retry (might just be a log rotation)
+            if self._tail:
+                print('File closed {:s} Retrying...'.format(self._filepath))
+                time.sleep(5)
+                continue
+            else:
+                break
+
+        # Okay we must be all done
+        raise StopIteration
+
+    def _readrows(self):
+        """Internal method _readrows, see readrows() for description"""
+        # Open the file
+        self._parent_class.__init__(self._filepath, full_read=True, tail=self._tail)
+
         # Read in the Bro Headers
         offset, field_names, field_types = self._parse_bro_header(self._filepath)
 
         # Use parent class to yield each row as a dictionary
         for line in self._parent_class.readlines(offset=offset):
+
             # Check for #close
             if line.startswith('#close'):
                 raise StopIteration
