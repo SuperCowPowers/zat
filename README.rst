@@ -32,7 +32,7 @@ Easy to Use
             pprint(row)
 
 
-**Output:** You get back a nice Python Dictionary with timestamps and types properly converted.
+**Output:** Each row is a nice Python Dictionary with timestamps and types properly converted.
 
 ::
 
@@ -46,10 +46,11 @@ Easy to Use
     'trans_id': 495764278,
     'ts': datetime.datetime(2012, 7, 20, 3, 14, 12, 219654),
     'uid': 'CJsdG95nCNF1RXuN5'}
+    ...
 
 More Examples
 -------------
-- Easy ingestion of any Bro Log into Python (dynamic tailing and log rotations are all handled)
+- Easy ingestion of any Bro Log into Python (dynamic tailing and log rotations are handled)
 - Bro Logs to Pandas Dataframes (and then dataframes to Machine Learning :)
 - Dynamically monitor files.log and make VirusTotal Queries
 - Dynamically monitor http.log and show 'uncommon' User Agents
