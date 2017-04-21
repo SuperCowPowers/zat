@@ -194,7 +194,7 @@ See brothon/examples/yara_matches.py for full code listing (code simplified belo
 
 Risky Domains
 -------------
-The example will use the analysis in our .. Risky Domains: https://github.com/Kitware/BroThon/blob/master/notebooks/Risky_Domains.ipynb
+The example will use the analysis in our `Risky Domains <https://github.com/Kitware/BroThon/blob/master/notebooks/Risky_Domains.ipynb>`_
 notebook to flag domains that are 'at risk' and conduct a Virus Total query on those domains.
 See brothon/examples/risky_dns.py for full code listing (code simplified below)
 
