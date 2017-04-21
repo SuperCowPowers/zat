@@ -61,7 +61,7 @@ Analysis Notebooks
 ------------------
 BroThon enables the processing, analysis, and machine learning of realtime data coming from Bro IDS.
 
-- Risky Domain Modeling and Deployment: <coming soon>
+- Risky Domains Stats and Deployment: <http://nbviewer.ipython.org/url/raw.github.com/Kitware/BroThon/master/notebooks/Risky_Domains.ipynb>
 
 Install
 -------
