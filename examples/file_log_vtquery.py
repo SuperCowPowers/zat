@@ -50,4 +50,4 @@ if __name__ == '__main__':
                     continue
 
             # Make the query with either sha
-            pprint(vtq.query(file_sha))
+            pprint(vtq.query_file(file_sha))

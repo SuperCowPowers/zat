@@ -38,23 +38,48 @@ class VTQuery(object):
         # Create query cache
         self.query_cache = cache.Cache(max_size=max_cache_size, timeout=max_cache_time*60)  # Convert to Seconds
 
-    def query(self, file_sha):
-        """Query the VirusTotal Service"""
+    def query_file(self, file_sha):
+        """Query the VirusTotal Service
+            Args:
+               file_sha (str): The file sha1 or sha256 hash
+               url (str): The domain/url to be queried (default=None)
+        """
 
-        # Sanity check input
+        # Sanity check sha hash input
         if len(file_sha) not in [64, 40]:  # sha256 and sha1 lengths
             print('File sha looks malformed: {:s}'.format(file_sha))
             return {'file_sha': file_sha, 'malformed': True}
 
+        # Call and return the internal query method
+        return self._query('file', file_sha)
+
+    def query_url(self, url):
+        """Query the VirusTotal Service
+            Args:
+               url (str): The domain/url to be queried
+        """
+        # Call and return the internal query method
+        return self._query('url', url)
+
+    def _query(self, query_type, query_str):
+        """Internal query method for the VirusTotal Service
+            Args:
+               query_type(str): The type of query (either 'file' or 'url')
+               query_str (str): The file hash or domain/url to be queried
+        """
         # First check query cache
-        cached = self.query_cache.get(file_sha)
+        cached = self.query_cache.get(query_str)
         if cached:
             print('Returning Cached VT Query Results')
             return cached
 
         # Not in cache so make the actual query
-        response = requests.get('http://www.virustotal.com/vtapi/v2/file/report',
-                                params={'apikey': self.apikey, 'resource': file_sha, 'allinfo': 1})
+        if query_type == 'file':
+            response = requests.get('https://www.virustotal.com/vtapi/v2/file/report',
+                                    params={'apikey': self.apikey, 'resource': query_str, 'allinfo': 1})
+        else:
+            response = requests.post('https://www.virustotal.com/vtapi/v2/url/report',
+                                     params={'apikey': self.apikey, 'resource': query_str, 'allinfo': 1})
 
         # Make sure we got a json blob back
         try:
@@ -64,15 +89,15 @@ class VTQuery(object):
 
         # Check for not-found
         if not vt_output or vt_output['response_code'] == 0:
-            output = {'file_sha': file_sha, 'not_found': True}
-            self.query_cache.set(file_sha, output)
+            output = {'query': query_str, 'not_found': True}
+            self.query_cache.set(query_str, output)
             return output
 
         # Exclude some fields (if summary=True)
         output = {field: vt_output[field] for field in vt_output.keys() if field not in self.exclude}
 
         # Put the file sha in the output
-        output['file_sha'] = file_sha
+        output['query'] = query_str
 
         # Organize the scans fields
         scan_results = collections.Counter()
@@ -83,7 +108,7 @@ class VTQuery(object):
         output['scan_results'] = scan_results.most_common(5)
 
         # Pull results in Cache
-        self.query_cache.set(file_sha, output)
+        self.query_cache.set(query_str, output)
 
         # Return results
         return output
@@ -94,25 +119,30 @@ def test():
     """vt_query.py test"""
 
     # Execute the worker (unit test)
+    vt_query = VTQuery(summary=False)
+    output = vt_query.query_file('eb107c004e6e1bbd3b32ad7961661bbe28a577b0cb5dac4cfd518f786029cb95')
+    print('\n<<< Unit Test Full>>>')
+    pprint.pprint(output)
     vt_query = VTQuery()
-    output = vt_query.query('eb107c004e6e1bbd3b32ad7961661bbe28a577b0cb5dac4cfd518f786029cb95')
+    output = vt_query.query_file('4ecf79302ba0439f62e15d0526a297975e6bb32ea25c8c70a608916a609e5a9c')
     print('\n<<< Unit Test Summary>>>')
     pprint.pprint(output)
-    vt_query = VTQuery(summary=False)
-    output = vt_query.query('4ecf79302ba0439f62e15d0526a297975e6bb32ea25c8c70a608916a609e5a9c')
-    print('\n<<< Unit Test Full>>>')
+
+    # Test queries on domain names
+    output = vt_query.query_url('amazon.co.uk.security-check.ga')
+    print('\n<<< Unit Test Domain Names>>>')
     pprint.pprint(output)
 
     # Test Cache
-    output = vt_query.query('4ecf79302ba0439f62e15d0526a297975e6bb32ea25c8c70a608916a609e5a9c')
-    print('\n<<< Unit Test Full>>>')
+    output = vt_query.query_file('4ecf79302ba0439f62e15d0526a297975e6bb32ea25c8c70a608916a609e5a9c')
+    print('\n<<< Unit Test Cache>>>')
     pprint.pprint(output)
 
     # Test some error conditions
-    output = vt_query.query('123')
+    output = vt_query.query_file('123')
     print('\n<<< Unit Test Malformed SHA HASH>>>')
     pprint.pprint(output)
-    output = vt_query.query('123f79302ba0439f62e15d0526a297975e6bb32ea25c8c70a608916a609e5a9c')
+    output = vt_query.query_file('123f79302ba0439f62e15d0526a297975e6bb32ea25c8c70a608916a609e5a9c')
     print('\n<<< Unit Test Not Found>>>')
     pprint.pprint(output)
 

@@ -42,15 +42,20 @@ class BroLogReader(file_tailer.FileTailer):
             as a dictionary of {key:value, ...} based on Bro header.
         """
         # Calling the internal _readrows so we can catch issues/log rotations
+        reconnecting = True
         while True:
             # Yield the rows from the internal reader
             try:
                 for row in self._readrows():
+                    if reconnecting:
+                        print('Successfully monitoring {:s}...'.format(self._filepath))
+                        reconnecting = False
                     yield row
             except IOError:
                 # If the tail option is set then we do a retry (might just be a log rotation)
                 if self._tail:
                     print('Could not open file {:s} Retrying...'.format(self._filepath))
+                    reconnecting = True
                     time.sleep(5)
                     continue
                 else:
@@ -59,6 +64,7 @@ class BroLogReader(file_tailer.FileTailer):
             # If the tail option is set then we do a retry (might just be a log rotation)
             if self._tail:
                 print('File closed {:s} Retrying...'.format(self._filepath))
+                reconnecting = True
                 time.sleep(5)
                 continue
             else:
