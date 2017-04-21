@@ -192,3 +192,63 @@ See brothon/examples/yara_matches.py for full code listing (code simplified belo
     Mathes:
     [AURIGA_driver_APT1]
 
+Risky Domains
+-------------
+The example will use the analysis in our .. Risky Domains: https://github.com/Kitware/BroThon/blob/master/notebooks/Risky_Domains.ipynb
+notebook to flag domains that are 'at risk' and conduct a Virus Total query on those domains.
+See brothon/examples/risky_dns.py for full code listing (code simplified below)
+
+.. code-block:: python
+
+    from brothon import bro_log_reader
+    from brothon.utils import vt_query
+    ...
+
+        # Create a VirusTotal Query Class
+        vtq = vt_query.VTQuery()
+
+        # See our 'Risky Domains' Notebook for the analysis and
+        # statistical methods used to compute this risky set of TLDs
+        risky_tlds = set(['info', 'tk', 'xyz', 'online', 'club', 'ru', 'website', 'in', 'ws', 'top', 'site', 'work', 'biz', 'name', 'tech'])
+
+        # Run the bro reader on the dns.log file looking for risky TLDs
+        reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)
+        for row in reader.readrows():
+
+            # Pull out the TLD
+            query = row['query']
+            tld = tldextract.extract(query).suffix
+
+            # Check if the TLD is in the risky group
+            if tld in risky_tlds:
+                # Make the query with the full query
+                results = vtq.query_url(query)
+                if results.get('positives'):
+                    print('\nOMG the Network is on Fire!!!')
+                    pprint(results)
+
+
+**Example Output:**
+To test this example simply do a "$ping uni10.tk" on a machine being monitored by your Bro IDS.
+
+Note: You can also ping something like 'isaftaho.tk' which is not on any of the blacklist but will
+still hit. The script will obviously cast a much wider net than just the blacklists.
+
+::
+
+  $ python risky_dns.py -f /usr/local/var/spool/bro/dns.log
+    Successfully monitoring /usr/local/var/spool/bro/dns.log...
+
+    OMG the Network is on Fire!!!
+    {'filescan_id': None,
+     'positives': 9,
+     'query': 'uni10.tk',
+     'scan_date': '2016-12-19 23:49:04',
+     'scan_results': [('clean site', 55),
+                      ('malicious site', 5),
+                      ('unrated site', 4),
+                      ('malware site', 4),
+                      ('suspicious site', 1)],
+     'total': 69,
+     'url': 'http://uni10.tk/'}
+
