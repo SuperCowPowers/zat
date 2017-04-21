@@ -47,8 +47,8 @@ if __name__ == '__main__':
         vtq = vt_query.VTQuery()
 
         # See our 'Risky Domains' Notebook for the analysis and
-        # statistical methods that were used to compute this risky set of TLDs
-        risky_tlds = set(['tk', 'online', 'website', 'info', 'club'])
+        # statistical methods used to compute this risky set of TLDs
+        risky_tlds = set(['info', 'tk', 'xyz', 'online', 'club', 'ru', 'website', 'in', 'ws', 'top', 'site', 'work', 'biz', 'name', 'tech'])
 
         # Run the bro reader on the dns.log file looking for risky TLDs
         reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)

@@ -61,7 +61,6 @@ class VTQuery(object):
         # Call and return the internal query method
         return self._query('url', url)
 
-
     def _query(self, query_type, query_str):
         """Internal query method for the VirusTotal Service
             Args:
@@ -113,8 +112,6 @@ class VTQuery(object):
 
         # Return results
         return output
-
-
 
 
 # Unit test: Create the class and test it
