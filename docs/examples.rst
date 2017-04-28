@@ -252,3 +252,73 @@ still hit. The script will obviously cast a much wider net than just the blackli
      'total': 69,
      'url': 'http://uni10.tk/'}
 
+Cert Checker
+------------
+There's been discussion about Let's Encrypt issuing certficates to possible phishing/malicious site owners. This example
+will quickly check and dynamically monitor your Bro IDS x509 logs for certificates that may be from malicious sites.
+
+See brothon/examples/cert_checker.py for full code listing (code simplified below)
+
+.. code-block:: python
+
+    from brothon import bro_log_reader
+    from brothon.utils import vt_query
+    ...
+
+        # These domains may be spoofed with a certificate issued by 'Let's Encrypt'
+        spoofed_domains = set(['paypal', 'gmail', 'google', 'apple','ebay', 'amazon'])
+
+        # Run the bro reader on the x509.log file looking for spoofed domains
+        reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)
+        for row in reader.readrows():
+
+            # Pull out the Certificate Issuer
+            issuer = row['certificate.issuer']
+            if "Let's Encrypt" in issuer:
+
+                # Check if the certificate subject has any spoofed domains
+                subject = row['certificate.subject']
+                domain = subject[3:] # Just chopping off the 'CN=' part
+                print(domain)
+                if any([domain in subject for domain in spoofed_domains]):
+                    pprint(row)
+
+                # Make a Virus Total query with the spoofed domain (just for fun)
+                results = vtq.query_url(domain)
+                if results.get('positives', 0) >= 2: # At least two hits
+                    print('\nVirus Total Query')
+                    pprint(results)
+
+
+**Example Output:**
+To test this example run this example on your Bro IDS x509.log.
+
+::
+
+  $ python cert_checker.py -f ../data/x509.log
+    Successfully monitoring ../data/x509.log...
+
+    <<< Suspicious Certificate Found >>>
+    {'basic_constraints.ca': True,
+     'certificate.issuer': "CN=Let's Encrypt Authority X3,O=Let's Encrypt,C=US",
+     'certificate.key_alg': 'rsaEncryption',
+     'certificate.key_length': 4096,
+     'certificate.key_type': 'rsa',
+     'certificate.sig_alg': 'sha256WithRSAEncryption',
+     'certificate.subject': 'CN=paypal.migems.com',
+     ...}
+
+    <<< Virus Total Query >>>
+    {'filescan_id': None,
+     'positives': 8,
+     'query': 'paypal.migems.com',
+     'scan_date': '2017-04-16 09:39:52',
+     'scan_results': [('clean site', 50),
+                      ('phishing site', 6),
+                      ('unrated site', 6),
+                      ('malware site', 1),
+                      ('malicious site', 1)],
+     'total': 64,
+     'url': 'http://paypal.migems.com/'}
+
+

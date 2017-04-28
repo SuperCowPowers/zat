@@ -1,4 +1,4 @@
-"""FileTailer Python Class"""
+"""Risky DNS BroThon Example"""
 from __future__ import print_function
 import os
 import sys
