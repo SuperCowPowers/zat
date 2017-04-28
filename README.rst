@@ -55,6 +55,7 @@ More Examples
 - Dynamically monitor files.log and make VirusTotal Queries
 - Dynamically monitor http.log and show 'uncommon' User Agents
 - Running Yara Signatures on Extracted Files
+- Checking x509 Certificates
 - See `BroThon Examples <https://brothon.readthedocs.io/en/latest/examples.html>`__ for more details.
 
 Analysis Notebooks
