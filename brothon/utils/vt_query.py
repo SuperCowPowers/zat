@@ -160,5 +160,6 @@ def test():
     output = vt_query.query_url('amazon.co.uk.security-check.ga1')
     output = vt_query.query_url('amazon.co.uk.security-check.ga2')
 
+
 if __name__ == "__main__":
     test()
