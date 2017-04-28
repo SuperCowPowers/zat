@@ -85,6 +85,7 @@ class VTQuery(object):
         try:
             vt_output = response.json()
         except ValueError:
+            print('VirusTotal no valid response... Typically this means you are past the per min quota')
             return {'vt_error': 'VirusTotal no valid response... Typically this means you are past the per min quota'}
 
         # Check for not-found

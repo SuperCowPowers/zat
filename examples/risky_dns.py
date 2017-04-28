@@ -48,7 +48,8 @@ if __name__ == '__main__':
 
         # See our 'Risky Domains' Notebook for the analysis and
         # statistical methods used to compute this risky set of TLDs
-        risky_tlds = set(['info', 'tk', 'xyz', 'online', 'club', 'ru', 'website', 'in', 'ws', 'top', 'site', 'work', 'biz', 'name', 'tech'])
+        risky_tlds = set(['info', 'tk', 'xyz', 'online', 'club', 'ru', 'website', 'in', 'ws',
+                          'top', 'site', 'work', 'biz', 'name', 'tech', 'loan'])
 
         # Run the bro reader on the dns.log file looking for risky TLDs
         reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)
@@ -62,6 +63,8 @@ if __name__ == '__main__':
             if tld in risky_tlds:
                 # Make the query with the full query
                 results = vtq.query_url(query)
-                if results.get('positives'):
-                    print('\nOMG the Network is on Fire!!!')
+                if results.get('positives', 0) > 1: # At least two hits
+                    print('\nRisky Domain DNS Query Found')
+                    print('From: {:s} To: {:s} QType: {:s} RCode: {:s}'.format(row['id.orig_h'],
+                           row['id.resp_h'], row['qtype_name'], row['rcode_name']))
                     pprint(results)
