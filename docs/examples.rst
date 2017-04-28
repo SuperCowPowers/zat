@@ -291,7 +291,7 @@ See brothon/examples/cert_checker.py for full code listing (code simplified belo
 
 
 **Example Output:**
-To test this example run this example on your Bro IDS x509.log.
+Simply run this example script on your Bro IDS x509.log.
 
 ::
 
