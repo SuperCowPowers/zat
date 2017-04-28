@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 import collections
+import time
 import pprint
 
 # Third Party
@@ -22,7 +23,7 @@ class VTQuery(object):
             max_cache_time (int): Time to keep query results in cache (default=60 minutes)
     """
 
-    def __init__(self, apikey=None, summary=True, max_cache_size=1000, max_cache_time=60):
+    def __init__(self, apikey=None, summary=True, max_cache_size=1000, max_cache_time=60, throttle=True):
         """VTQuery Init"""
 
         # Public VT API Key
@@ -34,6 +35,7 @@ class VTQuery(object):
         self.apikey = apikey or pub_vt_apikey
         self.exclude = ['scan_id', 'md5', 'sha1', 'sha256', 'resource', 'response_code', 'permalink',
                         'verbose_msg', 'scans'] if summary else []
+        self.throttle = throttle
 
         # Create query cache
         self.query_cache = cache.Cache(max_size=max_cache_size, timeout=max_cache_time*60)  # Convert to Seconds
@@ -85,8 +87,14 @@ class VTQuery(object):
         try:
             vt_output = response.json()
         except ValueError:
-            print('VirusTotal no valid response... Typically this means you are past the per min quota')
-            return {'vt_error': 'VirusTotal no valid response... Typically this means you are past the per min quota'}
+            error_msg = 'VirusTotal no valid response, typically this means you are past your quota'
+            print(error_msg)
+            if self.throttle:
+                print('Throttling and trying again...')
+                time.sleep(30)
+                return self._query(query_type, query_str)
+
+            return {'vt_error': error_msg}
 
         # Check for not-found
         if not vt_output or vt_output['response_code'] == 0:
