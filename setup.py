@@ -41,7 +41,7 @@ setup(
         'pandas'
     ],
     extras_require={
-     'all':  ['yara-python, tldextract']
+     'all':  ['yara-python', 'tldextract']
     },
     license='Apache',
     keywords='Bro IDS, Python, Networking, Security',
