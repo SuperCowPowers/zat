@@ -57,8 +57,8 @@ if __name__ == '__main__':
                     print('\n<<< Suspicious Certificate Found >>>')
                     pprint(row)
 
-                # Make a Virus Total query with the spoofed domain (just for fun)
-                results = vtq.query_url(domain)
-                if results.get('positives', 0) >= 2: # At least two hits
-                    print('\n<<< Virus Total Query >>>')
-                    pprint(results)
+                    # Make a Virus Total query with the spoofed domain (just for fun)
+                    results = vtq.query_url(domain)
+                    if results.get('positives', 0) >= 2: # At least two hits
+                        print('\n<<< Virus Total Query >>>')
+                        pprint(results)
