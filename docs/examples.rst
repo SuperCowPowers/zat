@@ -279,15 +279,15 @@ See brothon/examples/cert_checker.py for full code listing (code simplified belo
                 # Check if the certificate subject has any spoofed domains
                 subject = row['certificate.subject']
                 domain = subject[3:] # Just chopping off the 'CN=' part
-                print(domain)
                 if any([domain in subject for domain in spoofed_domains]):
+                    print('\n<<< Suspicious Certificate Found >>>')
                     pprint(row)
 
-                # Make a Virus Total query with the spoofed domain (just for fun)
-                results = vtq.query_url(domain)
-                if results.get('positives', 0) >= 2: # At least two hits
-                    print('\nVirus Total Query')
-                    pprint(results)
+                    # Make a Virus Total query with the spoofed domain (just for fun)
+                    results = vtq.query_url(domain)
+                    if results.get('positives', 0) >= 2: # At least two hits
+                        print('\n<<< Virus Total Query >>>')
+                        pprint(results)
 
 
 **Example Output:**
