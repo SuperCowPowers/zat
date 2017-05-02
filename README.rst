@@ -11,11 +11,11 @@ Why BroThon?
 ------------
 Bro IDS already has a flexible, powerful scripting language why should I use BroThon?
 
-**Offloading:** Running more complex tasks (yara sigs on files, state machines, machine learning, etc..) should
+**Offloading:** Running complex tasks (yara sigs on files, state machines, machine learning, etc..) should
 be offloaded from Bro IDS so that Bro can focus on the efficient processing of high volume network traffic.
 
 **Python:** Pulling Bro data into Python allows us to leverage a large set of of Python modules for data analysis,
-statistics, machine learning and visualization options.
+statistics, machine learning and visualization.
 
 **Data Analysis:** A growing set of notebooks/examples using statistics and machine learning on Bro data.
 
