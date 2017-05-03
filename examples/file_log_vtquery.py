@@ -50,4 +50,7 @@ if __name__ == '__main__':
                     continue
 
             # Make the query with either sha
-            pprint(vtq.query_file(file_sha))
+            results = vtq.query_file(file_sha)
+            if results.get('positives', 0) > 1: # At least two hits
+                pprint(results)
+
