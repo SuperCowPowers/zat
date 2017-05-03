@@ -37,15 +37,14 @@ class BroLogReader(file_tailer.FileTailer):
         self.field_names = []
         self.type_converters = []
         self.type_mapper = {'bool': lambda x: True if x == 'T' else False,
-                             'count': lambda x: int(x),
-                             'int': lambda x: int(x),
-                             'double': lambda x: float(x),
-                             'time': lambda x: datetime.datetime.fromtimestamp(float(x)),
-                             'interval': lambda x: datetime.timedelta(seconds=float(x)),
-                             'string': lambda x: x,
-                             'port': lambda x: int(x),
-                             'unknown': lambda x: x}
-
+                            'count': int,
+                            'int': int,
+                            'double': float,
+                            'time': lambda x: datetime.datetime.fromtimestamp(float(x)),
+                            'interval': lambda x: datetime.timedelta(seconds=float(x)),
+                            'string': lambda x: x,
+                            'port': int,
+                            'unknown': lambda x: x}
 
         # Initialize the Parent Class
         self._parent_class = super(BroLogReader, self)
@@ -151,7 +150,7 @@ class BroLogReader(file_tailer.FileTailer):
         '''
         data_dict = {}
         for key, value, converter in zip(self.field_names, field_values, self.type_converters):
-            data_dict[key] = '-' if value=='-' else converter(value)
+            data_dict[key] = '-' if value == '-' else converter(value)
 
         return data_dict
 
