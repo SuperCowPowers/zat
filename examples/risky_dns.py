@@ -49,7 +49,7 @@ if __name__ == '__main__':
         # See our 'Risky Domains' Notebook for the analysis and
         # statistical methods used to compute this risky set of TLDs
         risky_tlds = set(['info', 'tk', 'xyz', 'online', 'club', 'ru', 'website', 'in', 'ws',
-                          'top', 'site', 'work', 'biz', 'name', 'tech', 'loan'])
+                          'top', 'site', 'work', 'biz', 'name', 'tech', 'loan', 'win', 'pro'])
 
         # Run the bro reader on the dns.log file looking for risky TLDs
         reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)
