@@ -33,6 +33,19 @@ class BroLogReader(file_tailer.FileTailer):
         self._delimiter = delimiter
         self._tail = tail
 
+        # Setup the Bro to Python Type mapper
+        self.field_names = []
+        self.type_converters = []
+        self.type_mapper = {'bool': lambda x: True if x == 'T' else False,
+                            'count': int,
+                            'int': int,
+                            'double': float,
+                            'time': lambda x: datetime.datetime.fromtimestamp(float(x)),
+                            'interval': lambda x: datetime.timedelta(seconds=float(x)),
+                            'string': lambda x: x,
+                            'port': int,
+                            'unknown': lambda x: x}
+
         # Initialize the Parent Class
         self._parent_class = super(BroLogReader, self)
 
@@ -79,7 +92,7 @@ class BroLogReader(file_tailer.FileTailer):
         self._parent_class.__init__(self._filepath, full_read=True, tail=self._tail)
 
         # Read in the Bro Headers
-        offset, field_names, field_types = self._parse_bro_header(self._filepath)
+        offset, self.field_names, self.type_converters = self._parse_bro_header(self._filepath)
 
         # Use parent class to yield each row as a dictionary
         for line in self._parent_class.readlines(offset=offset):
@@ -89,7 +102,7 @@ class BroLogReader(file_tailer.FileTailer):
                 raise StopIteration
 
             # Yield the line as a dict
-            yield self.make_dict(field_names, line.strip().split(self._delimiter), field_types)
+            yield self.make_dict(line.strip().split(self._delimiter))
 
     def _parse_bro_header(self, bro_log):
         """Parse the Bro log header section.
@@ -120,39 +133,26 @@ class BroLogReader(file_tailer.FileTailer):
             _line = bro_file.readline()
             field_types = _line.strip().split(self._delimiter)[1:]
 
+            # Setup the type converters
+            type_converters = []
+            for field_type in field_types:
+                type_converters.append(self.type_mapper.get(field_type, self.type_mapper['unknown']))
+
             # Keep the header offset
             offset = bro_file.tell()
 
         # Return the header info
-        return offset, field_names, field_types
+        return offset, field_names, type_converters
 
-    def make_dict(self, field_names, field_values, field_types):
+    def make_dict(self, field_values):
         ''' Internal method that makes sure any dictionary elements
             are properly cast into the correct types.
         '''
         data_dict = {}
-        for key, value, field_type in zip(field_names, field_values, field_types):
-            # Check for timestamp
-            if field_type == 'time':
-                data_dict[key] = datetime.datetime.fromtimestamp(float(value))
-            elif field_type == 'string':
-                data_dict[key] = value
-            elif field_type == 'bool':
-                data_dict[key] = True if value == 'T' else False
-            else:  # Try to cast to int or float
-                data_dict[key] = self._cast_value(value)
-        return data_dict
+        for key, value, converter in zip(self.field_names, field_values, self.type_converters):
+            data_dict[key] = '-' if value == '-' else converter(value)
 
-    @staticmethod
-    def _cast_value(value):
-        """Try to cast value into a primative type"""
-        test_types = (int, float)
-        for cast_test in test_types:
-            try:
-                return cast_test(value)
-            except ValueError:
-                continue
-        return value
+        return data_dict
 
 
 def test():
@@ -162,7 +162,8 @@ def test():
     data_path = file_utils.relative_dir(__file__, '../data')
 
     # For each file, create the Class and test the reader
-    files = ['conn.log', 'dns.log', 'http.log', 'dhcp.log', 'files.log', 'weird.log']
+    files = ['app_stats.log', 'conn.log', 'dhcp.log', 'dns.log', 'files.log', 'ftp.log',
+             'http.log', 'notice.log', 'smtp.log', 'ssl.log', 'weird.log', 'x509.log']
     for bro_log in files:
         test_path = os.path.join(data_path, bro_log)
         print('Opening Data File: {:s}'.format(test_path))
