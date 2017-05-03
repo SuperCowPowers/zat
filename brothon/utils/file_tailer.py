@@ -31,7 +31,7 @@ class FileTailer(object):
                 # For full read go through existing lines in file
                 if self._full_read:
                     fp.seek(offset)
-                    for row in fp.readlines():
+                    for row in fp:
                         yield row
 
                 # Okay now dynamically tail the file
