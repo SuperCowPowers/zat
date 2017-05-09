@@ -150,7 +150,11 @@ class BroLogReader(file_tailer.FileTailer):
         '''
         data_dict = {}
         for key, value, converter in zip(self.field_names, field_values, self.type_converters):
-            data_dict[key] = '-' if value == '-' else converter(value)
+            try:
+                data_dict[key] = '-' if value == '-' else converter(value)
+            except ValueError as exc:
+                print('Conversion Issue for key:{:s} value:{:s}\n{:s}'.format(key, value, exc))
+                data_dict[key] = value
 
         return data_dict
 
