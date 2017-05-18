@@ -7,7 +7,7 @@
             delimiter (str): The delimiter in the Bro IDS logs (default='\t')
             tail (bool): Do a dynamic tail on the file (i.e. tail -f) (default=False)
 """
-
+from __future__ import print_function
 import os
 import time
 import datetime

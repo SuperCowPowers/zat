@@ -3,7 +3,7 @@
            $ git clone https://github.com/Yara-Rules/rules rules
            $ python yara_matches -r /path/to/rules/index.yar -e /path/to/bro/extract_files
 """
-
+from __future__ import print_function
 import os
 import sys
 import time

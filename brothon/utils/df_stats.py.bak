@@ -7,7 +7,7 @@
         - http://en.wikipedia.org/wiki/G_test (Wikipedia)
         - http://udel.edu/~mcdonald/stathyptesting.html (Hypothesis Testing)
 """
-
+from __future__ import print_function
 import math
 import pandas as pd
 

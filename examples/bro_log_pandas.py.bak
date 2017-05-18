@@ -1,15 +1,21 @@
 """FileTailer Python Class"""
-
+from __future__ import print_function
 import os
 import sys
 import argparse
-from pprint import pprint
+
+# Third Party Imports
+try:
+    import pandas as pd
+except ImportError:
+    print('\nThis example needs pandas. Please do a $pip install pandas and rerun this example')
+    sys.exit(1)
 
 # Local imports
 from brothon import bro_log_reader
 
 if __name__ == '__main__':
-    # Example to run the bro log reader on a given file
+    # Example to populate a Pandas dataframe from a bro log reader
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
@@ -30,7 +36,11 @@ if __name__ == '__main__':
     if args.bro_log:
         args.bro_log = os.path.expanduser(args.bro_log)
 
-        # Run the bro reader on a given log file
+        # Create a bro reader on a given log file
         reader = bro_log_reader.BroLogReader(args.bro_log)
-        for row in reader.readrows():
-            pprint(row)
+
+        # Create a Pandas dataframe from reader
+        bro_df = pd.DataFrame(reader.readrows())
+
+        # Print out the head of the dataframe
+        print(bro_df.head())
