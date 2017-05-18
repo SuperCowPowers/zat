@@ -32,13 +32,13 @@ class DirWatcher(FileSystemEventHandler):
 
 def my_callback(file_path):
     """Callback for new file"""
-    print(('New File Created: {:s}'.format(file_path)))
+    print('New File Created: {:s}'.format(file_path))
 
 
 def test():
     """Test the DirWatcher Class"""
     watch_path = file_utils.relative_dir(__file__, '../../data')
-    print(('Watching Directory: %s' % watch_path))
+    print('Watching Directory: %s' % watch_path)
     DirWatcher(watch_path, my_callback)
 
     # Create a file and then delete it

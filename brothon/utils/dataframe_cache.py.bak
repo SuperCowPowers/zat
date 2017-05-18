@@ -1,5 +1,5 @@
 """ DataFrame Cache Class: The class provides a caching mechanism for a Pandas DataFrame """
-
+from __future__ import print_function
 import time
 from collections import deque
 import pandas as pd

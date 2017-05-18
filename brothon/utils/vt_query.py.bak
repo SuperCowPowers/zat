@@ -1,6 +1,6 @@
 """VTQuery Class"""
 
-
+from __future__ import print_function
 import collections
 import time
 import pprint
@@ -103,14 +103,14 @@ class VTQuery(object):
             return output
 
         # Exclude some fields (if summary=True)
-        output = {field: vt_output[field] for field in list(vt_output.keys()) if field not in self.exclude}
+        output = {field: vt_output[field] for field in vt_output.keys() if field not in self.exclude}
 
         # Put the file sha in the output
         output['query'] = query_str
 
         # Organize the scans fields
         scan_results = collections.Counter()
-        for scan in list(vt_output['scans'].values()):
+        for scan in vt_output['scans'].values():
             if 'result' in scan:
                 if scan['result']:
                     scan_results[scan['result']] += 1
