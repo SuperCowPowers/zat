@@ -11,7 +11,8 @@ import numpy as np
 def df_random(num_numeric=3, num_categorical=3, num_rows=100):
     """Generate a dataframe with random data. This is a general method
        to easily generate a random dataframe, for more control of the
-       random 'distirbutions' use the column methods (df_numeric_column, df_categorical_column)
+       random 'distributions' use the column methods (df_numeric_column, df_categorical_column)
+       For other distributions you can use numpy methods directly (see example at bottom of this file)
         Args:
             num_numeric (int): The number of numeric columns (default = 3)
             num_categorical (int): The number of categorical columns (default = 3)
@@ -77,6 +78,11 @@ def test():
     print('\nProbabilities should be ~60% red, %30 green and %10 blue')
     print(df['color'].value_counts())
 
+    # Also we can just use the built in Numpy method for detailed control
+    # over the numeric distribution
+    my_series = pd.Series(np.random.normal(0, 1, 1000))
+    print('\nStats on numpy normal (gaussian) distribution')
+    print(my_series.describe())
 
 if __name__ == '__main__':
     test()
