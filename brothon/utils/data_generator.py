@@ -84,5 +84,6 @@ def test():
     print('\nStats on numpy normal (gaussian) distribution')
     print(my_series.describe())
 
+
 if __name__ == '__main__':
     test()
