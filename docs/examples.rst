@@ -30,7 +30,7 @@ See brothon/examples/bro_log_pprint.py for full code listing.
     'id.orig_p': 68,
     'id.resp_h': '192.168.84.1',
     'id.resp_p': 67,
-    'lease_time': 4294967000.0,
+    'lease_time': datetime.timedelta(49710, 23000),
     'mac': '00:20:18:eb:ca:54',
     'trans_id': 495764278,
     'ts': datetime.datetime(2012, 7, 20, 3, 14, 12, 219654),

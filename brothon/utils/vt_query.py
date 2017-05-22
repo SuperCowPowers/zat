@@ -156,7 +156,7 @@ def test():
     pprint.pprint(output)
 
     # Test Throttling
-    print('\n<<< Unit Test Not Throttling>>>')
+    print('\n<<< Unit Test Throttling>>>')
     output = vt_query.query_url('amazon.co.uk.security-check.ga1')
     output = vt_query.query_url('amazon.co.uk.security-check.ga2')
 
