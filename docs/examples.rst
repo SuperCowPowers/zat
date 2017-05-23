@@ -368,7 +368,7 @@ See brothon/examples/simple_dns_outlier.py for full code listing (code simplifie
                 print('DataFrame TimeRange: {:s} --> {:s}'.format(str(my_df['ts'].min()), str(my_df['ts'].max())))
 
                 # Compute Outliers
-                # Note: This is a TOY example, assuming a guassian distribution which it isn't, etc..
+                # Note: This is a TOY example, assuming a gaussian distribution which it isn't, etc..
                 my_outliers = my_df[outliers(my_df['query_length'])]
                 if not my_outliers.empty:
                     print('<<< Outliers Detected! >>>')

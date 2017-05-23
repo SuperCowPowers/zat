@@ -25,7 +25,7 @@ def entropy(string):
 
 def outliers(df_series):
     # Compute outliers for a series in a DataFrame
-    # Note: This is a TOY example, assuming a guassian distribution which it isn't, etc..
+    # Note: This is a TOY example, assuming a gaussian distribution which it isn't, etc..
     mean_delta = abs(df_series - df_series.mean())
     return mean_delta > df_series.std() * 2.0  # Greater than 2 std
 
@@ -84,7 +84,7 @@ if __name__ == '__main__':
                 print('DataFrame TimeRange: {:s} --> {:s}'.format(str(my_df['ts'].min()), str(my_df['ts'].max())))
 
                 # Compute Outliers
-                # Note: This is a TOY example, assuming a guassian distribution which it isn't, etc..
+                # Note: This is a TOY example, assuming a gaussian distribution which it isn't, etc..
                 my_outliers = my_df[outliers(my_df['query_length'])]
                 if not my_outliers.empty:
                     print('<<< Outliers Detected! >>>')
