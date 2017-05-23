@@ -88,24 +88,6 @@ def test():
         print(line)
     print('Read with max_rows Test successful!')
 
-    # Now without max_rows (note: as an automated test this needs to timeout quickly)
-    try:
-        from interruptingcow import timeout
-
-        # Spin up the class
-        unlimited = LiveSimulator(test_path)
-
-        # Run for 2 seconds and then quit
-        try:
-            with timeout(2, exception=RuntimeError):
-                for line in unlimited.readrows():
-                    print(line)
-        except RuntimeError:  # InterruptingCow raises a RuntimeError on timeout
-            print('Tailing Test successful!')
-
-    except ImportError:
-        print('Tailing Test not run, need interruptcow module...')
-
 
 if __name__ == '__main__':
     # Run the test for easy testing/debugging

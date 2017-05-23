@@ -155,11 +155,6 @@ def test():
     print('\n<<< Unit Test Not Found>>>')
     pprint.pprint(output)
 
-    # Test Throttling
-    print('\n<<< Unit Test Throttling>>>')
-    output = vt_query.query_url('amazon.co.uk.security-check.ga1')
-    output = vt_query.query_url('amazon.co.uk.security-check.ga2')
-
 
 if __name__ == "__main__":
     test()
