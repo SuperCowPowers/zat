@@ -322,3 +322,74 @@ Simply run this example script on your Bro IDS x509.log.
      'url': 'http://paypal.migems.com/'}
 
 
+
+Simple Outlier Detector
+-----------------------
+Here's we demonstrating a TOY outlier detection to show the use of dataframe_cache
+class and how we can stream data from Bro IDS into a dataframe
+and run some simple statistics on that 'windowed' dataframe.
+
+- Every 5 seconds we run the outlier detection
+- The dataframe cache contains a window of data for the last 30 seconds
+
+See brothon/examples/cert_checker.py for full code listing (code simplified below)
+
+.. code-block:: python
+
+    from brothon import bro_log_reader, live_simulator
+    from brothon.analysis import dataframe_cache
+    ...
+
+        # Create a Bro IDS log reader
+        print('Opening Data File: {:s}'.format(args.bro_log))
+        reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)
+
+        # Create a Dataframe Cache
+        df_cache = dataframe_cache.DataFrameCache(max_cache_time=30)  # 30 second cache
+
+        # Add each new row into the cache
+        time_delta = 5
+        timer = time.time() + time_delta
+        for row in reader.readrows():
+            df_cache.add_row(row)
+
+            # Every 5 seconds grab the dataframe from the cache
+            if time.time() > timer:
+                timer = time.time() + time_delta
+
+                # Get the windowed dataframe (30 second window)
+                my_df = df_cache.dataframe()
+
+                # Add query length and entropy
+                my_df['query_length'] = my_df['query'].str.len()
+                my_df['query_entropy'] = my_df['query'].apply(lambda x: entropy(x))
+
+                # Print out the range of the daterange and some stats
+                print('DataFrame TimeRange: {:s} --> {:s}'.format(str(my_df['ts'].min()), str(my_df['ts'].max())))
+
+                # Compute Outliers
+                # Note: This is a TOY example, assuming a guassian distribution which it isn't, etc..
+                my_outliers = my_df[outliers(my_df['query_length'])]
+                if not my_outliers.empty:
+                    print('<<< Outliers Detected! >>>')
+                    print(my_outliers[['query','query_length', 'query_entropy']])
+
+
+**Example Output:**
+Run this example script on your Bro IDS dns.log. Here we ran the outlier script
+and then we did a $ ping <very long hostname> a couple of times. We
+can see that those dns queries show up as Outliers.
+
+::
+
+    $ python simple_dns_outlier.py -f /usr/local/var/spool/bro/dns.log
+    Opening Data File: /usr/local/var/spool/bro/dns.log
+    Successfully monitoring /usr/local/var/spool/bro/dns.log...
+    DataFrame TimeRange: 2017-05-23 16:43:12.155247 --> 2017-05-23 16:43:57.201749
+    DataFrame TimeRange: 2017-05-23 16:43:27.734151 --> 2017-05-23 16:44:02.696416
+    DataFrame TimeRange: 2017-05-23 16:43:32.226345 --> 2017-05-23 16:44:02.696416
+    DataFrame TimeRange: 2017-05-23 16:43:32.226345 --> 2017-05-23 16:44:18.608977
+    <<< Outliers Detected! >>>
+                                                   query  query_length  query_entropy
+    0  abcxxyzifaoijpoqjefpqrgqhergphqeprghqperhgpqhe...            68       3.797085
+    8  xyaabcxxyzifaoijpoqjefpqrgqhergphqeprghqperhgp...            71       3.850374
