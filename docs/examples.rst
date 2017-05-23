@@ -325,14 +325,14 @@ Simply run this example script on your Bro IDS x509.log.
 
 Simple Outlier Detector
 -----------------------
-Here's we demonstrating a TOY outlier detection to show the use of dataframe_cache
-class and how we can stream data from Bro IDS into a dataframe
-and run some simple statistics on that 'windowed' dataframe.
+Here we're demonstrating a TOY outlier detection to show the use of the dataframe_cache
+class. The dataframe_cache allows us to stream data from Bro IDS into a 'time-windowed'
+dataframe. In this example we compute some simple statistics on that dataframe.
 
-- Every 5 seconds we run the outlier detection
-- The dataframe cache contains a window of data for the last 30 seconds
+- Every 5 seconds we run outlier detection
+- The dataframe contains a window of data (30 seconds in this example)
 
-See brothon/examples/cert_checker.py for full code listing (code simplified below)
+See brothon/examples/simple_dns_outlier.py for full code listing (code simplified below)
 
 .. code-block:: python
 
