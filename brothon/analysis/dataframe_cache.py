@@ -9,16 +9,20 @@ class DataFrameCache(object):
     """DataFrameCache: The class provides a caching mechanism for a Pandas DataFrame.
 
         Args:
-            max_cache_size (int): Maximum size of dataframe cache (default=1000)
-            max_cache_time (int): Time to keep rows in cache (default=60 minutes)
+            max_cache_size (int): Maximum size of dataframe cache (default=10000)
+            max_cache_time (int): Time to keep rows in cache (default=60 seconds)
     """
-    def __init__(self, max_cache_size=1000, max_cache_time=60):
+    def __init__(self, max_cache_size=10000, max_cache_time=60):
         """Initialize the DataFrameCache class"""
         self.max_size = max_cache_size
         self.max_time = max_cache_time
         self.row_deque = deque(maxlen=self.max_size)
         self.time_deque = deque(maxlen=self.max_size)
         self._dataframe = pd.DataFrame()
+
+    def add_row(self, row):
+        """Add a row to the DataFrameCache class"""
+        self.add_rows([row])
 
     def add_rows(self, list_of_rows):
         """Add a list of rows to the DataFrameCache class"""

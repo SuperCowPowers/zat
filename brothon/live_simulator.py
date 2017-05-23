@@ -75,7 +75,7 @@ class LiveSimulator(object):
 
 
 def test():
-    """Test for BroLogReader Python Class"""
+    """Test for LiveSimulator Python Class"""
 
     # Grab a test file
     data_path = file_utils.relative_dir(__file__, '../data')
