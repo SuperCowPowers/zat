@@ -36,6 +36,7 @@ setup(
         'requests',
         'watchdog',
         'pandas',
+        'scipy',
         'scikit-learn'
     ],
     extras_require={
