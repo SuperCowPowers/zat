@@ -79,6 +79,7 @@ class DummyEncoder(TransformerMixin):
         df = pd.concat([non_cat] + cats, axis=1)[self.columns_]
         return df
 
+
 # Simple test of the functionality
 def test():
     """Test for DummyEncoder Class"""
@@ -90,14 +91,14 @@ def test():
          'B': pd.Categorical(['a', 'b', 'c', 'a'], ordered=False),
          'C': pd.Categorical(['a', 'b', 'z', 'a'], categories=['a', 'b', 'z', 'd']),
          'D': [1, 2, 3, 4],
-        }
+         }
     )
     test_df2 = pd.DataFrame(
         {'A': pd.Categorical(['a', 'b', 'b', 'a'], ordered=True),
          'B': pd.Categorical(['a', 'b', 'd', 'a'], ordered=False),
          'C': pd.Categorical(['a', 'b', 'z', 'y'], categories=['a', 'b', 'z', 'd']),
          'D': [1, 2, 3, 4],
-        }
+         }
     )
 
     # Test the transformation from dataframe to numpy ndarray and back again
