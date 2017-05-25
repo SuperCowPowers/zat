@@ -35,7 +35,8 @@ setup(
     install_requires=[
         'requests',
         'watchdog',
-        'pandas'
+        'pandas',
+        'scikit-learn'
     ],
     extras_require={
         'all':  ['yara-python', 'tldextract']
