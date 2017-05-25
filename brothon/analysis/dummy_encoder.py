@@ -21,7 +21,7 @@ class DummyEncoder(TransformerMixin):
         self.cat_blocks_ = None
         self.columns_in_order = None
 
-    def fit(self, df, y=None):
+    def fit_transform(self, df):
         """Fit method for the DummyEncoder"""
         self.index_ = df.index
         self.columns_ = df.columns
@@ -37,12 +37,13 @@ class DummyEncoder(TransformerMixin):
             self.cat_blocks_[col], left = slice(left, right), right
 
         # This is to ensure that transform always produces the same columns in the same order
-        self.columns_in_order = pd.get_dummies(df).columns.tolist()
+        df_with_dummies = pd.get_dummies(df)
+        self.columns_in_order = df_with_dummies.columns.tolist()
 
-        # Fit returns the instance handle
-        return self
+        # Return the numpy matrix
+        return np.asarray(df_with_dummies)
 
-    def transform(self, df, y=None):
+    def transform(self, df):
         """Transform dataframe into a numpy ndarray(matrix)"""
 
         # Make sure the dataframe columns are the same as the ones passed to fit
@@ -103,8 +104,7 @@ def test():
 
     # Test the transformation from dataframe to numpy ndarray and back again
     encoder = DummyEncoder()
-    encoder.fit(test_df)
-    transformed_data = encoder.transform(test_df)
+    transformed_data = encoder.fit_transform(test_df)
     back_to_original = encoder.inverse_transform(transformed_data)
     test_utils.assert_frame_equal(back_to_original, test_df)
 
