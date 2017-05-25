@@ -81,6 +81,10 @@ Documentation
 `BroThon.readthedocs.org <https://BroThon.readthedocs.org/>`__
 
 
+Thanks
+------
+- The DummyEncoder is based on Tom Augspurger's great PyData Chicago 2016 `Talk <https://youtu.be/KLPtEBokqQ0>`__
+
 .. |kitware-logo| image:: https://www.kitware.com/img/small_logo_over.png
    :target: https://www.kitware.com
    :alt: Kitware Logo
