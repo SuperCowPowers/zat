@@ -104,7 +104,6 @@ class BroLogReader(file_tailer.FileTailer):
 
     def _parse_bro_header(self, bro_log):
         """Parse the Bro log header section.
-           TODO: Review parsing logic
 
             Format example:
                 #separator \x09
