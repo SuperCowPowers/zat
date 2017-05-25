@@ -8,7 +8,7 @@ To use Bro Python Utilities in a project::
 
 BroLog to Python
 ----------------
-See brothon/examples/bro_log_pprint.py for full code listing.
+See brothon/examples/bro_pprint.py for full code listing.
 
 .. code-block:: python
 
@@ -39,7 +39,7 @@ See brothon/examples/bro_log_pprint.py for full code listing.
 
 Creating a Pandas DataFrame
 ---------------------------
-See brothon/examples/bro_log_pandas.py for full code listing. Notice that it's one line of code to convert to a Pandas DataFrame.
+See brothon/examples/bro_to_pandas.py for full code listing. Notice that it's one line of code to convert to a Pandas DataFrame.
 
 .. code-block:: python
 
