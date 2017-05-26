@@ -105,7 +105,7 @@ def test():
          'D': [1, 2, 3, 4],
          'E': ['w', 'x', 'y', 'z'],
          'F': [1.1, 2.2, 3.3, 4.4],
-         'G': pd.to_datetime([0,1,2,3]),
+         'G': pd.to_datetime([0, 1, 2, 3]),
          'H': [True, False, False, True]
          }
     )
