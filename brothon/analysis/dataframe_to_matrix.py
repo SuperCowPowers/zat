@@ -47,6 +47,9 @@ class DataFrameToMatrix(object):
                 print('Changing column {:s} to category'.format(column))
                 df[column] = pd.Categorical(df[column])
 
+        # Remove any columns that aren't bool/int/float/category
+        df = df.select_dtypes(include=['bool', 'int', 'float', 'category'])
+
         # Now that categorical columns are setup call the dummy_encoder
         return self.dummy_encoder.fit_transform(df)
 
@@ -71,6 +74,9 @@ class DataFrameToMatrix(object):
             if df[column].dtype == 'object':
                 print('Changing column {:s} to category'.format(column))
                 df[column] = pd.Categorical(df[column])
+
+        # Remove any columns that aren't bool/int/float/category
+        df = df.select_dtypes(include=['bool', 'int', 'float', 'category'])
 
         # Now that categorical columns are setup call the dummy_encoder
         return self.dummy_encoder.transform(df)
@@ -97,7 +103,10 @@ def test():
          'B': pd.Categorical(['a', 'b', 'c', 'a'], ordered=False),
          'C': pd.Categorical(['a', 'b', 'z', 'a'], categories=['a', 'b', 'z', 'd']),
          'D': [1, 2, 3, 4],
-         'E': ['w', 'x', 'y', 'z']
+         'E': ['w', 'x', 'y', 'z'],
+         'F': [1.1, 2.2, 3.3, 4.4],
+         'G': pd.to_datetime([0,1,2,3]),
+         'H': [True, False, False, True]
          }
     )
     test_df2 = pd.DataFrame(
@@ -105,7 +114,9 @@ def test():
          'B': pd.Categorical(['a', 'b', 'd', 'a'], ordered=False),
          'C': pd.Categorical(['a', 'b', 'z', 'y'], categories=['a', 'b', 'z', 'd']),
          'D': [1, 2, 3, 4],
-         'E': ['w', 'x', 'z', 'foo']
+         'E': ['w', 'x', 'z', 'foo'],
+         'F': [1.1, 2.2, 3.3, 4.4],
+         'H': [True, False, False, False]
          }
     )
 

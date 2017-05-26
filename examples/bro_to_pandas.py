@@ -5,11 +5,7 @@ import sys
 import argparse
 
 # Third Party Imports
-try:
-    import pandas as pd
-except ImportError:
-    print('\nThis example needs pandas. Please do a $pip install pandas and rerun this example')
-    sys.exit(1)
+import pandas as pd
 
 # Local imports
 from brothon import bro_log_reader
