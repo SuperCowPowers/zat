@@ -93,6 +93,7 @@ if __name__ == '__main__':
         plt.show()
 
         # Now print out the details for each cluster
+        pd.set_option('display.width', 1000)
         for key, group in cluster_groups:
             print('Rows in Cluster: {:d}'.format(len(group)))
             print(group.head(), '\n')

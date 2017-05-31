@@ -37,7 +37,7 @@ See brothon/examples/bro_pprint.py for full code listing.
     'uid': 'CJsdG95nCNF1RXuN5'}
 
 
-Creating a Pandas DataFrame
+Bro to Pandas DataFrame
 ---------------------------
 See brothon/examples/bro_to_pandas.py for full code listing. Notice that it's one line of code to convert to a Pandas DataFrame.
 
@@ -66,6 +66,57 @@ See brothon/examples/bro_to_pandas.py for full code listing. Notice that it's on
         santiyesefi.com  192.168.84.10       1034                327         404     /mltools.js
          tudespacho.net  192.168.84.10       1033              12350         200  /32002245.html
          tudespacho.net  192.168.84.10       1033               5176         200      /98765.pdf
+
+
+Bro to Scikit-Learn
+-----------------------
+See brothon/examples/bro_to_scikit.py for full code listing, we've shortened the code listing here
+to demonstrate that it's literally just a few lines of code to get to Scikit-Learn.
+
+.. code-block:: python
+
+
+        # Create a bro reader on a given log file
+        reader = bro_log_reader.BroLogReader(args.bro_log)
+
+        # Create a Pandas dataframe from reader
+        bro_df = pd.DataFrame(reader.readrows())
+
+        # Use the Brothon DataframeToMatrix class (handles categorical data!)
+        to_matrix = dataframe_to_matrix.DataFrameToMatrix()
+        bro_matrix = to_matrix.fit_transform(bro_df)
+
+        # Now we're ready for scikit-learn!
+        kmeans = KMeans(n_clusters=5).fit_predict(bro_matrix)
+        pca = PCA(n_components=2).fit_transform(bro_matrix)
+
+**Example Output**
+
+::
+
+    Rows in Cluster: 42
+                               query  Z proto qtype_name         x         y  cluster
+    0                     guyspy.com  0   udp          A -0.356148 -0.111347        0
+    1                 www.guyspy.com  0   udp          A -0.488648 -0.068594        0
+    2   devrubn8mli40.cloudfront.net  0   udp          A -0.471554 -0.110367        0
+    3  d31qbv1cthcecs.cloudfront.net  0   udp          A -0.454148 -0.165611        0
+    4                crl.entrust.net  0   udp          A -0.414992 -0.103959        0
+
+    ...
+
+    Rows in Cluster: 4
+                query  Z proto qtype_name         x         y  cluster
+    57  j.maxmind.com  1   udp          A -0.488136 -0.230034        3
+    58  j.maxmind.com  1   udp          A -0.461758 -0.235828        3
+    59  j.maxmind.com  1   udp          A -0.408193 -0.179723        3
+    60  j.maxmind.com  1   udp          A -0.460889 -0.217559        3
+
+    Rows in Cluster: 4
+                                                    query  Z proto qtype_name         x         y  cluster
+    53  superlongcrazydnsqueryforoutlierdetectionj.max...  0   udp          A -0.554213 -0.206536        4
+    54  xyzsuperlongcrazydnsqueryforoutlierdetectionj....  0   udp          A -0.559984 -0.260327        4
+    55  abcsuperlongcrazydnsqueryforoutlierdetectionj....  0   udp          A -0.622886 -0.222030        4
+    56  qrssuperlongcrazydnsqueryforoutlierdetectionj....  0   udp          A -0.571959 -0.236560        4
 
 
 Bro Files Log to VirusTotal Query
