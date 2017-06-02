@@ -107,6 +107,7 @@ class DataFrameToMatrix(object):
     def _normalize_series(series):
         return (series - series.min()) / (series.max()-series.min())
 
+
 # Simple test of the functionality
 def test():
     """Test for DataFrameToMatrix Class"""
@@ -161,8 +162,8 @@ def test():
     to_matrix_norm = DataFrameToMatrix()
     norm_matrix = to_matrix_norm.fit_transform(test_df, normalize=True)
     print(norm_matrix)
-    assert(norm_matrix[:,0].min()==0)
-    assert(norm_matrix[:,0].max()==1)
+    assert(norm_matrix[:, 0].min() == 0)
+    assert(norm_matrix[:, 0].max() == 1)
 
     # Test serialization
     temp = NamedTemporaryFile(delete=False)
