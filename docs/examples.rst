@@ -374,73 +374,94 @@ Simply run this example script on your Bro IDS x509.log.
 
 
 
-Simple Outlier Detector
------------------------
-Here we're demonstrating a TOY outlier detection to show the use of the dataframe_cache
-class. The dataframe_cache allows us to stream data from Bro IDS into a 'time-windowed'
-dataframe. In this example we compute some simple statistics on that dataframe.
+Outlier Detection
+-----------------
+Here we're demonstrating outlier detection using the Isolated Forest algorithm. Once
+outliers are identified we then use clustering to group our outliers into organized
+segments that allow an analyst to 'skim' the output groups instead of looking at each row.
 
-- Every 5 seconds we run outlier detection
-- The dataframe contains a window of data (30 seconds in this example)
-
-See brothon/examples/simple_dns_outlier.py for full code listing (code simplified below)
+See brothon/examples/outlier_detection.py for full code listing (code simplified below)
 
 .. code-block:: python
 
-    from brothon import bro_log_reader, live_simulator
-    from brothon.analysis import dataframe_cache
-    ...
 
         # Create a Bro IDS log reader
-        print('Opening Data File: {:s}'.format(args.bro_log))
-        reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)
+        reader = bro_log_reader.BroLogReader(args.bro_log)
 
-        # Create a Dataframe Cache
-        df_cache = dataframe_cache.DataFrameCache(max_cache_time=30)  # 30 second cache
+        # Create a Pandas dataframe from reader
+        bro_df = pd.DataFrame(reader.readrows())
 
-        # Add each new row into the cache
-        time_delta = 5
-        timer = time.time() + time_delta
-        for row in reader.readrows():
-            df_cache.add_row(row)
+        # Using Pandas we can easily and efficiently compute additional data metrics
+        bro_df['query_length'] = bro_df['query'].str.len()
 
-            # Every 5 seconds grab the dataframe from the cache
-            if time.time() > timer:
-                timer = time.time() + time_delta
+        # Use the BroThon DataframeToMatrix class
+        features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name', 'rcode_name', 'query_length']
+        to_matrix = dataframe_to_matrix.DataFrameToMatrix()
+        bro_matrix = to_matrix.fit_transform(bro_df[features])
 
-                # Get the windowed dataframe (30 second window)
-                my_df = df_cache.dataframe()
+        # Train/fit and Predict anomalous instances using the Isolation Forest model
+        odd_clf = IsolationForest(contamination=0.35) # Marking 35% as odd
+        odd_clf.fit(bro_matrix)
 
-                # Add query length and entropy
-                my_df['query_length'] = my_df['query'].str.len()
-                my_df['query_entropy'] = my_df['query'].apply(lambda x: entropy(x))
+        # Add clustering to our outliers
+        bro_df['cluster'] = KMeans(n_clusters=4).fit_predict(bro_matrix)
 
-                # Print out the range of the daterange and some stats
-                print('DataFrame TimeRange: {:s} --> {:s}'.format(str(my_df['ts'].min()), str(my_df['ts'].max())))
+        # Now we create a new dataframe using the prediction from our classifier
+        odd_df = bro_df[features+['cluster']][odd_clf.predict(bro_matrix) == -1]
 
-                # Compute Outliers
-                # Note: This is a TOY example, assuming a gaussian distribution which it isn't, etc..
-                my_outliers = my_df[outliers(my_df['query_length'])]
-                if not my_outliers.empty:
-                    print('<<< Outliers Detected! >>>')
-                    print(my_outliers[['query','query_length', 'query_entropy']])
+        # Now group the dataframe by cluster
+        cluster_groups = bro_df[features+['cluster']].groupby('cluster')
+
+        # Now print out the details for each cluster
+        print('<<< Outliers Detected! >>>')
+        for key, group in cluster_groups:
+            print('\nCluster {:d}: {:d} observations'.format(key, len(group)))
+            print(group.head())
 
 
 **Example Output:**
-Run this example script on your Bro IDS dns.log. Here we ran the outlier script
-and then we did a $ ping <very long hostname> a couple of times. We
-can see that those dns queries show up as Outliers.
+Run this example script on your Bro IDS dns.log...
 
 ::
 
-    $ python simple_dns_outlier.py -f /usr/local/var/spool/bro/dns.log
-    Opening Data File: /usr/local/var/spool/bro/dns.log
-    Successfully monitoring /usr/local/var/spool/bro/dns.log...
-    DataFrame TimeRange: 2017-05-23 16:43:12.155247 --> 2017-05-23 16:43:57.201749
-    DataFrame TimeRange: 2017-05-23 16:43:27.734151 --> 2017-05-23 16:44:02.696416
-    DataFrame TimeRange: 2017-05-23 16:43:32.226345 --> 2017-05-23 16:44:02.696416
-    DataFrame TimeRange: 2017-05-23 16:43:32.226345 --> 2017-05-23 16:44:18.608977
     <<< Outliers Detected! >>>
-                                                   query  query_length  query_entropy
-    0  abcxxyzifaoijpoqjefpqrgqhergphqeprghqperhgpqhe...            68       3.797085
-    8  xyaabcxxyzifaoijpoqjefpqrgqhergphqeprghqperhgp...            71       3.850374
+
+    Cluster 0: 4 observations
+        Z rejected proto                                              query qclass_name qtype_name rcode_name  query_length  cluster
+    53  0    False   udp  superlongcrazydnsqueryforoutlierdetectionj.max...  C_INTERNET          A    NOERROR            54        0
+    54  0    False   udp  xyzsuperlongcrazydnsqueryforoutlierdetectionj....  C_INTERNET          A    NOERROR            57        0
+    55  0    False   udp  abcsuperlongcrazydnsqueryforoutlierdetectionj....  C_INTERNET          A    NOERROR            57        0
+    56  0    False   udp  qrssuperlongcrazydnsqueryforoutlierdetectionj....  C_INTERNET          A    NOERROR            57        0
+
+    Cluster 1: 11 observations
+        Z rejected proto query qclass_name qtype_name rcode_name  query_length  cluster
+    39  0    False   udp     -           -          -          -             1        1
+    40  0    False   udp     -           -          -          -             1        1
+    41  0    False   udp     -           -          -          -             1        1
+    42  0    False   udp     -           -          -          -             1        1
+    43  0    False   udp     -           -          -          -             1        1
+
+    Cluster 2: 6 observations
+        Z rejected proto          query qclass_name qtype_name rcode_name  query_length  cluster
+    61  0    False   tcp  j.maxmind.com  C_INTERNET          A    NOERROR            13        2
+    62  0    False   tcp  j.maxmind.com  C_INTERNET          A    NOERROR            13        2
+    63  0    False   tcp  j.maxmind.com  C_INTERNET          A    NOERROR            13        2
+    64  0    False   tcp  j.maxmind.com  C_INTERNET          A    NOERROR            13        2
+    65  0    False   tcp  j.maxmind.com  C_INTERNET          A    NOERROR            13        2
+
+    Cluster 3: 4 observations
+        Z rejected proto          query qclass_name qtype_name rcode_name  query_length  cluster
+    57  1    False   udp  j.maxmind.com  C_INTERNET          A    NOERROR            13        3
+    58  1    False   udp  j.maxmind.com  C_INTERNET          A    NOERROR            13        3
+    59  1    False   udp  j.maxmind.com  C_INTERNET          A    NOERROR            13        3
+    60  1    False   udp  j.maxmind.com  C_INTERNET          A    NOERROR            13        3
+
+
+Streaming Outlier Detector
+--------------------------
+Here we're demonstrating a streaming outlier detection to show the use of the dataframe_cache
+class. The dataframe_cache allows us to stream data from Bro IDS into a 'time-windowed'
+dataframe. In this example we blah blah..
+
+- Every 5 seconds we run outlier detection
+- The dataframe contains a window of data (30 seconds in this example)

@@ -47,6 +47,7 @@ class DataFrameToMatrix(object):
         # Normalize any numeric columns if normalize specified
         if self.normalize:
             for column in list(_df.select_dtypes(include=[np.number]).columns.values):
+                print('Normalizing column {:s}...'.format(column))
                 _df[column], _min, _max = self._normalize_series(_df[column])
                 self.norm_map[column] = (_min, _max)
 
@@ -80,6 +81,7 @@ class DataFrameToMatrix(object):
         # Normalize any numeric columns if normalize specified
         if self.normalize:
             for column in list(_df.select_dtypes(include=[np.number]).columns.values):
+                print('Normalizing column {:s}...'.format(column))
                 smin, smax = self.norm_map[column]
                 _df[column] = (_df[column] - smin) / (smax - smin)
 
@@ -98,7 +100,7 @@ class DataFrameToMatrix(object):
             if df[column].nunique() < 20:
 
                 # Convert the column
-                print('Changing column {:s} to category'.format(column))
+                print('Changing column {:s} to category...'.format(column))
                 df[column] = pd.Categorical(df[column])
 
     @staticmethod
