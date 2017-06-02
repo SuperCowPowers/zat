@@ -19,93 +19,93 @@ class DataFrameToMatrix(object):
         """Initialize the DataFrameToMatrix class"""
         self.column_names = None
         self.cat_columns = None
-        self.exclude_columns = None
-        self.normalize = False
+        self.normalize = True
+        self.norm_map = {}
         self.dummy_encoder = dummy_encoder.DummyEncoder()
 
-    def fit_transform(self, input_df, exclude_columns=None, normalize=False):
+    def fit_transform(self, input_df, normalize=True):
         """Convert the dataframe to a matrix (numpy ndarray)
         Args:
-            df (dataframe): The dataframe to convert
-            exclude_columns (list): A list of column names to exclude (default=None)
-            normalize (bool): Boolean flag to normalize numeric columns (default=False)
+            input_df (dataframe): The dataframe to convert
+            normalize (bool): Boolean flag to normalize numeric columns (default=True)
         """
+        # Shallow copy the dataframe (we'll be making changes to some columns)
+        _df = input_df.copy(deep=False)
+
+        # Set class variables that will be used both now and later for transform
         self.normalize = normalize
 
-        # Do a shallow copy the dataframe and exclude any columns not wanted
-        self.exclude_columns = exclude_columns or []
-        df = input_df.drop(self.exclude_columns, 1)
+        # Convert columns that are probably categorical
+        self.convert_to_categorical(_df)
 
         # First check for columns that are explicitly categorical
-        self.cat_columns = df.select_dtypes(include=['category']).columns.tolist()
-
-        # Next check for columns that might be categorical
-        might_be_categorical = df.select_dtypes(include=[object]).columns.tolist()
-        for column in might_be_categorical:
-            if self._probably_categorical(df[column]):
-
-                # Add the category columns
-                self.cat_columns.append(column)
-
-                # Convert the column
-                print('Changing column {:s} to category'.format(column))
-                df[column] = pd.Categorical(df[column])
+        self.cat_columns = _df.select_dtypes(include=['category']).columns.tolist()
 
         # Remove any columns that aren't bool/int/float/category
-        df = df.select_dtypes(include=['bool', 'int', 'float', 'category'])
+        _df = _df.select_dtypes(include=['bool', 'int', 'float', 'category'])
 
         # Normalize any numeric columns if normalize specified
         if self.normalize:
-            for column in list(input_df.select_dtypes(include=[np.number]).columns.values):
-                df[column] = self._normalize_series(df[column])
+            for column in list(_df.select_dtypes(include=[np.number]).columns.values):
+                _df[column], _min, _max = self._normalize_series(_df[column])
+                self.norm_map[column] = (_min, _max)
 
         # Now that categorical columns are setup call the dummy_encoder
-        return self.dummy_encoder.fit_transform(df)
+        return self.dummy_encoder.fit_transform(_df)
 
     def transform(self, input_df):
         """Convert the dataframe to a matrix (numpy ndarray)
         Args:
-            df (dataframe): The dataframe to convert
-            exclude_columns (list): A list of column names to exclude
+            input_df (dataframe): The dataframe to convert
         """
 
-        # Do a shallow copy the dataframe and exclude any columns not wanted
-        df = input_df.drop(self.exclude_columns)
+        # Shallow copy the dataframe (we'll be making changes to some columns)
+        _df = input_df.copy(deep=False)
 
         # Convert all columns that are/should be categorical
         for column in self.cat_columns:
 
             # Sanity check
-            if column not in df:
+            if column not in _df:
                 raise RuntimeError('Required column {:s} not found'.format(column))
 
             # If the column isn't already a category then change it
-            if df[column].dtype == 'object':
+            if _df[column].dtype == 'object':
                 print('Changing column {:s} to category'.format(column))
-                df[column] = pd.Categorical(df[column])
+                _df[column] = pd.Categorical(_df[column])
 
         # Remove any columns that aren't bool/int/float/category
-        df = df.select_dtypes(include=['bool', 'int', 'float', 'category'])
+        _df = _df.select_dtypes(include=['bool', 'int', 'float', 'category'])
 
         # Normalize any numeric columns if normalize specified
         if self.normalize:
-            for column in list(input_df.select_dtypes(include=[np.number]).columns.values):
-                df[column] = self._normalize_series(df[column])
+            for column in list(_df.select_dtypes(include=[np.number]).columns.values):
+                smin, smax = self.norm_map[column]
+                _df[column] = (_df[column] - smin) / (smax - smin)
 
         # Now that categorical columns are setup call the dummy_encoder
-        return self.dummy_encoder.transform(df)
+        return self.dummy_encoder.transform(_df)
 
     @staticmethod
-    def _probably_categorical(series):
-        """Run a heuristic on the series to determine whether it contains categorical values
+    def convert_to_categorical(df):
+        """Run a heuristic on the columns of the dataframe to determine whether it contains categorical values
+           if the heuristic decides it's categorical then the type of the column is changed
         Args:
-            series (dataframe series): The series to check for categorical data
+            df (dataframe): The dataframe to check for categorical data
         """
-        return series.nunique() < 10
+        might_be_categorical = df.select_dtypes(include=[object]).columns.tolist()
+        for column in might_be_categorical:
+            if df[column].nunique() < 20:
+
+                # Convert the column
+                print('Changing column {:s} to category'.format(column))
+                df[column] = pd.Categorical(df[column])
 
     @staticmethod
     def _normalize_series(series):
-        return (series - series.min()) / (series.max()-series.min())
+        smin = series.min()
+        smax = series.max()
+        return (series - smin) / (smax - smin), smin, smax
 
 
 # Simple test of the functionality
@@ -131,12 +131,15 @@ def test():
         {'A': pd.Categorical(['a', 'b', 'b', 'a'], ordered=True),
          'B': pd.Categorical(['a', 'b', 'd', 'a'], ordered=False),
          'C': pd.Categorical(['a', 'b', 'z', 'y'], categories=['a', 'b', 'z', 'd']),
-         'D': [1, 2, 3, 4],
+         'D': [1, 2, 3, 7],
          'E': ['w', 'x', 'z', 'foo'],
          'F': [1.1, 2.2, 3.3, 4.4],
          'H': [True, False, False, False]
          }
     )
+
+    # Copy the test_df for testing later
+    copy_test_df = test_df.copy(deep=True)
 
     # Test the transformation from dataframe to numpy ndarray and back again
     to_matrix = DataFrameToMatrix()
@@ -146,6 +149,9 @@ def test():
     # These two matrices should be the same
     np_test_utils.assert_equal(matrix, matrix_test)
 
+    # Assert that the dataframe we passed in didn't change
+    copy_test_df.equals(test_df)
+
     # Test that the conversion gives us the same columns on a df with different category values
     matrix2 = to_matrix.transform(test_df2)
     assert matrix.shape == matrix2.shape
@@ -154,16 +160,17 @@ def test():
     np_test_utils.assert_equal(matrix[0], matrix2[0])
     np_test_utils.assert_equal(matrix[1], matrix2[1])
 
-    # Test exclude_columns option
-    to_matrix_drop = DataFrameToMatrix()
-    to_matrix_drop.fit_transform(test_df, exclude_columns=['F'])
-
     # Test normalize = True
     to_matrix_norm = DataFrameToMatrix()
     norm_matrix = to_matrix_norm.fit_transform(test_df, normalize=True)
     print(norm_matrix)
     assert(norm_matrix[:, 0].min() == 0)
     assert(norm_matrix[:, 0].max() == 1)
+
+    # Make sure normalize 'does the right thing' when doing transform
+    norm_matrix2 = to_matrix_norm.transform(test_df2)
+    assert(norm_matrix2[:, 0].min() == 0)
+    assert(norm_matrix2[:, 0].max() == 2)    # Normalization is based on FIT range
 
     # Test serialization
     temp = NamedTemporaryFile(delete=False)
