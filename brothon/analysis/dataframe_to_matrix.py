@@ -3,6 +3,7 @@ from __future__ import print_function
 
 # Third Party
 import pandas as pd
+import numpy as np
 
 # Local imports
 from brothon.analysis import dummy_encoder
@@ -19,18 +20,21 @@ class DataFrameToMatrix(object):
         self.column_names = None
         self.cat_columns = None
         self.exclude_columns = None
+        self.normalize = False
         self.dummy_encoder = dummy_encoder.DummyEncoder()
 
-    def fit_transform(self, input_df, exclude_columns=None):
+    def fit_transform(self, input_df, exclude_columns=None, normalize=False):
         """Convert the dataframe to a matrix (numpy ndarray)
         Args:
             df (dataframe): The dataframe to convert
-            exclude_columns (list): A list of column names to exclude
+            exclude_columns (list): A list of column names to exclude (default=None)
+            normalize (bool): Boolean flag to normalize numeric columns (default=False)
         """
+        self.normalize = normalize
 
         # Do a shallow copy the dataframe and exclude any columns not wanted
         self.exclude_columns = exclude_columns or []
-        df = input_df.drop(self.exclude_columns)
+        df = input_df.drop(self.exclude_columns, 1)
 
         # First check for columns that are explicitly categorical
         self.cat_columns = df.select_dtypes(include=['category']).columns.tolist()
@@ -49,6 +53,11 @@ class DataFrameToMatrix(object):
 
         # Remove any columns that aren't bool/int/float/category
         df = df.select_dtypes(include=['bool', 'int', 'float', 'category'])
+
+        # Normalize any numeric columns if normalize specified
+        if self.normalize:
+            for column in list(input_df.select_dtypes(include=[np.number]).columns.values):
+                df[column] = self._normalize_series(df[column])
 
         # Now that categorical columns are setup call the dummy_encoder
         return self.dummy_encoder.fit_transform(df)
@@ -78,6 +87,11 @@ class DataFrameToMatrix(object):
         # Remove any columns that aren't bool/int/float/category
         df = df.select_dtypes(include=['bool', 'int', 'float', 'category'])
 
+        # Normalize any numeric columns if normalize specified
+        if self.normalize:
+            for column in list(input_df.select_dtypes(include=[np.number]).columns.values):
+                df[column] = self._normalize_series(df[column])
+
         # Now that categorical columns are setup call the dummy_encoder
         return self.dummy_encoder.transform(df)
 
@@ -89,6 +103,9 @@ class DataFrameToMatrix(object):
         """
         return series.nunique() < 10
 
+    @staticmethod
+    def _normalize_series(series):
+        return (series - series.min()) / (series.max()-series.min())
 
 # Simple test of the functionality
 def test():
@@ -135,6 +152,17 @@ def test():
     # First two ROWS should be the same
     np_test_utils.assert_equal(matrix[0], matrix2[0])
     np_test_utils.assert_equal(matrix[1], matrix2[1])
+
+    # Test exclude_columns option
+    to_matrix_drop = DataFrameToMatrix()
+    to_matrix_drop.fit_transform(test_df, exclude_columns=['F'])
+
+    # Test normalize = True
+    to_matrix_norm = DataFrameToMatrix()
+    norm_matrix = to_matrix_norm.fit_transform(test_df, normalize=True)
+    print(norm_matrix)
+    assert(norm_matrix[:,0].min()==0)
+    assert(norm_matrix[:,0].max()==1)
 
     # Test serialization
     temp = NamedTemporaryFile(delete=False)

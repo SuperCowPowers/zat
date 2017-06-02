@@ -51,7 +51,7 @@ Easy to Use
 More Examples
 -------------
 - Easy ingestion of any Bro Log into Python (dynamic tailing and log rotations are handled)
-- Bro Logs to Pandas Dataframes (and then dataframes to Machine Learning :)
+- Bro Logs to Pandas Dataframes and Scikit-Learn
 - Dynamically monitor files.log and make VirusTotal Queries
 - Dynamically monitor http.log and show 'uncommon' User Agents
 - Running Yara Signatures on Extracted Files
