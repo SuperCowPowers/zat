@@ -56,7 +56,7 @@ More Examples
 - Dynamically monitor http.log and show 'uncommon' User Agents
 - Running Yara Signatures on Extracted Files
 - Checking x509 Certificates
-- Simple Outlier Detection
+- Outlier Detection
 - See `BroThon Examples <https://brothon.readthedocs.io/en/latest/examples.html>`__ for more details.
 
 Analysis Notebooks
