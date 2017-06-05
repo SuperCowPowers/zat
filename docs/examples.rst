@@ -113,10 +113,10 @@ to demonstrate that it's literally just a few lines of code to get to Scikit-Lea
 
     Rows in Cluster: 4
                                                     query  Z proto qtype_name         x         y  cluster
-    53  superlongcrazydnsqueryforoutlierdetectionj.max...  0   udp          A -0.554213 -0.206536        4
-    54  xyzsuperlongcrazydnsqueryforoutlierdetectionj....  0   udp          A -0.559984 -0.260327        4
-    55  abcsuperlongcrazydnsqueryforoutlierdetectionj....  0   udp          A -0.622886 -0.222030        4
-    56  qrssuperlongcrazydnsqueryforoutlierdetectionj....  0   udp          A -0.571959 -0.236560        4
+    53  superlongcrazydnsqueryforanomalydetectionj.max...  0   udp          A -0.554213 -0.206536        4
+    54  xyzsuperlongcrazydnsqueryforanomalydetectionj....  0   udp          A -0.559984 -0.260327        4
+    55  abcsuperlongcrazydnsqueryforanomalydetectionj....  0   udp          A -0.622886 -0.222030        4
+    56  qrssuperlongcrazydnsqueryforanomalydetectionj....  0   udp          A -0.571959 -0.236560        4
 
 
 Bro Files Log to VirusTotal Query
@@ -374,13 +374,13 @@ Simply run this example script on your Bro IDS x509.log.
 
 
 
-Outlier Detection
+Anomaly Detection
 -----------------
-Here we're demonstrating outlier detection using the Isolated Forest algorithm. Once
-outliers are identified we then use clustering to group our outliers into organized
+Here we're demonstrating anomaly detection using the Isolated Forest algorithm. Once
+anomalies are identified we then use clustering to group our anomalies into organized
 segments that allow an analyst to 'skim' the output groups instead of looking at each row.
 
-See brothon/examples/outlier_detection.py for full code listing (code simplified below)
+See brothon/examples/anomaly_detection.py for full code listing (code simplified below)
 
 .. code-block:: python
 
@@ -403,7 +403,7 @@ See brothon/examples/outlier_detection.py for full code listing (code simplified
         odd_clf = IsolationForest(contamination=0.35) # Marking 35% as odd
         odd_clf.fit(bro_matrix)
 
-        # Add clustering to our outliers
+        # Add clustering to our anomalies
         bro_df['cluster'] = KMeans(n_clusters=4).fit_predict(bro_matrix)
 
         # Now we create a new dataframe using the prediction from our classifier
@@ -428,10 +428,10 @@ Run this example script on your Bro IDS dns.log...
 
     Cluster 0: 4 observations
         Z rejected proto                                              query qclass_name qtype_name rcode_name  query_length  cluster
-    53  0    False   udp  superlongcrazydnsqueryforoutlierdetectionj.max...  C_INTERNET          A    NOERROR            54        0
-    54  0    False   udp  xyzsuperlongcrazydnsqueryforoutlierdetectionj....  C_INTERNET          A    NOERROR            57        0
-    55  0    False   udp  abcsuperlongcrazydnsqueryforoutlierdetectionj....  C_INTERNET          A    NOERROR            57        0
-    56  0    False   udp  qrssuperlongcrazydnsqueryforoutlierdetectionj....  C_INTERNET          A    NOERROR            57        0
+    53  0    False   udp  superlongcrazydnsqueryforanomalydetectionj.max...  C_INTERNET          A    NOERROR            54        0
+    54  0    False   udp  xyzsuperlongcrazydnsqueryforanomalydetectionj....  C_INTERNET          A    NOERROR            57        0
+    55  0    False   udp  abcsuperlongcrazydnsqueryforanomalydetectionj....  C_INTERNET          A    NOERROR            57        0
+    56  0    False   udp  qrssuperlongcrazydnsqueryforanomalydetectionj....  C_INTERNET          A    NOERROR            57        0
 
     Cluster 1: 11 observations
         Z rejected proto query qclass_name qtype_name rcode_name  query_length  cluster
@@ -459,9 +459,9 @@ Run this example script on your Bro IDS dns.log...
 
 Streaming Outlier Detector
 --------------------------
-Here we're demonstrating a streaming outlier detection to show the use of the dataframe_cache
+Here we're demonstrating a streaming anomaly detection to show the use of the dataframe_cache
 class. The dataframe_cache allows us to stream data from Bro IDS into a 'time-windowed'
 dataframe. In this example we blah blah..
 
-- Every 5 seconds we run outlier detection
+- Every 5 seconds we run anomaly detection
 - The dataframe contains a window of data (30 seconds in this example)
