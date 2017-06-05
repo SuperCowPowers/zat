@@ -180,11 +180,10 @@ def test():
 
     # Test div by zero in normalize
     test_df3 = test_df2.copy()
-    test_df3['D'] = [1,1,1,1]
+    test_df3['D'] = [1, 1, 1, 1]
     norm_matrix3 = to_matrix_norm.fit_transform(test_df3)
     assert(norm_matrix3[:, 0].min() == 1)
     assert(norm_matrix3[:, 0].max() == 1)
-
 
     # Test serialization
     temp = NamedTemporaryFile(delete=False)
