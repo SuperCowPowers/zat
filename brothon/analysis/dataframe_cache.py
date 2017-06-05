@@ -12,7 +12,7 @@ class DataFrameCache(object):
             max_cache_size (int): Maximum size of dataframe cache (default=10000)
             max_cache_time (int): Time to keep rows in cache (default=60 seconds)
     """
-    def __init__(self, max_cache_size=10000, max_cache_time=60):
+    def __init__(self, max_cache_size=100000, max_cache_time=60):
         """Initialize the DataFrameCache class"""
         self.max_size = max_cache_size
         self.max_time = max_cache_time
