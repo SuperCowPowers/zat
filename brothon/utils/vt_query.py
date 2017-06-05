@@ -40,7 +40,7 @@ class VTQuery(object):
         # Create query cache
         self.query_cache = cache.Cache(max_size=max_cache_size, timeout=max_cache_time*60)  # Convert to Seconds
 
-    def query_file(self, file_sha):
+    def query_file(self, file_sha, verbose=False):
         """Query the VirusTotal Service
             Args:
                file_sha (str): The file sha1 or sha256 hash
@@ -53,17 +53,17 @@ class VTQuery(object):
             return {'file_sha': file_sha, 'malformed': True}
 
         # Call and return the internal query method
-        return self._query('file', file_sha)
+        return self._query('file', file_sha, verbose)
 
-    def query_url(self, url):
+    def query_url(self, url, verbose=False):
         """Query the VirusTotal Service
             Args:
                url (str): The domain/url to be queried
         """
         # Call and return the internal query method
-        return self._query('url', url)
+        return self._query('url', url, verbose)
 
-    def _query(self, query_type, query_str):
+    def _query(self, query_type, query_str, verbose=False):
         """Internal query method for the VirusTotal Service
             Args:
                query_type(str): The type of query (either 'file' or 'url')
@@ -72,7 +72,8 @@ class VTQuery(object):
         # First check query cache
         cached = self.query_cache.get(query_str)
         if cached:
-            print('Returning Cached VT Query Results')
+            if verbose:
+                print('Returning Cached VT Query Results')
             return cached
 
         # Not in cache so make the actual query
@@ -90,7 +91,8 @@ class VTQuery(object):
             error_msg = 'VirusTotal no valid response, typically this means you are past your quota'
             print(error_msg)
             if self.throttle:
-                print('Throttling and trying again...')
+                if verbose:
+                    print('Throttling and trying again...')
                 time.sleep(30)
                 return self._query(query_type, query_str)
 
