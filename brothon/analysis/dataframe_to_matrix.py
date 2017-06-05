@@ -107,6 +107,10 @@ class DataFrameToMatrix(object):
     def _normalize_series(series):
         smin = series.min()
         smax = series.max()
+        if smax - smin == 0:
+            print('Cannot normalize series (div by 0) so not normalizing...')
+            smin = 0
+            smax = 1
         return (series - smin) / (smax - smin), smin, smax
 
 
