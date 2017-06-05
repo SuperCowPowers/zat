@@ -8,7 +8,7 @@ To use Bro Python Utilities in a project::
 
 BroLog to Python
 ----------------
-See brothon/examples/bro_log_pprint.py for full code listing.
+See brothon/examples/bro_pprint.py for full code listing.
 
 .. code-block:: python
 
@@ -30,16 +30,16 @@ See brothon/examples/bro_log_pprint.py for full code listing.
     'id.orig_p': 68,
     'id.resp_h': '192.168.84.1',
     'id.resp_p': 67,
-    'lease_time': 4294967000.0,
+    'lease_time': datetime.timedelta(49710, 23000),
     'mac': '00:20:18:eb:ca:54',
     'trans_id': 495764278,
     'ts': datetime.datetime(2012, 7, 20, 3, 14, 12, 219654),
     'uid': 'CJsdG95nCNF1RXuN5'}
 
 
-Creating a Pandas DataFrame
+Bro to Pandas DataFrame
 ---------------------------
-See brothon/examples/bro_log_pandas.py for full code listing. Notice that it's one line of code to convert to a Pandas DataFrame.
+See brothon/examples/bro_to_pandas.py for full code listing. Notice that it's one line of code to convert to a Pandas DataFrame.
 
 .. code-block:: python
 
@@ -66,6 +66,57 @@ See brothon/examples/bro_log_pandas.py for full code listing. Notice that it's o
         santiyesefi.com  192.168.84.10       1034                327         404     /mltools.js
          tudespacho.net  192.168.84.10       1033              12350         200  /32002245.html
          tudespacho.net  192.168.84.10       1033               5176         200      /98765.pdf
+
+
+Bro to Scikit-Learn
+-----------------------
+See brothon/examples/bro_to_scikit.py for full code listing, we've shortened the code listing here
+to demonstrate that it's literally just a few lines of code to get to Scikit-Learn.
+
+.. code-block:: python
+
+
+        # Create a bro reader on a given log file
+        reader = bro_log_reader.BroLogReader(args.bro_log)
+
+        # Create a Pandas dataframe from reader
+        bro_df = pd.DataFrame(reader.readrows())
+
+        # Use the Brothon DataframeToMatrix class (handles categorical data!)
+        to_matrix = dataframe_to_matrix.DataFrameToMatrix()
+        bro_matrix = to_matrix.fit_transform(bro_df)
+
+        # Now we're ready for scikit-learn!
+        kmeans = KMeans(n_clusters=5).fit_predict(bro_matrix)
+        pca = PCA(n_components=2).fit_transform(bro_matrix)
+
+**Example Output**
+
+::
+
+    Rows in Cluster: 42
+                               query  Z proto qtype_name         x         y  cluster
+    0                     guyspy.com  0   udp          A -0.356148 -0.111347        0
+    1                 www.guyspy.com  0   udp          A -0.488648 -0.068594        0
+    2   devrubn8mli40.cloudfront.net  0   udp          A -0.471554 -0.110367        0
+    3  d31qbv1cthcecs.cloudfront.net  0   udp          A -0.454148 -0.165611        0
+    4                crl.entrust.net  0   udp          A -0.414992 -0.103959        0
+
+    ...
+
+    Rows in Cluster: 4
+                query  Z proto qtype_name         x         y  cluster
+    57  j.maxmind.com  1   udp          A -0.488136 -0.230034        3
+    58  j.maxmind.com  1   udp          A -0.461758 -0.235828        3
+    59  j.maxmind.com  1   udp          A -0.408193 -0.179723        3
+    60  j.maxmind.com  1   udp          A -0.460889 -0.217559        3
+
+    Rows in Cluster: 4
+                                                    query  Z proto qtype_name         x         y  cluster
+    53  superlongcrazydnsqueryforoutlierdetectionj.max...  0   udp          A -0.554213 -0.206536        4
+    54  xyzsuperlongcrazydnsqueryforoutlierdetectionj....  0   udp          A -0.559984 -0.260327        4
+    55  abcsuperlongcrazydnsqueryforoutlierdetectionj....  0   udp          A -0.622886 -0.222030        4
+    56  qrssuperlongcrazydnsqueryforoutlierdetectionj....  0   udp          A -0.571959 -0.236560        4
 
 
 Bro Files Log to VirusTotal Query
@@ -322,3 +373,95 @@ Simply run this example script on your Bro IDS x509.log.
      'url': 'http://paypal.migems.com/'}
 
 
+
+Outlier Detection
+-----------------
+Here we're demonstrating outlier detection using the Isolated Forest algorithm. Once
+outliers are identified we then use clustering to group our outliers into organized
+segments that allow an analyst to 'skim' the output groups instead of looking at each row.
+
+See brothon/examples/outlier_detection.py for full code listing (code simplified below)
+
+.. code-block:: python
+
+
+        # Create a Bro IDS log reader
+        reader = bro_log_reader.BroLogReader(args.bro_log)
+
+        # Create a Pandas dataframe from reader
+        bro_df = pd.DataFrame(reader.readrows())
+
+        # Using Pandas we can easily and efficiently compute additional data metrics
+        bro_df['query_length'] = bro_df['query'].str.len()
+
+        # Use the BroThon DataframeToMatrix class
+        features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name', 'rcode_name', 'query_length']
+        to_matrix = dataframe_to_matrix.DataFrameToMatrix()
+        bro_matrix = to_matrix.fit_transform(bro_df[features])
+
+        # Train/fit and Predict anomalous instances using the Isolation Forest model
+        odd_clf = IsolationForest(contamination=0.35) # Marking 35% as odd
+        odd_clf.fit(bro_matrix)
+
+        # Add clustering to our outliers
+        bro_df['cluster'] = KMeans(n_clusters=4).fit_predict(bro_matrix)
+
+        # Now we create a new dataframe using the prediction from our classifier
+        odd_df = bro_df[features+['cluster']][odd_clf.predict(bro_matrix) == -1]
+
+        # Now group the dataframe by cluster
+        cluster_groups = bro_df[features+['cluster']].groupby('cluster')
+
+        # Now print out the details for each cluster
+        print('<<< Outliers Detected! >>>')
+        for key, group in cluster_groups:
+            print('\nCluster {:d}: {:d} observations'.format(key, len(group)))
+            print(group.head())
+
+
+**Example Output:**
+Run this example script on your Bro IDS dns.log...
+
+::
+
+    <<< Outliers Detected! >>>
+
+    Cluster 0: 4 observations
+        Z rejected proto                                              query qclass_name qtype_name rcode_name  query_length  cluster
+    53  0    False   udp  superlongcrazydnsqueryforoutlierdetectionj.max...  C_INTERNET          A    NOERROR            54        0
+    54  0    False   udp  xyzsuperlongcrazydnsqueryforoutlierdetectionj....  C_INTERNET          A    NOERROR            57        0
+    55  0    False   udp  abcsuperlongcrazydnsqueryforoutlierdetectionj....  C_INTERNET          A    NOERROR            57        0
+    56  0    False   udp  qrssuperlongcrazydnsqueryforoutlierdetectionj....  C_INTERNET          A    NOERROR            57        0
+
+    Cluster 1: 11 observations
+        Z rejected proto query qclass_name qtype_name rcode_name  query_length  cluster
+    39  0    False   udp     -           -          -          -             1        1
+    40  0    False   udp     -           -          -          -             1        1
+    41  0    False   udp     -           -          -          -             1        1
+    42  0    False   udp     -           -          -          -             1        1
+    43  0    False   udp     -           -          -          -             1        1
+
+    Cluster 2: 6 observations
+        Z rejected proto          query qclass_name qtype_name rcode_name  query_length  cluster
+    61  0    False   tcp  j.maxmind.com  C_INTERNET          A    NOERROR            13        2
+    62  0    False   tcp  j.maxmind.com  C_INTERNET          A    NOERROR            13        2
+    63  0    False   tcp  j.maxmind.com  C_INTERNET          A    NOERROR            13        2
+    64  0    False   tcp  j.maxmind.com  C_INTERNET          A    NOERROR            13        2
+    65  0    False   tcp  j.maxmind.com  C_INTERNET          A    NOERROR            13        2
+
+    Cluster 3: 4 observations
+        Z rejected proto          query qclass_name qtype_name rcode_name  query_length  cluster
+    57  1    False   udp  j.maxmind.com  C_INTERNET          A    NOERROR            13        3
+    58  1    False   udp  j.maxmind.com  C_INTERNET          A    NOERROR            13        3
+    59  1    False   udp  j.maxmind.com  C_INTERNET          A    NOERROR            13        3
+    60  1    False   udp  j.maxmind.com  C_INTERNET          A    NOERROR            13        3
+
+
+Streaming Outlier Detector
+--------------------------
+Here we're demonstrating a streaming outlier detection to show the use of the dataframe_cache
+class. The dataframe_cache allows us to stream data from Bro IDS into a 'time-windowed'
+dataframe. In this example we blah blah..
+
+- Every 5 seconds we run outlier detection
+- The dataframe contains a window of data (30 seconds in this example)

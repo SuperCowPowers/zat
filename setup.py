@@ -16,12 +16,9 @@ email = package.__email__
 
 
 # Data and Example Files
-def get_data_and_example_files():
-    data_files = [(os.path.join('.', d), [os.path.join(d, f) for f in files])
-                  for d, _, files in os.walk('data')]
-    example_files = [(os.path.join('.', d), [os.path.join(d, f) for f in files])
-                     for d, _, files in os.walk('examples')]
-    return data_files + example_files
+def get_files(dir_name):
+    """Simple directory walker"""
+    return [(os.path.join('.', d), [os.path.join(d, f) for f in files]) for d, _, files in os.walk(dir_name)]
 
 
 setup(
@@ -34,14 +31,16 @@ setup(
     url='https://github.com/kitware/BroThon',
     packages=find_packages(),
     include_package_data=True,
-    data_files=get_data_and_example_files(),
+    data_files=get_files('data') + get_files('examples'),
     install_requires=[
         'requests',
         'watchdog',
-        'pandas'
+        'pandas',
+        'scipy',
+        'scikit-learn'
     ],
     extras_require={
-     'all':  ['yara-python', 'tldextract']
+        'all':  ['yara-python', 'tldextract']
     },
     license='Apache',
     keywords='Bro IDS, Python, Networking, Security',

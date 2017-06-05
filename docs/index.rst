@@ -14,7 +14,6 @@ Contents:
    examples
    contributing
    authors
-   history
 
 Feedback
 ========

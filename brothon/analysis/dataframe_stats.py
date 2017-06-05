@@ -9,6 +9,8 @@
 """
 from __future__ import print_function
 import math
+
+# Third Party
 import pandas as pd
 
 
@@ -76,13 +78,13 @@ def g_test_scores(dataframe, rownames, colnames):
     for row in cont_table.index:
         g_score = 0
         for column in cont_table.columns:
-            g_score += _compute_g(cont_table[column][row], exp_counts[column][row])
+            g_score += compute_g(cont_table[column][row], exp_counts[column][row])
         for column in cont_table.columns:
             cont_table[column][row] = g_score if cont_table[column][row] > exp_counts[column][row] else -g_score
     return cont_table
 
 
-def _compute_g(count, expected):
+def compute_g(count, expected):
     """G Test Score for log likelihood ratio
        - http://en.wikipedia.org/wiki/G_test (Wikipedia)
     """

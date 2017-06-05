@@ -47,7 +47,7 @@ class BroLogReader(file_tailer.FileTailer):
                             'unknown': lambda x: x}
 
         # Initialize the Parent Class
-        self._parent_class = super(BroLogReader, self)
+        super(BroLogReader, self).__init__(self._filepath, full_read=True, tail=self._tail)
 
     def readrows(self):
         """The readrows method reads in the header of the Bro log and
@@ -88,14 +88,12 @@ class BroLogReader(file_tailer.FileTailer):
 
     def _readrows(self):
         """Internal method _readrows, see readrows() for description"""
-        # Open the file
-        self._parent_class.__init__(self._filepath, full_read=True, tail=self._tail)
 
         # Read in the Bro Headers
         offset, self.field_names, self.type_converters = self._parse_bro_header(self._filepath)
 
         # Use parent class to yield each row as a dictionary
-        for line in self._parent_class.readlines(offset=offset):
+        for line in self.readlines(offset=offset):
 
             # Check for #close
             if line.startswith('#close'):
@@ -106,7 +104,6 @@ class BroLogReader(file_tailer.FileTailer):
 
     def _parse_bro_header(self, bro_log):
         """Parse the Bro log header section.
-           TODO: Review parsing logic
 
             Format example:
                 #separator \x09
@@ -150,7 +147,11 @@ class BroLogReader(file_tailer.FileTailer):
         '''
         data_dict = {}
         for key, value, converter in zip(self.field_names, field_values, self.type_converters):
-            data_dict[key] = '-' if value == '-' else converter(value)
+            try:
+                data_dict[key] = '-' if value == '-' else converter(value)
+            except ValueError as exc:
+                print('Conversion Issue for key:{:s} value:{:s}\n{:s}'.format(key, str(value), str(exc)))
+                data_dict[key] = value
 
         return data_dict
 
@@ -171,6 +172,11 @@ def test():
         for line in reader.readrows():
             print(line)
     print('Read with NoTail Test successful!')
+
+    # Test some of the error conditions
+    reader.field_names = ['good', 'error']
+    reader.type_converters = [int, lambda x: datetime.datetime.fromtimestamp(float(x))]
+    reader.make_dict([5, '0, .5, .5'])
 
     # Now include tailing (note: as an automated test this needs to timeout quickly)
     try:

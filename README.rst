@@ -41,7 +41,7 @@ Easy to Use
     'id.orig_p': 68,
     'id.resp_h': '192.168.84.1',
     'id.resp_p': 67,
-    'lease_time': 4294967000.0,
+    'lease_time': datetime.timedelta(49710, 23000),
     'mac': '00:20:18:eb:ca:54',
     'trans_id': 495764278,
     'ts': datetime.datetime(2012, 7, 20, 3, 14, 12, 219654),
@@ -51,11 +51,12 @@ Easy to Use
 More Examples
 -------------
 - Easy ingestion of any Bro Log into Python (dynamic tailing and log rotations are handled)
-- Bro Logs to Pandas Dataframes (and then dataframes to Machine Learning :)
+- Bro Logs to Pandas Dataframes and Scikit-Learn
 - Dynamically monitor files.log and make VirusTotal Queries
 - Dynamically monitor http.log and show 'uncommon' User Agents
 - Running Yara Signatures on Extracted Files
 - Checking x509 Certificates
+- Outlier Detection
 - See `BroThon Examples <https://brothon.readthedocs.io/en/latest/examples.html>`__ for more details.
 
 Analysis Notebooks
@@ -63,6 +64,8 @@ Analysis Notebooks
 BroThon enables the processing, analysis, and machine learning of realtime data coming from Bro IDS.
 
 - Risky Domains Stats and Deployment: `Risky Domains <https://github.com/Kitware/BroThon/blob/master/notebooks/Risky_Domains.ipynb>`__
+- Bro to Scikit-Learn: `Bro to Scikit <https://github.com/Kitware/BroThon/blob/master/notebooks/Bro_IDS_to_Scikit_Learn.ipynb>`__
+- Anomaly Detection Exploration: `Anomaly Detection <https://github.com/Kitware/BroThon/blob/master/notebooks/Anomaly_Detection.ipynb>`__
 
 Install
 -------
@@ -79,6 +82,10 @@ Documentation
 
 `BroThon.readthedocs.org <https://BroThon.readthedocs.org/>`__
 
+
+Thanks
+------
+- The DummyEncoder is based on Tom Augspurger's great PyData Chicago 2016 `Talk <https://youtu.be/KLPtEBokqQ0>`__
 
 .. |kitware-logo| image:: https://www.kitware.com/img/small_logo_over.png
    :target: https://www.kitware.com
