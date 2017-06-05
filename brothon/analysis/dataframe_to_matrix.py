@@ -107,6 +107,10 @@ class DataFrameToMatrix(object):
     def _normalize_series(series):
         smin = series.min()
         smax = series.max()
+        if smax - smin == 0:
+            print('Cannot normalize series (div by 0) so not normalizing...')
+            smin = 0
+            smax = 1
         return (series - smin) / (smax - smin), smin, smax
 
 
@@ -141,7 +145,7 @@ def test():
     )
 
     # Copy the test_df for testing later
-    copy_test_df = test_df.copy(deep=True)
+    copy_test_df = test_df.copy()
 
     # Test the transformation from dataframe to numpy ndarray and back again
     to_matrix = DataFrameToMatrix()
@@ -162,9 +166,9 @@ def test():
     np_test_utils.assert_equal(matrix[0], matrix2[0])
     np_test_utils.assert_equal(matrix[1], matrix2[1])
 
-    # Test normalize = True
+    # Test normalize
     to_matrix_norm = DataFrameToMatrix()
-    norm_matrix = to_matrix_norm.fit_transform(test_df, normalize=True)
+    norm_matrix = to_matrix_norm.fit_transform(test_df)
     print(norm_matrix)
     assert(norm_matrix[:, 0].min() == 0)
     assert(norm_matrix[:, 0].max() == 1)
@@ -173,6 +177,13 @@ def test():
     norm_matrix2 = to_matrix_norm.transform(test_df2)
     assert(norm_matrix2[:, 0].min() == 0)
     assert(norm_matrix2[:, 0].max() == 2)    # Normalization is based on FIT range
+
+    # Test div by zero in normalize
+    test_df3 = test_df2.copy()
+    test_df3['D'] = [1, 1, 1, 1]
+    norm_matrix3 = to_matrix_norm.fit_transform(test_df3)
+    assert(norm_matrix3[:, 0].min() == 1)
+    assert(norm_matrix3[:, 0].max() == 1)
 
     # Test serialization
     temp = NamedTemporaryFile(delete=False)

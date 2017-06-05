@@ -1,4 +1,4 @@
-"""FileTailer Python Class"""
+"""Anomaly Detection Example"""
 from __future__ import print_function
 import os
 import sys
@@ -64,7 +64,7 @@ if __name__ == '__main__':
         print(bro_matrix.shape)
 
         # Train/fit and Predict anomalous instances using the Isolation Forest model
-        odd_clf = IsolationForest(contamination=0.01) # Marking 1% as odd
+        odd_clf = IsolationForest(contamination=0.35) # Marking 1% as odd
         odd_clf.fit(bro_matrix)
 
         # Now we create a new dataframe using the prediction from our classifier
@@ -72,7 +72,8 @@ if __name__ == '__main__':
 
         # Now we're going to explore our odd observations with help from KMeans
         odd_matrix = to_matrix.fit_transform(odd_df)
-        odd_df['cluster'] = KMeans(n_clusters=40).fit_predict(odd_matrix)
+        odd_df['cluster'] = KMeans(n_clusters=4).fit_predict(odd_matrix)
+        print(odd_matrix.shape)
 
         # Now group the dataframe by cluster
         cluster_groups = odd_df[features+['cluster']].groupby('cluster')
