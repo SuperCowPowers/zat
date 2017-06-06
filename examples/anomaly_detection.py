@@ -36,14 +36,20 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(1)
 
-    # Sanity check that this is a dns log
-    if not args.bro_log.endswith('dns.log'):
-        print('This example only works with Bro dns.log files..')
-        sys.exit(1)
-
     # File may have a tilde in it
     if args.bro_log:
         args.bro_log = os.path.expanduser(args.bro_log)
+
+        # Sanity check that this is a dns log
+        if 'http' in args.bro_log:
+            log_type = 'http'
+            features = ['id.resp_p', 'method', 'resp_mime_types', 'request_body_len']
+        elif 'dns' in args.bro_log:
+            log_type = 'dns'
+            features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name', 'rcode_name', 'query_length']
+        else:
+            print('This example only works with Bro with http.log or dns.log files..')
+            sys.exit(1)
 
         # Create a Bro IDS log reader
         print('Opening Data File: {:s}'.format(args.bro_log))
@@ -55,10 +61,10 @@ if __name__ == '__main__':
 
         # Using Pandas we can easily and efficiently compute additional data metrics
         # Here we use the vectorized operations of Pandas/Numpy to compute query length
-        bro_df['query_length'] = bro_df['query'].str.len()
+        if log_type == 'dns':
+            bro_df['query_length'] = bro_df['query'].str.len()
 
         # Use the BroThon DataframeToMatrix class
-        features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name', 'rcode_name', 'query_length']
         to_matrix = dataframe_to_matrix.DataFrameToMatrix()
         bro_matrix = to_matrix.fit_transform(bro_df[features])
         print(bro_matrix.shape)
