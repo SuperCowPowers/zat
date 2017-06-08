@@ -3,9 +3,6 @@ from __future__ import print_function
 import os
 import sys
 import argparse
-import time
-import math
-from collections import Counter
 
 # Third Party Imports
 import pandas as pd
@@ -40,7 +37,7 @@ if __name__ == '__main__':
     if args.bro_log:
         args.bro_log = os.path.expanduser(args.bro_log)
 
-        # Sanity check that this is a dns log
+        # Sanity check either http or dns log
         if 'http' in args.bro_log:
             log_type = 'http'
             features = ['id.resp_p', 'method', 'resp_mime_types', 'request_body_len']
@@ -78,7 +75,8 @@ if __name__ == '__main__':
 
         # Now we're going to explore our odd observations with help from KMeans
         odd_matrix = to_matrix.fit_transform(odd_df)
-        odd_df['cluster'] = KMeans(n_clusters=4).fit_predict(odd_matrix)
+        num_clusters = min(len(odd_df), 10) # 10 clusters unless we have less than 10 observations
+        odd_df['cluster'] = KMeans(n_clusters=num_clusters).fit_predict(odd_matrix)
         print(odd_matrix.shape)
 
         # Now group the dataframe by cluster
