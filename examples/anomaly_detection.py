@@ -67,7 +67,7 @@ if __name__ == '__main__':
         print(bro_matrix.shape)
 
         # Train/fit and Predict anomalous instances using the Isolation Forest model
-        odd_clf = IsolationForest(contamination=0.35) # Marking 1% as odd
+        odd_clf = IsolationForest(contamination=0.2) # Marking 20% as odd
         odd_clf.fit(bro_matrix)
 
         # Now we create a new dataframe using the prediction from our classifier
@@ -75,7 +75,7 @@ if __name__ == '__main__':
 
         # Now we're going to explore our odd observations with help from KMeans
         odd_matrix = to_matrix.fit_transform(odd_df)
-        num_clusters = min(len(odd_df), 10) # 10 clusters unless we have less than 10 observations
+        num_clusters = min(len(odd_df), 4) # 4 clusters unless we have less than 4 observations
         odd_df['cluster'] = KMeans(n_clusters=num_clusters).fit_predict(odd_matrix)
         print(odd_matrix.shape)
 
