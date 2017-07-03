@@ -12,6 +12,7 @@ import json
 import pandas as pd
 from sklearn.ensemble import IsolationForest
 from sklearn.cluster import KMeans
+from sklearn.cluster import MiniBatchKMeans
 import hdbscan
 
 # Local imports
@@ -67,9 +68,18 @@ if __name__ == '__main__':
         # Create a Dataframe Cache
         df_cache = dataframe_cache.DataFrameCache(max_cache_time=600)  # 10 minute cache
 
+        # Streaming Clustering Class
+        batch_kmeans = MiniBatchKMeans(n_clusters=4, verbose=True)
+        # num_clusters = min(len(odd_df), 4) # 4 clusters unless we have less than 4 observations
+
+        # Use the BroThon DataframeToMatrix class
+        features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name', 'rcode_name', 'query_length', 'id.resp_p']
+        to_matrix = dataframe_to_matrix.DataFrameToMatrix()
+
         # Add each new row into the cache
         time_delta = 10
         timer = time.time() + time_delta
+        FIRST_TIME = True
         for row in reader.readrows():
             df_cache.add_row(row)
 
@@ -83,10 +93,12 @@ if __name__ == '__main__':
                 # Add query length
                 bro_df['query_length'] = bro_df['query'].str.len()
 
-                # Use the BroThon DataframeToMatrix class
-                features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name', 'rcode_name', 'query_length', 'id.resp_p']
-                to_matrix = dataframe_to_matrix.DataFrameToMatrix()
-                bro_matrix = to_matrix.fit_transform(bro_df[features])
+                # Convert dataframe to a matrix
+                if FIRST_TIME:
+                    bro_matrix = to_matrix.fit_transform(bro_df[features])
+                    FIRST_TIME = False
+                else:
+                    bro_matrix = to_matrix.transform(bro_df[features])
                 print(bro_matrix.shape)
 
                 # Print out the range of the daterange and some stats
@@ -101,9 +113,10 @@ if __name__ == '__main__':
                 odd_df = bro_df[bro_df['anomalous']]
 
                 # Now we're going to explore our odd observations with help from KMeans
-                num_clusters = min(len(odd_df), 4) # 4 clusters unless we have less than 4 observations
-                odd_matrix = to_matrix.fit_transform(odd_df[features])
-                clusters = KMeans(n_clusters=num_clusters).fit_predict(odd_matrix).tolist()
+                odd_matrix = to_matrix.transform(odd_df[features])
+                #clusters = KMeans(n_clusters=num_clusters).fit_predict(odd_matrix).tolist()
+                batch_kmeans.partial_fit(odd_matrix)
+                clusters = batch_kmeans.predict(odd_matrix).tolist()
 
                 # Set the cluster number for all the entries in the original dataframe
                 bro_df['cluster'] = [-1 if not anom else clusters.pop(0) for anom in bro_df['anomalous'] ]
@@ -122,5 +135,6 @@ if __name__ == '__main__':
                 with open('streaming_output.json', 'w+') as fp:
                     for row in bro_df.to_dict('records'):
                         row['ts'] = str(row['ts'])
-                        print(row)
+                        #print(row)
                         json.dump(row, fp)
+                        fp.write('\n')
