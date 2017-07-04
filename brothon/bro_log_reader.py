@@ -83,9 +83,6 @@ class BroLogReader(file_tailer.FileTailer):
             else:
                 break
 
-        # Okay we must be all done
-        raise StopIteration
-
     def _readrows(self):
         """Internal method _readrows, see readrows() for description"""
 
@@ -97,7 +94,7 @@ class BroLogReader(file_tailer.FileTailer):
 
             # Check for #close
             if line.startswith('#close'):
-                raise StopIteration
+                return
 
             # Yield the line as a dict
             yield self.make_dict(line.strip().split(self._delimiter))
