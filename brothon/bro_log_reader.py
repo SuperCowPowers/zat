@@ -93,22 +93,39 @@ class BroLogReader(object):
         # For each file (may be just one)
         for file_path in self._files:
 
-            # The file might be zipped
-            with zipfile.ZipFile(file_path) as z:
+            # Open the file (has logic for zipped)
+            with self._open_file(file_path) as fp:
+
+                # Get the filename
+                self._filepath = self._get_filename(fp) or file_path
 
                 # Read in the Bro Headers
-                offset, self.field_names, self.type_converters = self._parse_bro_header(z.filename)
+                offset, self.field_names, self.type_converters = self._parse_bro_header(self._filepath)
 
                 # Spin up a file tailer class
-                bro_tailer = file_tailer.FileTailer(z.filename, self._tail)
+                bro_tailer = file_tailer.FileTailer(self._filepath, self._tail)
                 for line in bro_tailer.readlines(offset=offset):
 
                     # Check for #close
                     if line.startswith('#close'):
-                        raise StopIteration
+                        return
 
                     # Yield the line as a dict
                     yield self.make_dict(line.strip().split(self._delimiter))
+
+    def _open_file(self, file_path):
+        """Internal method that tries to read in a zip file first"""
+        if zipfile.is_zipfile(file_path):
+            return zipfile.ZipFile(file_path)
+        else:
+            return open(file_path)
+
+    def _get_filename(self, fp):
+        """Internal method that gets the proper file_name (zip or not zip)"""
+        try:
+            return fp.filename
+        except AttributeError:
+            return None
 
     def _parse_bro_header(self, bro_log):
         """Parse the Bro log header section.
