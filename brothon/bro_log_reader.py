@@ -103,7 +103,7 @@ class BroLogReader(object):
                 offset, self.field_names, self.type_converters = self._parse_bro_header(self._filepath)
 
                 # Spin up a file tailer class
-                bro_tailer = file_tailer.FileTailer(self._filepath, self._tail)
+                bro_tailer = file_tailer.FileTailer(self._filepath, tail=self._tail)
                 for line in bro_tailer.readlines(offset=offset):
 
                     # Check for #close
@@ -190,6 +190,7 @@ def test():
     # For each file, create the Class and test the reader
     files = ['app_stats.log', 'conn.log', 'dhcp.log', 'dns.log', 'files.log', 'ftp.log',
              'http.log', 'notice.log', 'smtp.log', 'ssl.log', 'weird.log', 'x509.log']
+    files = ['x509.log']
     for bro_log in files:
         test_path = os.path.join(data_path, bro_log)
         print('Opening Data File: {:s}'.format(test_path))
