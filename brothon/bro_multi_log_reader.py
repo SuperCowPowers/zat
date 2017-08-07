@@ -28,9 +28,8 @@ class BroMultiLogReader(object):
         self._files = glob.glob(filepath)
 
     def readrows(self):
-        """The readrows method reads in the header of the Bro log and
-            then uses the parent class to yield each row of the log file
-            as a dictionary of {key:value, ...} based on Bro header.
+        """The readrows method reads simply 'combines' the rows of
+           multiple files OR gunzips the file and then reads the rows
         """
 
         # For each file (may be just one) create a BroLogReader and use it
@@ -59,7 +58,7 @@ class BroMultiLogReader(object):
 
 
 def test():
-    """Test for BroLogReader Python Class"""
+    """Test for BroMultiLogReader Python Class"""
     from brothon.utils import file_utils
 
     # Grab a test file
