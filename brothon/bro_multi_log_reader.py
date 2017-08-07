@@ -1,11 +1,7 @@
-"""BroLogReader: This class reads in various Bro IDS logs. The class inherits from
-                 the FileTailer class so it supports the following use cases:
-                   - Read contents of a Bro log file        (tail=False)
-                   - Read contents + 'tail -f' Bro log file (tail=True)
-       Args:
-            filepath (str): The full path the file (/full/path/to/the/file.txt)
-            delimiter (str): The delimiter in the Bro IDS logs (default='\t')
-            tail (bool): Do a dynamic tail on the file (i.e. tail -f) (default=False)
+"""BroMultiLogReader: This class reads in multiple Bro IDS logs.
+           Args:
+                filepath (str): The full path the file (/full/path/to/the/file.txt) can be a
+                                glob (e.g dns*.log) or a gzip file (e.g. dns.log.gz)
 """
 from __future__ import print_function
 import os
