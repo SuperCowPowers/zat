@@ -11,14 +11,18 @@ from __future__ import print_function
 import os
 import time
 import datetime
+import glob
+import gzip
+import tempfile
+import shutil
 
 # Local Imports
 from brothon.utils import file_tailer, file_utils
 
 
-class BroLogReader(file_tailer.FileTailer):
-    """BroLogReader: This class reads in various Bro IDS logs. The class inherits from
-                     the FileTailer class so it supports the following use cases:
+class BroLogReader(object):
+    """BroLogReader: This class reads in various Bro IDS logs. The class uses
+                     the FileTailer class and supports the following use cases:
                        - Read contents of a Bro log file        (tail=False)
                        - Read contents + 'tail -f' Bro log file (tail=True)
            Args:
@@ -29,9 +33,11 @@ class BroLogReader(file_tailer.FileTailer):
 
     def __init__(self, filepath, delimiter='\t', tail=False):
         """Initialization for the BroLogReader Class"""
-        self._filepath = filepath
         self._delimiter = delimiter
         self._tail = tail
+
+        # The filepath may be a glob pattern
+        self._files = glob.glob(filepath)
 
         # Setup the Bro to Python Type mapper
         self.field_names = []
@@ -45,9 +51,6 @@ class BroLogReader(file_tailer.FileTailer):
                             'string': lambda x: x,
                             'port': int,
                             'unknown': lambda x: x}
-
-        # Initialize the Parent Class
-        super(BroLogReader, self).__init__(self._filepath, full_read=True, tail=self._tail)
 
     def readrows(self):
         """The readrows method reads in the header of the Bro log and
@@ -86,18 +89,48 @@ class BroLogReader(file_tailer.FileTailer):
     def _readrows(self):
         """Internal method _readrows, see readrows() for description"""
 
-        # Read in the Bro Headers
-        offset, self.field_names, self.type_converters = self._parse_bro_header(self._filepath)
+        # For each file (may be just one)
+        for self._filepath in self._files:
 
-        # Use parent class to yield each row as a dictionary
-        for line in self.readlines(offset=offset):
+            # Check if the file is zipped
+            if self._filepath.endswith('.gz'):
+                tmp = tempfile.NamedTemporaryFile(delete=False)
+                with gzip.open(self._filepath, 'rb') as f_in, open(tmp.name, 'wb') as f_out:
+                    shutil.copyfileobj(f_in, f_out)
 
-            # Check for #close
-            if line.startswith('#close'):
-                return
+                # Set the file path to the new temp file
+                self._filepath = tmp.name
 
-            # Yield the line as a dict
-            yield self.make_dict(line.strip().split(self._delimiter))
+            # Open the file
+            with open(self._filepath) as fp:
+
+                # Read in the Bro Headers
+                offset, self.field_names, self.type_converters = self._parse_bro_header(self._filepath)
+
+                # Spin up a file tailer class
+                bro_tailer = file_tailer.FileTailer(self._filepath, tail=self._tail)
+                for line in bro_tailer.readlines(offset=offset):
+
+                    # Check for #close
+                    if line.startswith('#close'):
+                        break
+
+                    # Yield the line as a dict
+                    yield self.make_dict(line.strip().split(self._delimiter))
+
+            # Clean up any temp files
+            try:
+                os.remove(tmp.name)
+                print('Removed temporary file {:s}...'.format(tmp.name))
+            except:
+                pass
+
+    def _get_filename(self, fp):
+        """Internal method that gets the proper file_name (zip or not zip)"""
+        try:
+            return fp.filename
+        except AttributeError:
+            return None
 
     def _parse_bro_header(self, bro_log):
         """Parse the Bro log header section.
@@ -161,7 +194,8 @@ def test():
 
     # For each file, create the Class and test the reader
     files = ['app_stats.log', 'conn.log', 'dhcp.log', 'dns.log', 'files.log', 'ftp.log',
-             'http.log', 'notice.log', 'smtp.log', 'ssl.log', 'weird.log', 'x509.log']
+             'http.log', 'notice.log', 'smtp.log', 'ssl.log', 'weird.log', 'x509.log',
+             'http.log.gz', 'dhcp*.log', 'dhcp*.log.gz']
     for bro_log in files:
         test_path = os.path.join(data_path, bro_log)
         print('Opening Data File: {:s}'.format(test_path))
