@@ -64,7 +64,7 @@ class LiveSimulator(object):
 
                 # Check for max_rows
                 if self.max_rows and (num_rows >= self.max_rows):
-                    raise StopIteration
+                    return
 
     @staticmethod
     def replace_timestamp(row):
