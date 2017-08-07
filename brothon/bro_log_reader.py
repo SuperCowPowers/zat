@@ -12,7 +12,9 @@ import os
 import time
 import datetime
 import glob
-import zipfile
+import gzip
+import tempfile
+import shutil
 
 # Local Imports
 from brothon.utils import file_tailer, file_utils
@@ -84,20 +86,23 @@ class BroLogReader(object):
             else:
                 break
 
-        # Okay we must be all done
-        raise StopIteration
-
     def _readrows(self):
         """Internal method _readrows, see readrows() for description"""
 
         # For each file (may be just one)
-        for file_path in self._files:
+        for self._filepath in self._files:
 
-            # Open the file (has logic for zipped)
-            with self._open_file(file_path) as fp:
+            # Check if the file is zipped
+            if self._filepath.endswith('.gz'):
+                tmp = tempfile.NamedTemporaryFile(delete=False)
+                with gzip.open(self._filepath, 'rb') as f_in, open(tmp.name, 'wb') as f_out:
+                    shutil.copyfileobj(f_in, f_out)
 
-                # Get the filename
-                self._filepath = self._get_filename(fp) or file_path
+                # Set the file path to the new temp file
+                self._filepath = tmp.name
+
+            # Open the file
+            with open(self._filepath) as fp:
 
                 # Read in the Bro Headers
                 offset, self.field_names, self.type_converters = self._parse_bro_header(self._filepath)
@@ -108,17 +113,17 @@ class BroLogReader(object):
 
                     # Check for #close
                     if line.startswith('#close'):
-                        return
+                        break
 
                     # Yield the line as a dict
                     yield self.make_dict(line.strip().split(self._delimiter))
 
-    def _open_file(self, file_path):
-        """Internal method that tries to read in a zip file first"""
-        if zipfile.is_zipfile(file_path):
-            return zipfile.ZipFile(file_path)
-        else:
-            return open(file_path)
+            # Clean up any temp files
+            try:
+                os.remove(tmp.name)
+                print('Removed temporary file {:s}...'.format(tmp.name))
+            except:
+                pass
 
     def _get_filename(self, fp):
         """Internal method that gets the proper file_name (zip or not zip)"""
@@ -189,8 +194,8 @@ def test():
 
     # For each file, create the Class and test the reader
     files = ['app_stats.log', 'conn.log', 'dhcp.log', 'dns.log', 'files.log', 'ftp.log',
-             'http.log', 'notice.log', 'smtp.log', 'ssl.log', 'weird.log', 'x509.log']
-    files = ['x509.log']
+             'http.log', 'notice.log', 'smtp.log', 'ssl.log', 'weird.log', 'x509.log',
+             'http.log.gz', 'dhcp*.log', 'dhcp*.log.gz']
     for bro_log in files:
         test_path = os.path.join(data_path, bro_log)
         print('Opening Data File: {:s}'.format(test_path))
