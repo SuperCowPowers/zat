@@ -5,8 +5,6 @@
 """
 from __future__ import print_function
 import os
-import time
-import datetime
 import glob
 import gzip
 import tempfile
@@ -59,6 +57,7 @@ class BroMultiLogReader(object):
             except:
                 pass
 
+
 def test():
     """Test for BroLogReader Python Class"""
     from brothon.utils import file_utils
@@ -75,6 +74,7 @@ def test():
         for line in reader.readrows():
             print(line)
     print('Tests successful!')
+
 
 if __name__ == '__main__':
     # Run the test for easy testing/debugging
