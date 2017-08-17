@@ -14,6 +14,7 @@ if __name__ == '__main__':
     # Collect args from the command line
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--bro-log', type=str, help='Specify a bro log to run BroLogReader test on')
+    parser.add_argument('-t', '--tail', action='store_true', help='Turn on log tailing')
     args, commands = parser.parse_known_args()
 
     # Check for unknown args
@@ -31,6 +32,6 @@ if __name__ == '__main__':
         args.bro_log = os.path.expanduser(args.bro_log)
 
         # Run the bro reader on a given log file
-        reader = bro_log_reader.BroLogReader(args.bro_log)
+        reader = bro_log_reader.BroLogReader(args.bro_log, tail=args.tail)
         for row in reader.readrows():
             pprint(row)
