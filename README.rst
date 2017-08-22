@@ -64,7 +64,7 @@ Analysis Notebooks
 BroThon enables the processing, analysis, and machine learning of realtime data coming from Bro IDS.
 
 - Risky Domains Stats and Deployment: `Risky Domains <https://github.com/Kitware/BroThon/blob/master/notebooks/Risky_Domains.ipynb>`__
-- Bro to Scikit-Learn: `Bro to Scikit <https://github.com/Kitware/BroThon/blob/master/notebooks/Bro_IDS_to_Scikit_Learn.ipynb>`__
+- Bro to Scikit-Learn: `Bro to Scikit <https://github.com/Kitware/BroThon/blob/master/notebooks/Bro_to_Scikit_Learn.ipynb>`__
 - Anomaly Detection Exploration: `Anomaly Detection <https://github.com/Kitware/BroThon/blob/master/notebooks/Anomaly_Detection.ipynb>`__
 
 Install
