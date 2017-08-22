@@ -1,4 +1,4 @@
-BroThon |travis| |Coverage Status| |supported-versions| |license| |kitware-logo|
+BroThon |travis| |Coverage Status| |supported-versions| |license| 
 ================================================================================================================
 
 **Bro + Python = BroThon!**
@@ -86,9 +86,10 @@ Thanks
 ------
 - The DummyEncoder is based on Tom Augspurger's great PyData Chicago 2016 `Talk <https://youtu.be/KLPtEBokqQ0>`__
 
+|kitware-logo|
+
 .. |kitware-logo| image:: https://www.kitware.com/img/small_logo_over.png
    :target: https://www.kitware.com
-   :width: 100 px
    :alt: Kitware Logo
 .. |travis| image:: https://img.shields.io/travis/Kitware/BroThon.svg
    :target: https://travis-ci.org/Kitware/BroThon
