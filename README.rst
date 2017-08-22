@@ -1,11 +1,10 @@
-BroThon |travis| |Coverage Status| |supported-versions| |license|
+BroThon |travis| |Coverage Status| |supported-versions| |license| |kitware-logo|
 ================================================================================================================
 
 **Bro + Python = BroThon!**
 
 The BroThon package supports the ingestion, processing, and analysis of Bro IDS data with Python.
 
-|kitware-logo|
 
 Why BroThon?
 ------------
