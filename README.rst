@@ -88,6 +88,7 @@ Thanks
 
 .. |kitware-logo| image:: https://www.kitware.com/img/small_logo_over.png
    :target: https://www.kitware.com
+   :width: 200 px
    :alt: Kitware Logo
 .. |travis| image:: https://img.shields.io/travis/Kitware/BroThon.svg
    :target: https://travis-ci.org/Kitware/BroThon
