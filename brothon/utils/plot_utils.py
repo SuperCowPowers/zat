@@ -12,7 +12,7 @@ def plot_defaults():
         plt.rc('axes', axisbelow=True)
         plt.rc('grid', color='grey')
         plt.rc('grid', alpha=.5)
-        plt.rc('patch', linewidth=1)
+        plt.rc('grid', linestyle='-')
         plt.rcParams['figure.figsize'] = 10.0, 4.0
         plt.rcParams.update({'figure.autolayout': True})
         try:
