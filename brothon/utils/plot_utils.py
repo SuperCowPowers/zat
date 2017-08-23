@@ -11,13 +11,14 @@ def plot_defaults():
         plt.rc('grid', color='grey')
         plt.rc('grid', alpha=.5)
         plt.rc('patch', linewidth=1)
-        plt.rc('patch', force_edgecolor=True)
         plt.rcParams['figure.figsize'] = 10.0, 4.0
         plt.rcParams.update({'figure.autolayout': True})
+        try:
+            plt.rc('patch', force_edgecolor=True)
+        except:
+            pass
     except ImportError:
         print('Could not import matplotlib... this is fine...')
-    except KeyError:
-        print('Could not set matplotlib default... this is fine...')
 
 def test():
     """Test the Plot Utilities"""
