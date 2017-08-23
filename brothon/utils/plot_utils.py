@@ -15,7 +15,9 @@ def plot_defaults():
         plt.rcParams['figure.figsize'] = 10.0, 4.0
         plt.rcParams.update({'figure.autolayout': True})
     except ImportError:
-        print('Could not import matplotlib... this is fine... nothing bad...')
+        print('Could not import matplotlib... this is fine...')
+    except KeyError:
+        print('Could not set matplotlib default... this is fine...')
 
 def test():
     """Test the Plot Utilities"""
