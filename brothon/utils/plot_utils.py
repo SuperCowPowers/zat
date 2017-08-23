@@ -1,4 +1,6 @@
 """Plotting utilities"""
+
+
 def plot_defaults():
     try:
         import matplotlib.pyplot as plt
@@ -20,9 +22,11 @@ def plot_defaults():
     except ImportError:
         print('Could not import matplotlib... this is fine...')
 
+
 def test():
     """Test the Plot Utilities"""
     plot_defaults()
+
 
 if __name__ == '__main__':
     test()
