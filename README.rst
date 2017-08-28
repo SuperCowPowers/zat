@@ -1,4 +1,4 @@
-BroThon |travis| |Coverage Status| |supported-versions| |license| 
+BroThon |travis| |Coverage Status| |supported-versions| |license|
 ================================================================================================================
 
 **Bro + Python = BroThon!**
@@ -64,6 +64,7 @@ BroThon enables the processing, analysis, and machine learning of realtime data 
 
 - Risky Domains Stats and Deployment: `Risky Domains <https://github.com/Kitware/BroThon/blob/master/notebooks/Risky_Domains.ipynb>`__
 - Bro to Scikit-Learn: `Bro to Scikit <https://github.com/Kitware/BroThon/blob/master/notebooks/Bro_to_Scikit_Learn.ipynb>`__
+- Bro to Spark: `Bro to Spark <https://github.com/Kitware/BroThon/blob/master/notebooks/Bro_to_Spark.ipynb>`__
 - Anomaly Detection Exploration: `Anomaly Detection <https://github.com/Kitware/BroThon/blob/master/notebooks/Anomaly_Detection.ipynb>`__
 
 Install
