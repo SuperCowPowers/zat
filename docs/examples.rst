@@ -245,7 +245,7 @@ See bat/examples/yara_matches.py for full code listing (code simplified below)
 
 Risky Domains
 -------------
-The example will use the analysis in our `Risky Domains <https://github.com/Kitware/BroThon/blob/master/notebooks/Risky_Domains.ipynb>`_
+The example will use the analysis in our `Risky Domains <https://github.com/Kitware/bat/blob/master/notebooks/Risky_Domains.ipynb>`_
 notebook to flag domains that are 'at risk' and conduct a Virus Total query on those domains.
 See bat/examples/risky_dns.py for full code listing (code simplified below)
 
@@ -394,7 +394,7 @@ See bat/examples/anomaly_detection.py for full code listing (code simplified bel
         # Using Pandas we can easily and efficiently compute additional data metrics
         bro_df['query_length'] = bro_df['query'].str.len()
 
-        # Use the BroThon DataframeToMatrix class
+        # Use the bat DataframeToMatrix class
         features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name', 'rcode_name', 'query_length']
         to_matrix = dataframe_to_matrix.DataFrameToMatrix()
         bro_matrix = to_matrix.fit_transform(bro_df[features])

@@ -222,7 +222,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'bat', u'BroThon Documentation',
+    ('index', 'bat', u'bat Documentation',
      [u'Brian Wylie'], 1)
 ]
 
@@ -236,8 +236,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'bat', u'BroThon Documentation',
-   u'Brian Wylie', 'bat', 'Bro + Python = BroThon!',
+  ('index', 'bat', u'bat Documentation',
+   u'Brian Wylie', 'bat', 'Bro + Python = bat!',
    'Miscellaneous'),
 ]
 

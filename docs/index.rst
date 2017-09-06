@@ -22,4 +22,4 @@ If you have any suggestions or questions about **Bro IDS Python Utilities** feel
 at brian.wylie@kitware.com.
 
 If you encounter any errors or problems with **Bro IDS Python Utilities**, please let me know!
-Open an Issue at the GitHub https://github.com/kitware/BroThon main repository.
+Open an Issue at the GitHub https://github.com/kitware/bat main repository.

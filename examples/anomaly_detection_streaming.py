@@ -78,7 +78,7 @@ if __name__ == '__main__':
                 # Add query length
                 bro_df['query_length'] = bro_df['query'].str.len()
 
-                # Use the BroThon DataframeToMatrix class
+                # Use the bat DataframeToMatrix class
                 features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name', 'rcode_name', 'query_length', 'id.resp_p']
                 to_matrix = dataframe_to_matrix.DataFrameToMatrix()
                 bro_matrix = to_matrix.fit_transform(bro_df[features])

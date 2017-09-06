@@ -1,4 +1,4 @@
-"""Cert Checker BroThon Example"""
+"""Cert Checker bat Example"""
 from __future__ import print_function
 import os
 import sys

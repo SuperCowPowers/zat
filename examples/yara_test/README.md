@@ -1,11 +1,11 @@
 # Yara Test Directory
-Welcome to the yara test directory, this is just so we can run unit tests. If you're going to use BroThon with yara rules do the following:
+Welcome to the yara test directory, this is just so we can run unit tests. If you're going to use bat with yara rules do the following:
 
 ### Download official yara rules
     $ git clone https://github.com/Yara-Rules/rules
-          
+
 ### Usage
-When creating the BroThon YaraRules class simply provide the path to the index file in the yara repository.
+When creating the bat YaraRules class simply provide the path to the index file in the yara repository.
 
 
     ...

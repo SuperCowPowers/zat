@@ -70,7 +70,7 @@ if __name__ == '__main__':
             bro_df['answer_length'] = bro_df['answers'].str.len()
             bro_df['entropy'] = bro_df['query'].map(lambda x: entropy(x))
 
-        # Use the BroThon DataframeToMatrix class
+        # Use the bat DataframeToMatrix class
         to_matrix = dataframe_to_matrix.DataFrameToMatrix()
         bro_matrix = to_matrix.fit_transform(bro_df[features])
         print(bro_matrix.shape)

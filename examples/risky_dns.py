@@ -1,4 +1,4 @@
-"""Risky DNS BroThon Example"""
+"""Risky DNS bat Example"""
 from __future__ import print_function
 import os
 import sys
