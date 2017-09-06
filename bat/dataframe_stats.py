@@ -96,10 +96,10 @@ def test():
     """Test for DataFrame Stats module"""
 
     import os
-    from brothon.utils import file_utils
+    from bat.utils import file_utils
 
     # Open a dataset (relative path)
-    data_dir = file_utils.relative_dir(__file__, 'data')
+    data_dir = file_utils.relative_dir(__file__, 'test_data')
     file_path = os.path.join(data_dir, 'g_test_data.csv')
     dataframe = pd.read_csv(file_path)
     print(dataframe.head())

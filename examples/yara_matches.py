@@ -18,7 +18,7 @@ except ImportError:
     sys.exit(1)
 
 # Local imports
-from brothon.utils import dir_watcher, signal_utils
+from bat.utils import dir_watcher, signal_utils
 
 def yara_match(file_path, rules):
     """Callback for a newly extracted file"""

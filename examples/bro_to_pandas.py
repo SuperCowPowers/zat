@@ -8,7 +8,7 @@ import argparse
 import pandas as pd
 
 # Local imports
-from brothon import bro_log_reader
+from bat import bro_log_reader
 
 if __name__ == '__main__':
     # Example to populate a Pandas dataframe from a bro log reader

@@ -6,8 +6,8 @@ import argparse
 from pprint import pprint
 
 # Local imports
-from brothon import bro_log_reader
-from brothon.utils import vt_query
+from bat import bro_log_reader
+from bat.utils import vt_query
 
 if __name__ == '__main__':
     """Run a VirusTotal Query on Extracted File Hashes"""

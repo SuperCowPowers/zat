@@ -11,7 +11,7 @@ import tempfile
 import shutil
 
 # Local Imports
-from brothon import bro_log_reader
+from bat import bro_log_reader
 
 
 class BroMultiLogReader(object):
@@ -59,7 +59,7 @@ class BroMultiLogReader(object):
 
 def test():
     """Test for BroMultiLogReader Python Class"""
-    from brothon.utils import file_utils
+    from bat.utils import file_utils
 
     # Grab a test file
     data_path = file_utils.relative_dir(__file__, '../data')

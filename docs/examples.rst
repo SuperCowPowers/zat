@@ -4,16 +4,16 @@ Examples
 
 To use Bro Python Utilities in a project::
 
-    import brothon
+    import bat
 
 BroLog to Python
 ----------------
-See brothon/examples/bro_pprint.py for full code listing.
+See bat/examples/bro_pprint.py for full code listing.
 
 .. code-block:: python
 
     from pprint import pprint
-    from brothon import bro_log_reader
+    from bat import bro_log_reader
     ...
         # Run the bro reader on a given log file
         reader = bro_log_reader.BroLogReader('dhcp.log')
@@ -39,12 +39,12 @@ See brothon/examples/bro_pprint.py for full code listing.
 
 Bro to Pandas DataFrame
 ---------------------------
-See brothon/examples/bro_to_pandas.py for full code listing. Notice that it's one line of code to convert to a Pandas DataFrame.
+See bat/examples/bro_to_pandas.py for full code listing. Notice that it's one line of code to convert to a Pandas DataFrame.
 
 .. code-block:: python
 
     import pandas as pd
-    from brothon import bro_log_reader
+    from bat import bro_log_reader
     ...
 
         # Create a bro reader on a given log file
@@ -70,7 +70,7 @@ See brothon/examples/bro_to_pandas.py for full code listing. Notice that it's on
 
 Bro to Scikit-Learn
 -----------------------
-See brothon/examples/bro_to_scikit.py for full code listing, we've shortened the code listing here
+See bat/examples/bro_to_scikit.py for full code listing, we've shortened the code listing here
 to demonstrate that it's literally just a few lines of code to get to Scikit-Learn.
 
 .. code-block:: python
@@ -121,12 +121,12 @@ to demonstrate that it's literally just a few lines of code to get to Scikit-Lea
 
 Bro Files Log to VirusTotal Query
 ---------------------------------
-See brothon/examples/file_log_vtquery.py for full code listing (code simplified below)
+See bat/examples/file_log_vtquery.py for full code listing (code simplified below)
 
 .. code-block:: python
 
-    from brothon import bro_log_reader
-    from brothon.utils import vt_query
+    from bat import bro_log_reader
+    from bat.utils import vt_query
     ...
         # Run the bro reader on on the files.log output
         reader = bro_log_reader.BroLogReader('files.log', tail=True) # This will dynamically monitor this Bro log
@@ -163,12 +163,12 @@ See brothon/examples/file_log_vtquery.py for full code listing (code simplified 
 
 Bro HTTP Log User Agents
 ------------------------
-See brothon/examples/http_user_agents.py for full code listing (code simplified below)
+See bat/examples/http_user_agents.py for full code listing (code simplified below)
 
 .. code-block:: python
 
     from collections import Counter
-    from brothon import bro_log_reader
+    from bat import bro_log_reader
     ...
         # Run the bro reader on a given log file counting up user agents
         http_agents = Counter()
@@ -210,12 +210,12 @@ Yara rules on Bro extracted files
 ---------------------------------
 The example will dymancially monitor the extract_files directory and when a file is
 dropped by Bro IDS the code will run a set of Yara rules against that file.
-See brothon/examples/yara_matches.py for full code listing (code simplified below)
+See bat/examples/yara_matches.py for full code listing (code simplified below)
 
 .. code-block:: python
 
     import yara
-    from brothon import dir_watcher
+    from bat import dir_watcher
     ...
 
     def yara_match(file_path, rules):
@@ -237,7 +237,7 @@ See brothon/examples/yara_matches.py for full code listing (code simplified belo
 
 ::
 
-    Loading Yara Rules from ../brothon/utils/yara_test/index.yar
+    Loading Yara Rules from ../bat/utils/yara_test/index.yar
     Watching Extract Files Directory: /home/ubuntu/software/bro/extract_files
     New Extracted File: /home/ubuntu/software/bro/extract_files/test.tmp
     Mathes:
@@ -247,12 +247,12 @@ Risky Domains
 -------------
 The example will use the analysis in our `Risky Domains <https://github.com/Kitware/BroThon/blob/master/notebooks/Risky_Domains.ipynb>`_
 notebook to flag domains that are 'at risk' and conduct a Virus Total query on those domains.
-See brothon/examples/risky_dns.py for full code listing (code simplified below)
+See bat/examples/risky_dns.py for full code listing (code simplified below)
 
 .. code-block:: python
 
-    from brothon import bro_log_reader
-    from brothon.utils import vt_query
+    from bat import bro_log_reader
+    from bat.utils import vt_query
     ...
 
         # Create a VirusTotal Query Class
@@ -308,12 +308,12 @@ Cert Checker
 There's been discussion about Let's Encrypt issuing certficates to possible phishing/malicious site owners. This example
 will quickly check and dynamically monitor your Bro IDS x509 logs for certificates that may be from malicious sites.
 
-See brothon/examples/cert_checker.py for full code listing (code simplified below)
+See bat/examples/cert_checker.py for full code listing (code simplified below)
 
 .. code-block:: python
 
-    from brothon import bro_log_reader
-    from brothon.utils import vt_query
+    from bat import bro_log_reader
+    from bat.utils import vt_query
     ...
 
         # These domains may be spoofed with a certificate issued by 'Let's Encrypt'
@@ -380,7 +380,7 @@ Here we're demonstrating anomaly detection using the Isolated Forest algorithm. 
 anomalies are identified we then use clustering to group our anomalies into organized
 segments that allow an analyst to 'skim' the output groups instead of looking at each row.
 
-See brothon/examples/anomaly_detection.py for full code listing (code simplified below)
+See bat/examples/anomaly_detection.py for full code listing (code simplified below)
 
 .. code-block:: python
 

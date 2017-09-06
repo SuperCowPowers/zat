@@ -13,8 +13,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Local imports
-from brothon import bro_log_reader
-from brothon.analysis import dataframe_to_matrix
+from bat import bro_log_reader
+from bat import dataframe_to_matrix
 
 # Helper method for scatter/beeswarm plot
 def jitter(arr):

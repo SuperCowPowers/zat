@@ -29,7 +29,7 @@ clean-pyc:
 	find . -name '*~' -exec rm -rf {} +
 
 lint:
-	flake8 brothon test
+	flake8 bat test
 
 test:
 	py.test
@@ -38,15 +38,15 @@ test-all:
 	tox
 
 coverage:
-	coverage run --source brothon setup.py test
+	coverage run --source bat setup.py test
 	coverage report -m
 	coverage html
 	open htmlcov/index.html
 
 docs:
-	rm -f docs/brothon.rst
+	rm -f docs/bat.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ brothon
+	sphinx-apidoc -o docs/ bat
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	open docs/_build/html/index.html

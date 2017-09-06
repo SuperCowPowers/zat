@@ -1,29 +1,26 @@
-BroThon |travis| |Coverage Status| |supported-versions| |license|
+Bro Analysis Tools (BAT) |travis| |Coverage Status| |supported-versions| |license|
 ================================================================================================================
 
-**Bro + Python = BroThon!**
+**Bro Analysis Tools**
 
-The BroThon package supports the ingestion, processing, and analysis of Bro IDS data with Python.
+The BAT package supports the processing and analysis of Bro IDS data with Pandas, scikit-learn, Spark and more...
 
 
-Why BroThon?
-------------
-Bro IDS already has a flexible, powerful scripting language why should I use BroThon?
+Why BAT?
+--------
+Bro IDS already has a flexible, powerful scripting language why should I use BAT?
 
-**Offloading:** Running complex tasks (yara sigs on files, state machines, machine learning, etc..) should
+**Offloading:** Running complex tasks like statistics, state machines, machine learning, etc.. should
 be offloaded from Bro IDS so that Bro can focus on the efficient processing of high volume network traffic.
 
-**Python:** Pulling Bro data into Python allows us to leverage a large set of of Python modules for data analysis,
-statistics, machine learning and visualization.
-
-**Data Analysis:** A growing set of notebooks/examples using statistics and machine learning on Bro data.
+**Data Analysis:** We have a large set of classes and example notebooks statistics and machine learning on Bro data.
 
 Easy to Use
 -----------
 
 .. code-block:: python
 
-    from brothon import bro_log_reader
+    from bat import bro_log_reader
     ...
         # Run the bro reader on a given log file
         reader = bro_log_reader.BroLogReader('dhcp.log')
@@ -56,31 +53,29 @@ More Examples
 - Running Yara Signatures on Extracted Files
 - Checking x509 Certificates
 - Anomaly Detection
-- See `BroThon Examples <https://brothon.readthedocs.io/en/latest/examples.html>`__ for more details.
+- See `BAT Examples <https://bat-tools.readthedocs.io/en/latest/examples.html>`__ for more details.
 
 Analysis Notebooks
 ------------------
-BroThon enables the processing, analysis, and machine learning of realtime data coming from Bro IDS.
+BAT enables the processing, analysis, and machine learning of realtime data coming from Bro IDS.
 
-- Risky Domains Stats and Deployment: `Risky Domains <https://github.com/Kitware/BroThon/blob/master/notebooks/Risky_Domains.ipynb>`__
-- Bro to Scikit-Learn: `Bro to Scikit <https://github.com/Kitware/BroThon/blob/master/notebooks/Bro_to_Scikit_Learn.ipynb>`__
-- Bro to Spark: `Bro to Spark <https://github.com/Kitware/BroThon/blob/master/notebooks/Bro_to_Spark.ipynb>`__
-- Anomaly Detection Exploration: `Anomaly Detection <https://github.com/Kitware/BroThon/blob/master/notebooks/Anomaly_Detection.ipynb>`__
+- Risky Domains Stats and Deployment: `Risky Domains <https://github.com/Kitware/bat/blob/master/notebooks/Risky_Domains.ipynb>`__
+- Bro to Scikit-Learn: `Bro to Scikit <https://github.com/Kitware/bat/blob/master/notebooks/Bro_to_Scikit_Learn.ipynb>`__
+- Bro to Spark: `Bro to Spark <https://github.com/Kitware/bat/blob/master/notebooks/Bro_to_Spark.ipynb>`__
+- Anomaly Detection Exploration: `Anomaly Detection <https://github.com/Kitware/bat/blob/master/notebooks/Anomaly_Detection.ipynb>`__
 
 Install
 -------
 
 ::
 
-    $ pip install brothon
-    or
-    $ pip install brothon[all]   # Includes additional dependencies to run all examples (yara, etc)
+    $ pip install bat
 
 
 Documentation
 -------------
 
-`BroThon.readthedocs.org <https://BroThon.readthedocs.org/>`__
+`bat-tools.readthedocs.org <https://bat-tools.readthedocs.org/>`__
 
 
 Thanks
@@ -92,17 +87,17 @@ Thanks
 .. |kitware-logo| image:: https://www.kitware.com/img/small_logo_over.png
    :target: https://www.kitware.com
    :alt: Kitware Logo
-.. |travis| image:: https://img.shields.io/travis/Kitware/BroThon.svg
-   :target: https://travis-ci.org/Kitware/BroThon
-.. |Coverage Status| image:: https://coveralls.io/repos/github/Kitware/BroThon/badge.svg?branch=master
-   :target: https://coveralls.io/github/Kitware/BroThon?branch=master
-.. |version| image:: https://img.shields.io/pypi/v/BroThon.svg
-   :target: https://pypi.python.org/pypi/BroThon
-.. |wheel| image:: https://img.shields.io/pypi/wheel/BroThon.svg
-   :target: https://pypi.python.org/pypi/BroThon
-.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/BroThon.svg
-   :target: https://pypi.python.org/pypi/BroThon
-.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/BroThon.svg
-   :target: https://pypi.python.org/pypi/BroThon
+.. |travis| image:: https://img.shields.io/travis/Kitware/bat.svg
+   :target: https://travis-ci.org/Kitware/bat
+.. |Coverage Status| image:: https://coveralls.io/repos/github/Kitware/bat/badge.svg?branch=master
+   :target: https://coveralls.io/github/Kitware/bat?branch=master
+.. |version| image:: https://img.shields.io/pypi/v/bat.svg
+   :target: https://pypi.python.org/pypi/bat
+.. |wheel| image:: https://img.shields.io/pypi/wheel/bat.svg
+   :target: https://pypi.python.org/pypi/bat
+.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/bat.svg
+   :target: https://pypi.python.org/pypi/bat
+.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/bat.svg
+   :target: https://pypi.python.org/pypi/bat
 .. |license| image:: https://img.shields.io/badge/License-Apache%202.0-green.svg
    :target: https://choosealicense.com/licenses/apache-2.0

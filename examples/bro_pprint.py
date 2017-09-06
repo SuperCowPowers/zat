@@ -6,7 +6,7 @@ import argparse
 from pprint import pprint
 
 # Local imports
-from brothon import bro_log_reader
+from bat import bro_log_reader
 
 if __name__ == '__main__':
     # Example to run the bro log reader on a given file

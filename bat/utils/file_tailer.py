@@ -4,7 +4,7 @@ import os
 import time
 
 # Local imports
-from brothon.utils import file_utils
+from bat.utils import file_utils
 
 
 class FileTailer(object):

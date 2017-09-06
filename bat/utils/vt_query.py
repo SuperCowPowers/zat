@@ -9,7 +9,7 @@ import pprint
 import requests
 
 # Local imports
-from brothon.utils import cache
+from bat.utils import cache
 
 
 class VTQuery(object):

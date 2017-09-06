@@ -13,8 +13,8 @@ except ImportError:
     sys.exit(1)
 
 # Local imports
-from brothon import bro_log_reader
-from brothon.utils import vt_query
+from bat import bro_log_reader
+from bat.utils import vt_query
 
 if __name__ == '__main__':
     # Example to run the bro log reader on a given file

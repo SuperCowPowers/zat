@@ -12,8 +12,8 @@ from sklearn.ensemble import IsolationForest
 from sklearn.cluster import KMeans
 
 # Local imports
-from brothon import bro_log_reader
-from brothon.analysis import dataframe_to_matrix
+from bat import bro_log_reader
+from bat import dataframe_to_matrix
 
 def entropy(string):
     """Compute entropy on the string"""

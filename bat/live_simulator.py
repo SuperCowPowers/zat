@@ -15,8 +15,8 @@ import itertools
 import numpy as np
 
 # Local Imports
-from brothon import bro_log_reader
-from brothon.utils import file_utils
+from bat import bro_log_reader
+from bat.utils import file_utils
 
 
 class LiveSimulator(object):

@@ -13,7 +13,7 @@ import time
 import datetime
 
 # Local Imports
-from brothon.utils import file_tailer, file_utils
+from bat.utils import file_tailer, file_utils
 
 
 class BroLogReader(file_tailer.FileTailer):

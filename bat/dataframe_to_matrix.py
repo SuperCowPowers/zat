@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 
 # Local imports
-from brothon.analysis import dummy_encoder
+from bat.utils import dummy_encoder
 
 
 class DataFrameToMatrix(object):

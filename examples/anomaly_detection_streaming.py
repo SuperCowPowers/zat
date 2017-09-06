@@ -13,8 +13,8 @@ from sklearn.ensemble import IsolationForest
 from sklearn.cluster import KMeans
 
 # Local imports
-from brothon import bro_log_reader, live_simulator
-from brothon.analysis import dataframe_to_matrix, dataframe_cache
+from bat import bro_log_reader, live_simulator
+from bat import dataframe_to_matrix, dataframe_cache
 
 
 if __name__ == '__main__':
