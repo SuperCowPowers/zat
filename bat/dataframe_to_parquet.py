@@ -9,7 +9,6 @@ from __future__ import print_function
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
-import numpy as np
 
 
 def df_to_parquet(df, filename, compression='SNAPPY'):
@@ -32,6 +31,7 @@ def parquet_to_df(filename, nthreads=1):
     """
     return pq.read_table(filename, nthreads=nthreads).to_pandas()
 
+
 # Simple test of the functionality
 def test():
     """Test for methods in this file"""
@@ -41,7 +41,6 @@ def test():
     from bat.log_to_dataframe import LogToDataFrame
     from bat.utils import file_utils
     import tempfile
-    import numpy as np
 
     # Grab a test file
     data_path = file_utils.relative_dir(__file__, '../data')
