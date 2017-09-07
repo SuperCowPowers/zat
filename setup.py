@@ -42,6 +42,9 @@ setup(
         'scikit-learn',
         'spark'
     ],
+    extras_require={
+        'all':  ['yara-python', 'tldextract']
+    },
     license='Apache',
     keywords='Bro IDS, Python, Networking, Security, Scikit-Learn, Spark, Kafka',
     classifiers=[
