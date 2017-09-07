@@ -3,7 +3,7 @@ Bro Analysis Tools (BAT) |travis| |Coverage Status| |supported-versions| |licens
 
 **Bro Analysis Tools**
 
-The BAT Python package supports the processing and analysis of Bro IDS data with Pandas, scikit-learn, Spark and more...
+The BAT Python package supports the processing and analysis of Bro IDS data with Pandas, scikit-learn, and Spark
 
 
 Why BAT?
@@ -14,7 +14,7 @@ Bro IDS already has a flexible, powerful scripting language why should I use BAT
 be offloaded from Bro IDS so that Bro can focus on the efficient processing of high volume network traffic.
 
 **Data Analysis:** We have a large set of support classes that help bridge from raw Bro IDS data to packages
-like Pandas, scikit-learn, Spark and more. We also have example notebooks that show step-by-step how to get
+like Pandas, scikit-learn, and Spark. We also have example notebooks that show step-by-step how to get
 from here to there.
 
 Example: Pull in Bro Logs as Python Dictionaries
