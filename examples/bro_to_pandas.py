@@ -4,11 +4,8 @@ import os
 import sys
 import argparse
 
-# Third Party Imports
-import pandas as pd
-
 # Local imports
-from bat import bro_log_reader
+from bat.log_to_dataframe import LogToDataFrame
 
 if __name__ == '__main__':
     # Example to populate a Pandas dataframe from a bro log reader
@@ -32,11 +29,11 @@ if __name__ == '__main__':
     if args.bro_log:
         args.bro_log = os.path.expanduser(args.bro_log)
 
-        # Create a bro reader on a given log file
-        reader = bro_log_reader.BroLogReader(args.bro_log)
-
-        # Create a Pandas dataframe from reader
-        bro_df = pd.DataFrame(reader.readrows())
+        # Create a Pandas dataframe from a Bro log
+        bro_df = LogToDataFrame(args.bro_log)
 
         # Print out the head of the dataframe
         print(bro_df.head())
+
+        # Print out the types of the columns
+        print(bro_df.dtypes)

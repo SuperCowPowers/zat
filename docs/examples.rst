@@ -37,35 +37,32 @@ See bat/examples/bro_pprint.py for full code listing.
     'uid': 'CJsdG95nCNF1RXuN5'}
 
 
-Bro to Pandas DataFrame
+Bro log to Pandas DataFrame
 ---------------------------
 See bat/examples/bro_to_pandas.py for full code listing. Notice that it's one line of code to convert to a Pandas DataFrame.
 
 .. code-block:: python
 
-    import pandas as pd
-    from bat import bro_log_reader
+    from bat.log_to_dataframe import LogToDataFrame
     ...
-
-        # Create a bro reader on a given log file
-        reader = bro_log_reader.BroLogReader('http.log')
-
-        # Create a Pandas dataframe from reader
-        bro_df = pd.DataFrame(reader.readrows())
+        # Create a Pandas dataframe from a Bro log
+        bro_df = LogToDataFrame('/path/to/dns.log')
 
         # Print out the head of the dataframe
         print(bro_df.head())
 
-**Example Output**
+
+**Output:** All the Bro log data is in a Pandas DataFrame with proper types with 'ts' as the index
 
 ::
 
-                   host      id.orig_h  id.orig_p  response_body_len status_code             uri
-     hopraresidency.com  192.168.84.10       1030                372         200         /foo.js
-    blogs.redheberg.com  192.168.84.10       1031               2111         200     /mltools.js
-        santiyesefi.com  192.168.84.10       1034                327         404     /mltools.js
-         tudespacho.net  192.168.84.10       1033              12350         200  /32002245.html
-         tudespacho.net  192.168.84.10       1033               5176         200      /98765.pdf
+                                                        query      id.orig_h  id.orig_p id.resp_h \
+    ts
+    2013-09-15 17:44:27.631940                     guyspy.com  192.168.33.10       1030   4.2.2.3
+    2013-09-15 17:44:27.696869                 www.guyspy.com  192.168.33.10       1030   4.2.2.3
+    2013-09-15 17:44:28.060639   devrubn8mli40.cloudfront.net  192.168.33.10       1030   4.2.2.3
+    2013-09-15 17:44:28.141795  d31qbv1cthcecs.cloudfront.net  192.168.33.10       1030   4.2.2.3
+    2013-09-15 17:44:28.422704                crl.entrust.net  192.168.33.10       1030   4.2.2.3
 
 
 Bro to Scikit-Learn

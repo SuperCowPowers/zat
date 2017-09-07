@@ -3,7 +3,7 @@ Bro Analysis Tools (BAT) |travis| |Coverage Status| |supported-versions| |licens
 
 **Bro Analysis Tools**
 
-The BAT package supports the processing and analysis of Bro IDS data with Pandas, scikit-learn, Spark and more...
+The BAT Python package supports the processing and analysis of Bro IDS data with Pandas, scikit-learn, Spark and more...
 
 
 Why BAT?
@@ -13,10 +13,12 @@ Bro IDS already has a flexible, powerful scripting language why should I use BAT
 **Offloading:** Running complex tasks like statistics, state machines, machine learning, etc.. should
 be offloaded from Bro IDS so that Bro can focus on the efficient processing of high volume network traffic.
 
-**Data Analysis:** We have a large set of classes and example notebooks statistics and machine learning on Bro data.
+**Data Analysis:** We have a large set of support classes that help bridge from raw Bro IDS data to packages
+like Pandas, scikit-learn, Spark and more. We also have example notebooks that show step-by-step how to get
+from here to there.
 
-Easy to Use
------------
+Easy: Make a Python Dictionary
+------------------------------
 
 .. code-block:: python
 
@@ -43,6 +45,32 @@ Easy to Use
     'ts': datetime.datetime(2012, 7, 20, 3, 14, 12, 219654),
     'uid': 'CJsdG95nCNF1RXuN5'}
     ...
+
+Easy: Make a Pandas DataFrame (in one line of code)
+---------------------------------------------------
+.. code-block:: python
+
+    from bat.log_to_dataframe import LogToDataFrame
+    ...
+        # Create a Pandas dataframe from a Bro log
+        bro_df = LogToDataFrame('/path/to/dns.log')
+
+        # Print out the head of the dataframe
+        print(bro_df.head())
+
+
+**Output:** All the Bro log data is in a Pandas DataFrame with proper types and timestamp as the index
+
+::
+
+                                                         query      id.orig_h  id.orig_p id.resp_h \
+    ts
+    2013-09-15 17:44:27.631940                     guyspy.com  192.168.33.10       1030   4.2.2.3
+    2013-09-15 17:44:27.696869                 www.guyspy.com  192.168.33.10       1030   4.2.2.3
+    2013-09-15 17:44:28.060639   devrubn8mli40.cloudfront.net  192.168.33.10       1030   4.2.2.3
+    2013-09-15 17:44:28.141795  d31qbv1cthcecs.cloudfront.net  192.168.33.10       1030   4.2.2.3
+    2013-09-15 17:44:28.422704                crl.entrust.net  192.168.33.10       1030   4.2.2.3
+
 
 More Examples
 -------------

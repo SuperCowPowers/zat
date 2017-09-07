@@ -36,8 +36,9 @@ setup(
         'bat',
         'requests',
         'watchdog',
-        'pandas',
+        'numpy',
         'scipy',
+        'pandas',
         'scikit-learn',
         'spark'
     ],
