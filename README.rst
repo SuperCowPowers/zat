@@ -17,8 +17,8 @@ be offloaded from Bro IDS so that Bro can focus on the efficient processing of h
 like Pandas, scikit-learn, Spark and more. We also have example notebooks that show step-by-step how to get
 from here to there.
 
-Easy: Make a Python Dictionary
-------------------------------
+Example: Pull in Bro Logs as Python Dictionaries
+------------------------------------------------
 
 .. code-block:: python
 
@@ -46,8 +46,8 @@ Easy: Make a Python Dictionary
     'uid': 'CJsdG95nCNF1RXuN5'}
     ...
 
-Easy: Make a Pandas DataFrame (in one line of code)
----------------------------------------------------
+Example: Bro log to Pandas DataFrame (in one line of code)
+----------------------------------------------------------
 .. code-block:: python
 
     from bat.log_to_dataframe import LogToDataFrame
