@@ -35,6 +35,7 @@ class BroLogReader(file_tailer.FileTailer):
 
         # Setup the Bro to Python Type mapper
         self.field_names = []
+        self.field_types = []
         self.type_converters = []
         self.type_mapper = {'bool': lambda x: True if x == 'T' else False,
                             'count': int,
@@ -87,7 +88,7 @@ class BroLogReader(file_tailer.FileTailer):
         """Internal method _readrows, see readrows() for description"""
 
         # Read in the Bro Headers
-        offset, self.field_names, self.type_converters = self._parse_bro_header(self._filepath)
+        offset, self.field_names, self.field_types, self.type_converters = self._parse_bro_header(self._filepath)
 
         # Use parent class to yield each row as a dictionary
         for line in self.readlines(offset=offset):
@@ -136,16 +137,33 @@ class BroLogReader(file_tailer.FileTailer):
             offset = bro_file.tell()
 
         # Return the header info
-        return offset, field_names, type_converters
+        return offset, field_names, field_types, type_converters
+
+    @staticmethod
+    def dash_replacement(field_type):
+        # Replace the '-' with something reasonable for the field type
+        if field_type == 'bool':
+            return False
+        elif field_type in ['count', 'int', 'port']:
+            return 0
+        elif field_type == 'double':
+            return 0.0
+        elif field_type == 'time':
+            return datetime.datetime.fromtimestamp(0)
+        elif field_type == 'interval':
+            return datetime.timedelta(seconds=0)
+        else:
+            return '-'
 
     def make_dict(self, field_values):
         ''' Internal method that makes sure any dictionary elements
             are properly cast into the correct types.
         '''
         data_dict = {}
-        for key, value, converter in zip(self.field_names, field_values, self.type_converters):
+        for key, value, field_type, converter in zip(self.field_names, field_values, self.field_types, self.type_converters):
             try:
-                data_dict[key] = '-' if value == '-' else converter(value)
+                # We have to deal with the '-' based on the field_type
+                data_dict[key] = self.dash_replacement(field_type) if value == '-' else converter(value)
             except ValueError as exc:
                 print('Conversion Issue for key:{:s} value:{:s}\n{:s}'.format(key, str(value), str(exc)))
                 data_dict[key] = value
