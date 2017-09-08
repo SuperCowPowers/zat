@@ -20,7 +20,7 @@ def df_to_parquet(df, filename, compression='SNAPPY'):
     arrow_table = pa.Table.from_pandas(df)
     if compression == 'UNCOMPRESSED':
         compression = None
-    pq.write_table(arrow_table, filename, use_dictionary=False, compression=compression)
+    pq.write_table(arrow_table, filename, compression=compression, use_deprecated_int96_timestamps=True)
 
 
 def parquet_to_df(filename, nthreads=1):
