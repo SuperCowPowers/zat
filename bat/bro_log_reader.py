@@ -46,6 +46,9 @@ class BroLogReader(file_tailer.FileTailer):
                             'string': lambda x: x,
                             'port': int,
                             'unknown': lambda x: x}
+        self.dash_mapper = { 'bool': False, 'count': 0, 'int': 0, 'port': 0, 'double': 0.0,
+                             'time': datetime.datetime.fromtimestamp(0), 'interval': datetime.timedelta(seconds=0),
+                             'string': '-', 'unknown:': '-'}
 
         # Initialize the Parent Class
         super(BroLogReader, self).__init__(self._filepath, full_read=True, tail=self._tail)
@@ -139,22 +142,6 @@ class BroLogReader(file_tailer.FileTailer):
         # Return the header info
         return offset, field_names, field_types, type_converters
 
-    @staticmethod
-    def dash_replacement(field_type):
-        # Replace the '-' with something reasonable for the field type
-        if field_type == 'bool':
-            return False
-        elif field_type in ['count', 'int', 'port']:
-            return 0
-        elif field_type == 'double':
-            return 0.0
-        elif field_type == 'time':
-            return datetime.datetime.fromtimestamp(0)
-        elif field_type == 'interval':
-            return datetime.timedelta(seconds=0)
-        else:
-            return '-'
-
     def make_dict(self, field_values):
         ''' Internal method that makes sure any dictionary elements
             are properly cast into the correct types.
@@ -163,7 +150,7 @@ class BroLogReader(file_tailer.FileTailer):
         for key, value, field_type, converter in zip(self.field_names, field_values, self.field_types, self.type_converters):
             try:
                 # We have to deal with the '-' based on the field_type
-                data_dict[key] = self.dash_replacement(field_type) if value == '-' else converter(value)
+                data_dict[key] = self.dash_mapper.get(field_type, '-') if value == '-' else converter(value)
             except ValueError as exc:
                 print('Conversion Issue for key:{:s} value:{:s}\n{:s}'.format(key, str(value), str(exc)))
                 data_dict[key] = value
