@@ -5,8 +5,7 @@ import sys
 import argparse
 
 # Local imports
-from bat.log_to_dataframe import LogToDataFrame
-from bat.dataframe_to_parquet import df_to_parquet
+from bat.log_to_parquet import log_to_parquet
 
 if __name__ == '__main__':
     # Example to populate a Pandas dataframe from a bro log reader
@@ -32,12 +31,6 @@ if __name__ == '__main__':
         args.bro_log = os.path.expanduser(args.bro_log)
         args.parquet_file = os.path.expanduser(args.parquet_file)
 
-        # Create a Pandas dataframe from a Bro log
-        bro_df = LogToDataFrame(args.bro_log)
-
-        # Print out number of rows
-        print('Log has {:d} rows'.format(len(bro_df)))
-
         # Write out the parquet file
         print('Writing Parquet file: {:s}'.format(args.parquet_file))
-        df_to_parquet(bro_df, args.parquet_file)
+        log_to_parquet(args.bro_log, args.parquet_file)
