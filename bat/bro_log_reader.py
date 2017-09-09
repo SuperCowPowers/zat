@@ -46,9 +46,9 @@ class BroLogReader(file_tailer.FileTailer):
                             'string': lambda x: x,
                             'port': int,
                             'unknown': lambda x: x}
-        self.dash_mapper = { 'bool': False, 'count': 0, 'int': 0, 'port': 0, 'double': 0.0,
-                             'time': datetime.datetime.fromtimestamp(0), 'interval': datetime.timedelta(seconds=0),
-                             'string': '-', 'unknown:': '-'}
+        self.dash_mapper = {'bool': False, 'count': 0, 'int': 0, 'port': 0, 'double': 0.0,
+                            'time': datetime.datetime.fromtimestamp(0), 'interval': datetime.timedelta(seconds=0),
+                            'string': '-', 'unknown:': '-'}
 
         # Initialize the Parent Class
         super(BroLogReader, self).__init__(self._filepath, full_read=True, tail=self._tail)
