@@ -13,6 +13,7 @@ import pyarrow.parquet as pq
 # Local Imports
 from bat.bro_log_reader import BroLogReader
 
+
 def _make_df(rows):
     """Internal Method to make and clean the dataframe in preparation for sending to Parquet"""
 
@@ -25,6 +26,7 @@ def _make_df(rows):
             print('Converting timedelta column {:s}...'.format(column))
             df[column] = df[column].astype(str)
     return df
+
 
 def log_to_parquet(bro_log, parquet_file, compression='SNAPPY', row_group_size=1000000):
     """write_to_parquet: Converts a Bro log into a Parquet file

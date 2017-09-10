@@ -4,7 +4,6 @@
         this article: http://wesmckinney.com/blog/python-parquet-update
 """
 from __future__ import print_function
-import datetime
 
 # Third Party
 import pandas as pd
