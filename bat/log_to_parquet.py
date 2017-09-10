@@ -26,12 +26,13 @@ def _make_df(rows):
             df[column] = df[column].astype(str)
     return df
 
-def log_to_parquet(bro_log, parquet_file, compression='SNAPPY'):
+def log_to_parquet(bro_log, parquet_file, compression='SNAPPY', row_group_size=1000000):
     """write_to_parquet: Converts a Bro log into a Parquet file
         Args:
             bro_log (string: The full path to the bro log to be saved as a Parquet file
             parquet_file (string): The full path to the filename for the Parquet file
             compression (string): The compression algo to use (defaults to 'SNAPPY')
+            row_group_size (int): The size of the parquet row groups (defaults to 1000000)
         Notes:
             Right now there are two open Parquet issues
             - Timestamps in Spark: https://issues.apache.org/jira/browse/ARROW-1499
@@ -39,7 +40,6 @@ def log_to_parquet(bro_log, parquet_file, compression='SNAPPY'):
     """
 
     # Set up various parameters
-    row_group_size = 10000
     current_row_set = []
     writer = None
 
