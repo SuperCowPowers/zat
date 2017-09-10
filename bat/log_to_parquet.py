@@ -13,16 +13,32 @@ import pyarrow.parquet as pq
 # Local Imports
 from bat.bro_log_reader import BroLogReader
 
+def _make_df(rows):
+    """Internal Method to make and clean the dataframe in preparation for sending to Parquet"""
+
+    # Make DataFrame
+    df = pd.DataFrame(rows).set_index('ts')
+
+    # TimeDelta Support: https://issues.apache.org/jira/browse/ARROW-835
+    for column in df.columns:
+        if(df[column].dtype == 'timedelta64[ns]'):
+            print('Converting timedelta column {:s}...'.format(column))
+            df[column] = df[column].astype(str)
+    return df
+
 def log_to_parquet(bro_log, parquet_file, compression='SNAPPY'):
     """write_to_parquet: Converts a Bro log into a Parquet file
         Args:
             bro_log (string: The full path to the bro log to be saved as a Parquet file
             parquet_file (string): The full path to the filename for the Parquet file
             compression (string): The compression algo to use (defaults to 'SNAPPY')
+        Notes:
+            Right now there are two open Parquet issues
+            - Timestamps in Spark: https://issues.apache.org/jira/browse/ARROW-1499
+            - TimeDelta Support: https://issues.apache.org/jira/browse/ARROW-835
     """
 
     # Set up various parameters
-    row_counter = 0
     row_group_size = 10000
     current_row_set = []
     writer = None
@@ -38,11 +54,11 @@ def log_to_parquet(bro_log, parquet_file, compression='SNAPPY'):
         if num_rows % row_group_size == 0:
             print('Writing {:d} rows...'.format(num_rows))
             if writer is None:
-                arrow_table = pa.Table.from_pandas(pd.DataFrame(current_row_set).set_index('ts'))
+                arrow_table = pa.Table.from_pandas(_make_df(current_row_set))
                 writer = pq.ParquetWriter(parquet_file, arrow_table.schema, compression=compression, use_deprecated_int96_timestamps=True)
                 writer.write_table(arrow_table)
             else:
-                arrow_table = pa.Table.from_pandas(pd.DataFrame(current_row_set).set_index('ts'))
+                arrow_table = pa.Table.from_pandas(_make_df(current_row_set))
                 writer.write_table(arrow_table)
 
             # Empty the current row set
@@ -50,11 +66,10 @@ def log_to_parquet(bro_log, parquet_file, compression='SNAPPY'):
 
     # Add any left over rows and close the Parquet file
     print('Writing {:d} rows...'.format(num_rows))
-    arrow_table = pa.Table.from_pandas(pd.DataFrame(current_row_set).set_index('ts'))
+    arrow_table = pa.Table.from_pandas(_make_df(current_row_set))
     writer.write_table(arrow_table)
     writer.close()
     print('Parquet File Complete')
-
 
 
 # Simple test of the functionality
@@ -62,7 +77,7 @@ def test():
     """Test for methods in this file"""
     import os
     pd.set_option('display.width', 1000)
-    from bat.dataframe_to_parquet import df_to_parquet, parquet_to_df
+    from bat.dataframe_to_parquet import parquet_to_df
     from bat.log_to_dataframe import LogToDataFrame
     from bat.utils import file_utils
     import tempfile
@@ -94,7 +109,9 @@ def test():
     print(new_dns_df.head())
 
     # Make sure our conversions didn't lose type info
-    assert(dns_df.dtypes.values.tolist() == new_dns_df.dtypes.values.tolist())
+    # TODO: Uncomment this test when the following PR is fixed
+    #       - TimeDelta Support: https://issues.apache.org/jira/browse/ARROW-835
+    # assert(dns_df.dtypes.values.tolist() == new_dns_df.dtypes.values.tolist())
 
     print('DataFrame to Parquet Tests successful!')
 

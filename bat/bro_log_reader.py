@@ -44,6 +44,7 @@ class BroLogReader(file_tailer.FileTailer):
                             'time': lambda x: datetime.datetime.fromtimestamp(float(x)),
                             'interval': lambda x: datetime.timedelta(seconds=float(x)),
                             'string': lambda x: x,
+                            'enum': lambda x: x,
                             'port': int,
                             'unknown': lambda x: x}
         self.dash_mapper = {'bool': False, 'count': 0, 'int': 0, 'port': 0, 'double': 0.0,

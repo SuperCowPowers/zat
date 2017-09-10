@@ -4,6 +4,7 @@
         this article: http://wesmckinney.com/blog/python-parquet-update
 """
 from __future__ import print_function
+import datetime
 
 # Third Party
 import pandas as pd
@@ -17,6 +18,15 @@ def df_to_parquet(df, filename, compression='SNAPPY'):
             df (pandas dataframe): The Pandas Dataframe to be saved as parquet file
             filename (string): The full path to the filename for the Parquet file
     """
+
+    # Right now there are two open Parquet issues
+    # Timestamps in Spark: https://issues.apache.org/jira/browse/ARROW-1499
+    # TimeDelta Support: https://issues.apache.org/jira/browse/ARROW-835
+    for column in df.columns:
+        if(df[column].dtype == 'timedelta64[ns]'):
+            print('Converting timedelta column {:s}...'.format(column))
+            df[column] = df[column].astype(str)
+
     arrow_table = pa.Table.from_pandas(df)
     if compression == 'UNCOMPRESSED':
         compression = None
