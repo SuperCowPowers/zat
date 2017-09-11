@@ -89,8 +89,8 @@ BAT enables the processing, analysis, and machine learning of realtime data comi
 
 - Bro to Scikit-Learn: `Bro to Scikit <https://github.com/Kitware/bat/blob/master/notebooks/Bro_to_Scikit_Learn.ipynb>`__
 - Bro to Matplotlib: `Bro to Plot <https://github.com/Kitware/bat/blob/master/notebooks/Bro_to_Plot.ipynb>`__
-- Bro to Spark: `Bro to Spark <https://github.com/Kitware/bat/blob/master/notebooks/Bro_to_Spark.ipynb>`__
 - Bro to Parquet to Spark: `Bro to Parquet to Spark <https://github.com/Kitware/bat/blob/master/notebooks/Bro_to_Parquet_to_Spark.ipynb>`__
+- Bro to Kafka to Spark: `Bro to Spark <https://github.com/Kitware/bat/blob/master/notebooks/Bro_to_Kafka_to_Spark.ipynb>`__
 - Clustering: Picking K (or not): `Clustering K Hyperparameter <https://github.com/Kitware/bat/blob/master/notebooks/Clustering_Picking_K.ipynb>`__
 - Anomaly Detection Exploration: `Anomaly Detection <https://github.com/Kitware/bat/blob/master/notebooks/Anomaly_Detection.ipynb>`__
 - Risky Domains Stats and Deployment: `Risky Domains <https://github.com/Kitware/bat/blob/master/notebooks/Risky_Domains.ipynb>`__
