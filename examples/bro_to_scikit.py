@@ -9,7 +9,6 @@ import pandas as pd
 from sklearn.decomposition import PCA
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.cluster import KMeans
-import matplotlib.pyplot as plt
 import numpy as np
 
 # Local imports
@@ -80,14 +79,6 @@ if __name__ == '__main__':
         # Now use dataframe group by cluster
         show_fields = ['query', 'Z', 'proto', 'qtype_name', 'x', 'y', 'cluster']
         cluster_groups = bro_df[show_fields].groupby('cluster')
-
-        # Plot the Machine Learning results
-        fig, ax = plt.subplots()
-        colors = {0:'green', 1:'blue', 2:'red', 3:'orange', 4:'purple'}
-        for key, group in cluster_groups:
-            group.plot(ax=ax, kind='scatter', x='x', y='y', alpha=0.6, s=60,
-                       label='Cluster: {:d}'.format(key), color=colors[key])
-        plt.show()
 
         # Now print out the details for each cluster
         pd.set_option('display.width', 1000)
