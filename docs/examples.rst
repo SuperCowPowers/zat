@@ -73,11 +73,8 @@ to demonstrate that it's literally just a few lines of code to get to Scikit-Lea
 .. code-block:: python
 
 
-        # Create a bro reader on a given log file
-        reader = bro_log_reader.BroLogReader(args.bro_log)
-
-        # Create a Pandas dataframe from reader
-        bro_df = pd.DataFrame(reader.readrows())
+        # Create a Pandas dataframe from a Bro log
+        bro_df = log_to_dataframe.LogToDataFrame('/path/to/bro.log')
 
         # Use the Brothon DataframeToMatrix class (handles categorical data!)
         to_matrix = dataframe_to_matrix.DataFrameToMatrix()
@@ -382,11 +379,8 @@ See bat/examples/anomaly_detection.py for full code listing (code simplified bel
 .. code-block:: python
 
 
-        # Create a Bro IDS log reader
-        reader = bro_log_reader.BroLogReader(args.bro_log)
-
-        # Create a Pandas dataframe from reader
-        bro_df = pd.DataFrame(reader.readrows())
+        # Create a Pandas dataframe from a Bro log
+        bro_df = log_to_dataframe.LogToDataFrame('/path/to/dns.log')
 
         # Using Pandas we can easily and efficiently compute additional data metrics
         bro_df['query_length'] = bro_df['query'].str.len()

@@ -12,7 +12,7 @@ from sklearn.ensemble import IsolationForest
 from sklearn.cluster import KMeans
 
 # Local imports
-from bat import bro_log_reader
+from bat import log_to_dataframe
 from bat import dataframe_to_matrix
 
 def entropy(string):
@@ -54,12 +54,8 @@ if __name__ == '__main__':
             print('This example only works with Bro with http.log or dns.log files..')
             sys.exit(1)
 
-        # Create a Bro IDS log reader
-        print('Opening Data File: {:s}'.format(args.bro_log))
-        reader = bro_log_reader.BroLogReader(args.bro_log)
-
-        # Create a Pandas dataframe from reader
-        bro_df = pd.DataFrame(reader.readrows())
+        # Create a Pandas dataframe from a Bro log
+        bro_df = log_to_dataframe.LogToDataFrame(args.bro_log)
         print('Read in {:d} Rows...'.format(len(bro_df)))
 
         # Using Pandas we can easily and efficiently compute additional data metrics

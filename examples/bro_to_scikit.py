@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Local imports
-from bat import bro_log_reader
+from bat import log_to_dataframe
 from bat import dataframe_to_matrix
 
 # Helper method for scatter/beeswarm plot
@@ -48,11 +48,8 @@ if __name__ == '__main__':
     if args.bro_log:
         args.bro_log = os.path.expanduser(args.bro_log)
 
-        # Create a bro reader on a given log file
-        reader = bro_log_reader.BroLogReader(args.bro_log)
-
-        # Create a Pandas dataframe from reader
-        bro_df = pd.DataFrame(reader.readrows())
+        # Create a Pandas dataframe from the Bro log
+        bro_df = log_to_dataframe.LogToDataFrame(args.bro_log)
 
         # Add query length
         bro_df['query_length'] = bro_df['query'].str.len()
