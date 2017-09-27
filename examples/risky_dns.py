@@ -57,6 +57,7 @@ if __name__ == '__main__':
         # If we do not have one we'll create a new one
         try:
             vtq = pickle.load(open('vtq.pkl', 'rb'))
+            print('Opening VirusTotal Query Cache (cache_size={:d})...'.format(vtq.size))
         except IOError:
             vtq = vt_query.VTQuery()
 
