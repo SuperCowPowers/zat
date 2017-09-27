@@ -63,6 +63,10 @@ class VTQuery(object):
         # Call and return the internal query method
         return self._query('url', url, verbose)
 
+    @property
+    def size(self):
+        return self.query_cache.size
+
     def _query(self, query_type, query_str, verbose=False):
         """Internal query method for the VirusTotal Service
             Args:
@@ -148,6 +152,9 @@ def test():
     output = vt_query.query_file('4ecf79302ba0439f62e15d0526a297975e6bb32ea25c8c70a608916a609e5a9c')
     print('\n<<< Unit Test Cache>>>')
     pprint.pprint(output)
+
+    # Test Size
+    assert vt_query.size == 2
 
     # Test some error conditions
     output = vt_query.query_file('123')

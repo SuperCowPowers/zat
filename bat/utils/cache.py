@@ -48,12 +48,6 @@ class Cache(object):
             return None
         return value
 
-    def _check_limit(self):
-        """Intenal method: check if current cache size exceeds maximum cache
-           size and pop the oldest item in this case"""
-        if len(self._store) >= self._max_size:
-            self._store.popitem(last=False)  # FIFO
-
     def clear(self):
         """Clear the cache"""
         self._store = OrderedDict()
@@ -62,6 +56,16 @@ class Cache(object):
         """Dump the cache (for debugging)"""
         for key in self._store.keys():
             print(key, ':', self.get(key))
+
+    @property
+    def size(self):
+        return len(self._store)
+
+    def _check_limit(self):
+        """Intenal method: check if current cache size exceeds maximum cache
+           size and pop the oldest item in this case"""
+        if len(self._store) >= self._max_size:
+            self._store.popitem(last=False)  # FIFO
 
 
 def test():
@@ -86,6 +90,9 @@ def test():
     # So the '0' key should no longer be there FIFO
     assert my_cache.get('0') is None
     assert my_cache.get('5') is not None
+
+    # Make sure size is working
+    assert my_cache.size == 5
 
     # Dump the cache
     my_cache.dump()
