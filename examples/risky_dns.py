@@ -59,7 +59,7 @@ if __name__ == '__main__':
             vtq = pickle.load(open('vtq.pkl', 'rb'))
             print('Opening VirusTotal Query Cache (cache_size={:d})...'.format(vtq.size))
         except IOError:
-            vtq = vt_query.VTQuery()
+            vtq = vt_query.VTQuery(max_cache_time=60*24*7) # One week cache
 
         # See our 'Risky Domains' Notebook for the analysis and
         # statistical methods used to compute this risky set of TLDs
