@@ -9,9 +9,10 @@ from bat.utils import net_utils, cache
 class ReverseDNS(object):
     """Perform a reverse dns lookup on fields in the ip_field_list."""
 
-    def __init__(self):
+    def __init__(self, lookup_internal=False):
         """Initialize ReverseDNS Class"""
         self.ip_lookup_cache = cache.Cache(timeout=600)
+        self.lookup_internal = lookup_internal
 
     def lookup(self, ip_address):
         """Try to do a reverse dns lookup on the given ip_address"""
@@ -21,7 +22,7 @@ class ReverseDNS(object):
             domain = self.ip_lookup_cache.get(ip_address)
 
         # Is the ip_address local or special
-        elif net_utils.is_internal(ip_address):
+        elif not self.lookup_internal and net_utils.is_internal(ip_address):
             domain = 'internal'
         elif net_utils.is_special(ip_address):
             domain = net_utils.is_special(ip_address)
