@@ -193,9 +193,8 @@ def test():
     reader.make_dict([5, '0, .5, .5'])
 
     # Test invalid file path
-    with pytest.raises(IOError) as e_info:
+    with pytest.raises(IOError):
         BroLogReader('nowhere.log')
-
 
     # Now include tailing (note: as an automated test this needs to timeout quickly)
     try:
