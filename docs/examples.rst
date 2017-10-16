@@ -203,7 +203,7 @@ See bat/examples/http_user_agents.py for full code listing (code simplified belo
 Yara rules on Bro extracted files
 ---------------------------------
 The example will dymancially monitor the extract_files directory and when a file is
-dropped by Bro IDS the code will run a set of Yara rules against that file.
+dropped by Bro the code will run a set of Yara rules against that file.
 See bat/examples/yara_matches.py for full code listing (code simplified below)
 
 .. code-block:: python
@@ -274,7 +274,7 @@ See bat/examples/risky_dns.py for full code listing (code simplified below)
 
 
 **Example Output:**
-To test this example simply do a "$ping uni10.tk" on a machine being monitored by your Bro IDS.
+To test this example simply do a "$ping uni10.tk" on a machine being monitored by your Bro.
 
 Note: You can also ping something like 'isaftaho.tk' which is not on any of the blacklist but will
 still hit. The script will obviously cast a much wider net than just the blacklists.
@@ -300,7 +300,7 @@ still hit. The script will obviously cast a much wider net than just the blackli
 Cert Checker
 ------------
 There's been discussion about Let's Encrypt issuing certficates to possible phishing/malicious site owners. This example
-will quickly check and dynamically monitor your Bro IDS x509 logs for certificates that may be from malicious sites.
+will quickly check and dynamically monitor your Bro x509 logs for certificates that may be from malicious sites.
 
 See bat/examples/cert_checker.py for full code listing (code simplified below)
 
@@ -336,7 +336,7 @@ See bat/examples/cert_checker.py for full code listing (code simplified below)
 
 
 **Example Output:**
-Simply run this example script on your Bro IDS x509.log.
+Simply run this example script on your Bro x509.log.
 
 ::
 
@@ -411,7 +411,7 @@ See bat/examples/anomaly_detection.py for full code listing (code simplified bel
 
 
 **Example Output:**
-Run this example script on your Bro IDS dns.log...
+Run this example script on your Bro dns.log...
 
 ::
 
@@ -451,7 +451,7 @@ Run this example script on your Bro IDS dns.log...
 Streaming Outlier Detector
 --------------------------
 Here we're demonstrating a streaming anomaly detection to show the use of the dataframe_cache
-class. The dataframe_cache allows us to stream data from Bro IDS into a 'time-windowed'
+class. The dataframe_cache allows us to stream data from Bro into a 'time-windowed'
 dataframe. In this example we blah blah..
 
 - Every 5 seconds we run anomaly detection
