@@ -32,6 +32,6 @@ if __name__ == '__main__':
         args.bro_log = os.path.expanduser(args.bro_log)
 
         # Run the bro reader on a given log file
-        reader = bro_log_reader.BroLogReader(args.bro_log, tail=args.tail)
+        reader = bro_log_reader.BroLogReader(args.bro_log, tail=args.tail, strict=True)
         for row in reader.readrows():
             pprint(row)

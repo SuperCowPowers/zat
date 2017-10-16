@@ -25,13 +25,21 @@ class BroLogReader(file_tailer.FileTailer):
                 filepath (str): The full path the file (/full/path/to/the/file.txt)
                 delimiter (str): The delimiter in the Bro IDS logs (default='\t')
                 tail (bool): Do a dynamic tail on the file (i.e. tail -f) (default=False)
+                strict (bool): Raise an exception on conversions errors (default=False)
     """
 
-    def __init__(self, filepath, delimiter='\t', tail=False):
+    def __init__(self, filepath, delimiter='\t', tail=False, strict=False):
         """Initialization for the BroLogReader Class"""
+
+        # First check if the file exists and is readable
+        if not os.access(filepath, os.R_OK):
+            raise IOError('Could not read/access bro log file: {:s}'.format(filepath))
+
+        # Setup some class instance vars
         self._filepath = filepath
         self._delimiter = delimiter
         self._tail = tail
+        self._strict = strict
 
         # Setup the Bro to Python Type mapper
         self.field_names = []
@@ -155,12 +163,15 @@ class BroLogReader(file_tailer.FileTailer):
             except ValueError as exc:
                 print('Conversion Issue for key:{:s} value:{:s}\n{:s}'.format(key, str(value), str(exc)))
                 data_dict[key] = value
+                if self._strict:
+                    raise exc
 
         return data_dict
 
 
 def test():
     """Test for BroLogReader Python Class"""
+    import pytest
 
     # Grab a test file
     data_path = file_utils.relative_dir(__file__, '../data')
@@ -180,6 +191,11 @@ def test():
     reader.field_names = ['good', 'error']
     reader.type_converters = [int, lambda x: datetime.datetime.fromtimestamp(float(x))]
     reader.make_dict([5, '0, .5, .5'])
+
+    # Test invalid file path
+    with pytest.raises(IOError) as e_info:
+        BroLogReader('nowhere.log')
+
 
     # Now include tailing (note: as an automated test this needs to timeout quickly)
     try:
