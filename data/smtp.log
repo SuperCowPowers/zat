@@ -1,0 +1,12 @@
+#separator \x09
+#set_separator	,
+#empty_field	(empty)
+#unset_field	-
+#path	smtp
+#open	2014-04-03-10-16-36
+#fields	ts	uid	id.orig_h	id.orig_p	id.resp_h	id.resp_p	trans_depth	helo	mailfrom	rcptto	date	from	to	reply_to	msg_id	in_reply_to	subject	x_originating_ip	first_received	second_received	last_reply	path	user_agent	fuids	is_webmail
+#types	time	string	addr	port	addr	port	count	string	string	table[string]	string	string	table[string]	string	string	string	string	addr	string	string	string	vector[addr]	string	vector[string]	bool
+1326934970.944281	CdbVOo4rI0fX8lIug9	192.168.6.10	1045	65.55.162.200	587	1	tf1s	-	-	-	-	-	-	-	-	-	-	-	-	220 2.0.0 SMTP server ready	65.55.162.200,192.168.6.10	-	(empty)	F
+1326934980.935623	CAJIcp28fzFeMfMiyc	192.168.6.10	1049	65.55.96.11	587	1	dmlqo	-	-	-	-	-	-	-	-	-	-	-	-	220 2.0.0 SMTP server ready	65.55.96.11,192.168.6.10	-	(empty)	F
+1326934987.764453	CKMRDvx3umJMvVT1b	192.168.6.10	1051	65.55.162.200	587	1	mabr5j	-	-	-	-	-	-	-	-	-	-	-	-	220 2.0.0 SMTP server ready	65.55.162.200,192.168.6.10	-	(empty)	F
+#close	2014-04-03-10-16-36
