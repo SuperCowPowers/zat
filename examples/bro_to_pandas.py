@@ -1,4 +1,4 @@
-"""Bro IDS log to Pandas Dataframe Example"""
+"""Bro log to Pandas Dataframe Example"""
 from __future__ import print_function
 import os
 import sys

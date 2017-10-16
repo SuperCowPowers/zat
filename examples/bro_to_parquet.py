@@ -1,4 +1,4 @@
-"""Bro IDS log to Pandas Dataframe Example"""
+"""Bro log to Parquet Dataframe Example"""
 from __future__ import print_function
 import os
 import sys
@@ -8,7 +8,7 @@ import argparse
 from bat.log_to_parquet import log_to_parquet
 
 if __name__ == '__main__':
-    # Example to populate a Pandas dataframe from a bro log reader
+    # Example to write Parquet file from a bro log
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()

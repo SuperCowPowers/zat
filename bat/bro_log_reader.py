@@ -1,10 +1,10 @@
-"""BroLogReader: This class reads in various Bro IDS logs. The class inherits from
+"""BroLogReader: This class reads in various Bro logs. The class inherits from
                  the FileTailer class so it supports the following use cases:
                    - Read contents of a Bro log file        (tail=False)
                    - Read contents + 'tail -f' Bro log file (tail=True)
        Args:
             filepath (str): The full path the file (/full/path/to/the/file.txt)
-            delimiter (str): The delimiter in the Bro IDS logs (default='\t')
+            delimiter (str): The delimiter in the Bro logs (default='\t')
             tail (bool): Do a dynamic tail on the file (i.e. tail -f) (default=False)
 """
 from __future__ import print_function
@@ -17,13 +17,13 @@ from bat.utils import file_tailer, file_utils
 
 
 class BroLogReader(file_tailer.FileTailer):
-    """BroLogReader: This class reads in various Bro IDS logs. The class inherits from
+    """BroLogReader: This class reads in various Bro logs. The class inherits from
                      the FileTailer class so it supports the following use cases:
                        - Read contents of a Bro log file        (tail=False)
                        - Read contents + 'tail -f' Bro log file (tail=True)
            Args:
                 filepath (str): The full path the file (/full/path/to/the/file.txt)
-                delimiter (str): The delimiter in the Bro IDS logs (default='\t')
+                delimiter (str): The delimiter in the Bro logs (default='\t')
                 tail (bool): Do a dynamic tail on the file (i.e. tail -f) (default=False)
                 strict (bool): Raise an exception on conversions errors (default=False)
     """

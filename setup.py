@@ -47,7 +47,7 @@ setup(
         'all':  ['yara-python', 'tldextract']
     },
     license='Apache',
-    keywords='Bro IDS, Python, Networking, Security, Scikit-Learn, Spark, Kafka',
+    keywords='Bro, Python, Networking, Security, Scikit-Learn, Spark, Kafka, Parquet',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',

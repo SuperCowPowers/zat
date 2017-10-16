@@ -1,4 +1,4 @@
-"""LiveSimulator: This class reads in various Bro IDS logs. The class utilizes
+"""LiveSimulator: This class reads in various Bro logs. The class utilizes
                  the BroLogReader and simply loops over the static bro log
                  file, replaying rows and changing any time stamps
         Args:
@@ -20,7 +20,7 @@ from bat.utils import file_utils
 
 
 class LiveSimulator(object):
-    """LiveSimulator: This class reads in various Bro IDS logs. The class utilizes the
+    """LiveSimulator: This class reads in various Bro logs. The class utilizes the
                       BroLogReader and simply loops over the static bro log file
                       replaying rows at the specified EPS and changing timestamps to 'now()'
     """

@@ -1,4 +1,4 @@
-# Example that demonstrates going from Bro IDS data to scikit-learn models
+# Example that demonstrates going from Bro data to scikit-learn models
 from __future__ import print_function
 import os
 import sys
@@ -21,7 +21,7 @@ def jitter(arr):
     return arr + np.random.randn(len(arr)) * stdev
 
 if __name__ == '__main__':
-    # Example that demonstrates going from Bro IDS data to scikit-learn models
+    # Example that demonstrates going from Bro data to scikit-learn models
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()

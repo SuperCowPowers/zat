@@ -52,7 +52,7 @@ if __name__ == '__main__':
             print('This example only works with Bro with http.log or dns.log files..')
             sys.exit(1)
 
-        # Create a Bro IDS log reader
+        # Create a Bro log reader
         print('Opening Data File: {:s}'.format(args.bro_log))
         reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)
 

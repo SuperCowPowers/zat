@@ -1,4 +1,4 @@
-"""BroMultiLogReader: This class reads in multiple Bro IDS logs.
+"""BroMultiLogReader: This class reads in multiple Bro logs.
            Args:
                 filepath (str): The full path the file (/full/path/to/the/file.txt) can be a
                                 glob (e.g dns*.log) or a gzip file (e.g. dns.log.gz)
@@ -15,7 +15,7 @@ from bat import bro_log_reader
 
 
 class BroMultiLogReader(object):
-    """BroMultiLogReader: This class reads in multiple Bro IDS logs.
+    """BroMultiLogReader: This class reads in multiple Bro logs.
            Args:
                 filepath (str): The full path the file (/full/path/to/the/file.txt) can be a
                                 glob (e.g dns*.log) or a gzip file (e.g. dns.log.gz)
