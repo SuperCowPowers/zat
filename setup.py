@@ -33,7 +33,6 @@ setup(
     include_package_data=True,
     data_files=get_files('data') + get_files('examples'),
     install_requires=[
-        'bat',
         'requests',
         'watchdog',
         'numpy',
