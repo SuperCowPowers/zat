@@ -82,7 +82,7 @@ class Cache(object):
         now = time.time()
         if self._last_compression + self._compression_timer < now:
             print('Compressing Cache...')
-            self._last_compression  = now
+            self._last_compression = now
             for key in list(self._store.keys()):
                 self.get(key)
 
@@ -138,7 +138,7 @@ def test():
     assert my_cache.size == 0
 
     # Also make sure compression call is throttled
-    my_cache._compress() # Should not output a compression message
+    my_cache._compress()  # Should not output a compression message
 
 
 if __name__ == '__main__':
