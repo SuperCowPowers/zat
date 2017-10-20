@@ -118,7 +118,7 @@ Thanks
 .. |kitware-logo| image:: https://www.kitware.com/img/small_logo_over.png
    :target: https://www.kitware.com
    :alt: Kitware Logo
-.. |travis| image:: https://img.shields.io/travis/Kitware/bat.svg
+.. |travis| image:: https://travis-ci.org/Kitware/bat.svg?branch=master
    :target: https://travis-ci.org/Kitware/bat
 .. |Coverage Status| image:: https://coveralls.io/repos/github/Kitware/bat/badge.svg?branch=master
    :target: https://coveralls.io/github/Kitware/bat?branch=master
