@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--bro-log', type=str, required=True, help='Specify a bro log to run BroLogReader test on')
+    parser.add_argument('bro_log', type=str, help='Specify a bro log to run BroLogReader test on')
     parser.add_argument('-t', action='store_true', default=False, help='Sets the program to tail a live Bro log')
     parser.add_argument('-s', action='store_true', default=False, help='Only print the summary of the findings.')
     args, commands = parser.parse_known_args()
