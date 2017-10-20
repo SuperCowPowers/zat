@@ -36,8 +36,8 @@ if __name__ == '__main__':
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('-r', '--rule-index', type=str, help='Specify the yara rule index file (e.g. /full/path/to/yara/rules/index.yar)')
-    parser.add_argument('-e', '--extract-dir', type=str, help='Specify the Bro extract_files directory (e.g. /full/path/to/bro/extract_files)')
+    parser.add_argument('-r', '--rule-index', type=str, required=True, help='Specify the yara rule index file (e.g. /full/path/to/yara/rules/index.yar)')
+    parser.add_argument('-e', '--extract-dir', type=str, required=True, help='Specify the Bro extract_files directory (e.g. /full/path/to/bro/extract_files)')
     args, commands = parser.parse_known_args()
 
     # Check for unknown args
