@@ -22,11 +22,6 @@ if __name__ == '__main__':
         print('Unrecognized args: %s' % commands)
         sys.exit(1)
 
-    # If no args just call help
-    if len(sys.argv) == 1:
-        parser.print_help()
-        sys.exit(1)
-
     # Sanity check that this is a file log
     if not args.bro_log.endswith('files.log'):
         print('This example only works with Bro files.log files..')
