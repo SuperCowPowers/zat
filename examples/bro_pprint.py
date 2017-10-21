@@ -22,11 +22,6 @@ if __name__ == '__main__':
         print('Unrecognized args: %s' % commands)
         sys.exit(1)
 
-    # If no args just call help
-    if len(sys.argv) == 1:
-        parser.print_help()
-        sys.exit(1)
-
     # File may have a tilde in it
     if args.bro_log:
         args.bro_log = os.path.expanduser(args.bro_log)
