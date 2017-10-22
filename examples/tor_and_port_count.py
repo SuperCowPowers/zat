@@ -52,11 +52,19 @@ if __name__ == '__main__':
             # Add the destination port to the list of ports
             ports.append(row['id.resp_p'])
             # Pull out the Certificate Issuer
-            issuer = row['issuer']
+            try:
+                issuer = row['issuer']
+            except KeyError:
+                print('Could not find the issuer field in your ssl.log. Please verify your log file.')
+                sys.exit(1)
             # Check if the issuer matches the known Tor format
             if issuer_regex.match(issuer):
                 # Pull out the Certificate Subject
-                subject = row['subject']
+                try:
+                    subject = row['subject']
+                except KeyError:
+                    print('Could not find the subject field in your ssl.log. Please verify your log file.')
+                    sys.exit(1)
                 # Check if the subject matches the known Tor format
                 if subject_regex.match(subject):
                     print('\nPossible Tor connection found')
