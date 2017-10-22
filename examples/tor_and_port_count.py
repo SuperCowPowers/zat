@@ -1,4 +1,4 @@
-"""Cert Checker bat Example"""
+"""Tor detection and SSL port count example"""
 from __future__ import print_function
 import os
 import sys
