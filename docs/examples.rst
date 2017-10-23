@@ -448,11 +448,41 @@ Run this example script on your Bro dns.log...
     60  1    False   udp  j.maxmind.com  C_INTERNET          A    NOERROR            13        3
 
 
-Streaming Outlier Detector
---------------------------
-Here we're demonstrating a streaming anomaly detection to show the use of the dataframe_cache
-class. The dataframe_cache allows us to stream data from Bro into a 'time-windowed'
-dataframe. In this example we blah blah..
+Tor detection and port number count
+-----------------------------------
+See bat/examples/tor_and_port_count.py for the code.
 
-- Every 5 seconds we run anomaly detection
-- The dataframe contains a window of data (30 seconds in this example)
+This example will go through ssl.log files and try to identify possible Tor traffic.
+This is done by using the well known pattern of the Issuer and Subject ID in the
+certificates. Please note that your Bro installation will have to be configured
+to log these fields for this to work. Further info about how to do that can be
+found here: `SSL Log Info <https://www.bro.org/sphinx/scripts/base/protocols/ssl/main.bro.html#type-SSL::Info>`_
+
+**Example Output:**
+Run this example script on your Bro ssl.log...
+
+::
+
+    Possible Tor connection found
+    From: 10.0.0.126 To: 82.96.35.7 Port: 443
+
+
+The script will also keep a count of which destination ports that SSL have been
+detected on. Something that might help with threat hunting since you might find
+traffic on a port you definitely wasn't expecting to be there.
+
+**Example Output:**
+Run this example script on your Bro ssl.log...
+
+::
+
+    Port statistics
+    443     513
+    8443    173
+    9997    21
+    9001    20
+    8080    2
+    80      2
+    5901    1
+    9081    1
+    447     1
