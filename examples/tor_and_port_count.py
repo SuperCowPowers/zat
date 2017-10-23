@@ -68,9 +68,7 @@ if __name__ == '__main__':
                 # Check if the subject matches the known Tor format
                 if subject_regex.match(subject):
                     print('\nPossible Tor connection found')
-                    print('From: {:s} To: {:s} Port: {:d}'.format(row['id.orig_h'],
-                                                                  row['id.resp_h'],
-                                                                  row['id.resp_p']))
+                    print('From: {:s} To: {:s} Port: {:d}'.format(row['id.orig_h'], row['id.resp_h'], row['id.resp_p']))
                     number +=1
 
         # If we are not tailing a live log file, let's print some stats.

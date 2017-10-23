@@ -448,15 +448,6 @@ Run this example script on your Bro dns.log...
     60  1    False   udp  j.maxmind.com  C_INTERNET          A    NOERROR            13        3
 
 
-Streaming Outlier Detector
---------------------------
-Here we're demonstrating a streaming anomaly detection to show the use of the dataframe_cache
-class. The dataframe_cache allows us to stream data from Bro into a 'time-windowed'
-dataframe. In this example we blah blah..
-
-- Every 5 seconds we run anomaly detection
-- The dataframe contains a window of data (30 seconds in this example)
-
 Tor detection and port number count
 -----------------------------------
 See bat/examples/tor_and_port_count.py for the code.
