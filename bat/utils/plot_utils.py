@@ -15,10 +15,7 @@ def plot_defaults():
         plt.rc('grid', linestyle='-')
         plt.rcParams['figure.figsize'] = 16.0, 6.0
         # plt.rcParams.update({'figure.autolayout': True})
-        try:
-            plt.rc('patch', force_edgecolor=True)
-        except:
-            pass
+        plt.rc('patch', force_edgecolor=True)
     except ImportError:
         print('Could not import matplotlib... this is fine...')
 

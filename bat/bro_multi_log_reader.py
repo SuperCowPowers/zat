@@ -36,6 +36,7 @@ class BroMultiLogReader(object):
         for self._filepath in self._files:
 
             # Check if the file is zipped
+            tmp = None
             if self._filepath.endswith('.gz'):
                 tmp = tempfile.NamedTemporaryFile(delete=False)
                 with gzip.open(self._filepath, 'rb') as f_in, open(tmp.name, 'wb') as f_out:
@@ -51,9 +52,10 @@ class BroMultiLogReader(object):
 
             # Clean up any temp files
             try:
-                os.remove(tmp.name)
-                print('Removed temporary file {:s}...'.format(tmp.name))
-            except:
+                if tmp:
+                    os.remove(tmp.name)
+                    print('Removed temporary file {:s}...'.format(tmp.name))
+            except IOError:
                 pass
 
 
