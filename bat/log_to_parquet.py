@@ -44,6 +44,7 @@ def log_to_parquet(bro_log, parquet_file, compression='SNAPPY', row_group_size=1
     # Set up various parameters
     current_row_set = []
     writer = None
+    num_rows = 0
 
     # Spin up the bro reader on a given log file
     reader = BroLogReader(bro_log)
@@ -67,11 +68,12 @@ def log_to_parquet(bro_log, parquet_file, compression='SNAPPY', row_group_size=1
             current_row_set = []
 
     # Add any left over rows and close the Parquet file
-    print('Writing {:d} rows...'.format(num_rows))
-    arrow_table = pa.Table.from_pandas(_make_df(current_row_set))
-    writer.write_table(arrow_table)
-    writer.close()
-    print('Parquet File Complete')
+    if num_rows:
+        print('Writing {:d} rows...'.format(num_rows))
+        arrow_table = pa.Table.from_pandas(_make_df(current_row_set))
+        writer.write_table(arrow_table)
+        writer.close()
+        print('Parquet File Complete')
 
 
 # Simple test of the functionality
@@ -90,7 +92,6 @@ def test():
 
     # Convert the log to a Pandas DataFrame
     dns_df = LogToDataFrame(test_path)
-    # dns_df.reset_index(inplace=True)
 
     # Print out the head
     print(dns_df.head())
@@ -114,6 +115,13 @@ def test():
     # TODO: Uncomment this test when the following PR is fixed
     #       - TimeDelta Support: https://issues.apache.org/jira/browse/ARROW-835
     # assert(dns_df.dtypes.values.tolist() == new_dns_df.dtypes.values.tolist())
+
+    # Test an empty log (a log with header/close but no data rows)
+    test_path = os.path.join(data_path, 'http_empty.log')
+    filename = tempfile.NamedTemporaryFile(delete=False).name
+    log_to_parquet(test_path, filename)
+    parquet_to_df(filename)
+    os.remove(filename)
 
     print('DataFrame to Parquet Tests successful!')
 

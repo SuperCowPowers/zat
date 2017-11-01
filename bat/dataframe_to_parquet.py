@@ -38,7 +38,11 @@ def parquet_to_df(filename, nthreads=1):
             filename (string): The full path to the filename for the Parquet file
             ntreads (int): The number of threads to use (defaults to 1)
     """
-    return pq.read_table(filename, nthreads=nthreads).to_pandas()
+    try:
+        return pq.read_table(filename, nthreads=nthreads).to_pandas()
+    except pa.lib.ArrowIOError:
+        print('Could not read parquet file {:s}'.format(filename))
+        return None
 
 
 # Simple test of the functionality

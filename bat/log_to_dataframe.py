@@ -27,7 +27,7 @@ class LogToDataFrame(pd.DataFrame):
         super(LogToDataFrame, self).__init__(reader.readrows())
 
         # Set the index
-        if ts_index:
+        if ts_index and not self.empty:
             self.set_index('ts', inplace=True)
 
 
@@ -40,9 +40,19 @@ def test():
 
     # Grab a test file
     data_path = file_utils.relative_dir(__file__, '../data')
-    test_path = os.path.join(data_path, 'dns.log')
+    test_path = os.path.join(data_path, 'http.log')
 
     # Convert it to a Pandas DataFrame
+    http_df = LogToDataFrame(test_path)
+
+    # Print out the head
+    print(http_df.head())
+
+    # Print out the datatypes
+    print(http_df.dtypes)
+
+    # Test an empty log (a log with header/close but no data rows)
+    test_path = os.path.join(data_path, 'http_empty.log')
     http_df = LogToDataFrame(test_path)
 
     # Print out the head
