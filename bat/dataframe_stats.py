@@ -88,7 +88,7 @@ def compute_g(count, expected):
     """G Test Score for log likelihood ratio
        - http://en.wikipedia.org/wiki/G_test (Wikipedia)
     """
-    return 2.0 * count * math.log(count/expected) if count else 0
+    return 2.0 * count * math.log(count/expected) if count and expected else 0
 
 
 # Simple test of the functionality
