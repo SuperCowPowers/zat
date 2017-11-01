@@ -188,7 +188,8 @@ def test():
     print('Read with NoTail Test successful!')
 
     # Test an empty log (a log with header/close but no data rows)
-    reader = BroLogReader('../data/http_empty.log')
+    test_path = os.path.join(data_path, 'http_empty.log')
+    reader = BroLogReader(test_path)
     for line in reader.readrows():
         print(line)
 
