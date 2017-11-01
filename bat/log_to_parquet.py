@@ -120,7 +120,7 @@ def test():
     test_path = os.path.join(data_path, 'http_empty.log')
     filename = tempfile.NamedTemporaryFile(delete=False).name
     log_to_parquet(test_path, filename)
-    new_http_df = parquet_to_df(filename)
+    parquet_to_df(filename)
     os.remove(filename)
 
     print('DataFrame to Parquet Tests successful!')
