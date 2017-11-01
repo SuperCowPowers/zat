@@ -187,6 +187,11 @@ def test():
             print(line)
     print('Read with NoTail Test successful!')
 
+    # Test an empty log (a log with header/close but no data rows)
+    reader = BroLogReader('../data/http_empty.log')
+    for line in reader.readrows():
+        print(line)
+
     # Test some of the error conditions
     reader.field_names = ['good', 'error']
     reader.type_converters = [int, lambda x: datetime.datetime.fromtimestamp(float(x))]
