@@ -81,7 +81,6 @@ class Cache(object):
         # Don't compress too often
         now = time.time()
         if self._last_compression + self._compression_timer < now:
-            print('Compressing Cache...')
             self._last_compression = now
             for key in list(self._store.keys()):
                 self.get(key)

@@ -92,11 +92,10 @@ class VTQuery(object):
         try:
             vt_output = response.json()
         except ValueError:
-            error_msg = 'VirusTotal no valid response, typically this means you are past your quota'
-            print(error_msg)
+            error_msg = 'VirusTotal no valid response, throttling and trying again...'
             if self.throttle:
                 if verbose:
-                    print('Throttling and trying again...')
+                    print(error_msg)
                 time.sleep(30)
                 return self._query(query_type, query_str)
 
