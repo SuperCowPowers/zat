@@ -79,7 +79,7 @@ def test_utils():
     print('Most Recent Python File: {:s}'.format(most_recent(path, endswith='.py')))
 
     # Test startswith
-    assert most_recent(path, startswith='cache') == relative_dir(__file__, 'cache.py')
+    assert most_recent(path, startswith='cache', endswith='.py') == relative_dir(__file__, 'cache.py')
 
     # Test when no filename match
     assert most_recent(path, endswith='.nomatch') is None
