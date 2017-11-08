@@ -32,7 +32,7 @@ def most_recent(path, startswith=None, endswith=None):
     """
     candidate_files = []
     for filename in all_files_in_directory(path):
-        if startswith and not filename.startswith(startswith):
+        if startswith and not os.path.basename(filename).startswith(startswith):
             continue
         if endswith and not filename.endswith(endswith):
             continue
@@ -68,14 +68,18 @@ def relative_dir(file_path, rel_dir):
 def test_utils():
     """Test the utility methods"""
 
+    print('Relative Dir: {:s}'.format(relative_dir(__file__, '.')))
     print('File Directory: {:s}'.format(file_dir(__file__)))
-    path = relative_dir(__file__, '.')
+    path = file_dir(__file__)
     print('Path: {:s}'.format(path))
     for my_file in all_files_in_directory(path):
         print('\t%s' % my_file)
 
     print('Most Recent: {:s}'.format(most_recent(path)))
     print('Most Recent Python File: {:s}'.format(most_recent(path, endswith='.py')))
+
+    # Test startswith
+    assert most_recent(path, startswith='cache') == relative_dir(__file__, 'cache.py')
 
     # Test when no filename match
     assert most_recent(path, endswith='.nomatch') is None
