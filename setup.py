@@ -39,7 +39,7 @@ setup(
         'scipy',
         'pandas',
         'scikit-learn',
-        'spark',
+        'pyspark',
         'pyarrow'
     ],
     extras_require={
