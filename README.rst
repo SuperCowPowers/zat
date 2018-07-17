@@ -6,6 +6,10 @@ Bro Analysis Tools (BAT) |travis| |Coverage Status| |supported-versions| |licens
 The BAT Python package supports the processing and analysis of Bro data with Pandas, scikit-learn, and Spark
 
 
+BroCon 2017 Presentation
+------------------------
+Data Analysis, Machine Learning, Bro, and You! (`Video <https://www.youtube.com/watch?v=pG5lU9CLnIU>`__)
+
 Why BAT?
 --------
 Bro already has a flexible, powerful scripting language why should I use BAT?
