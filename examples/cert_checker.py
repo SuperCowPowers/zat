@@ -23,7 +23,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # Sanity check that this is a dns log
-    if not args.bro_log.endswith('x509.log'):
+    if 'x509' not in args.bro_log:
         print('This example only works with Bro x509.log files..')
         sys.exit(1)
 
