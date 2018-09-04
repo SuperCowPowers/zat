@@ -40,7 +40,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # Sanity check that this is a dns log
-    if not args.bro_log.endswith('dns.log'):
+    if 'dns' not in args.bro_log:
         print('This example only works with Bro dns.log files..')
         sys.exit(1)
 
