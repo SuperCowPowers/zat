@@ -1,4 +1,4 @@
-# Example that demonstrates going from Bro IDS data to scikit-learn models
+# Example that demonstrates going from Bro data to scikit-learn models
 from __future__ import print_function
 import os
 import sys
@@ -9,12 +9,11 @@ import pandas as pd
 from sklearn.decomposition import PCA
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.cluster import KMeans
-import matplotlib.pyplot as plt
 import numpy as np
 
 # Local imports
-from brothon import bro_log_reader
-from brothon.analysis import dataframe_to_matrix
+from bat import log_to_dataframe
+from bat import dataframe_to_matrix
 
 # Helper method for scatter/beeswarm plot
 def jitter(arr):
@@ -22,11 +21,11 @@ def jitter(arr):
     return arr + np.random.randn(len(arr)) * stdev
 
 if __name__ == '__main__':
-    # Example that demonstrates going from Bro IDS data to scikit-learn models
+    # Example that demonstrates going from Bro data to scikit-learn models
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--bro-log', type=str, help='Specify a bro log to run BroLogReader test on')
+    parser.add_argument('bro_log', type=str, help='Specify a bro log to run BroLogReader test on')
     args, commands = parser.parse_known_args()
 
     # Check for unknown args
@@ -34,13 +33,8 @@ if __name__ == '__main__':
         print('Unrecognized args: %s' % commands)
         sys.exit(1)
 
-    # If no args just call help
-    if len(sys.argv) == 1:
-        parser.print_help()
-        sys.exit(1)
-
     # Sanity check that this is a dns log
-    if not args.bro_log.endswith('dns.log'):
+    if 'dns' not in args.bro_log:
         print('This example only works with Bro dns.log files..')
         sys.exit(1)
 
@@ -48,11 +42,8 @@ if __name__ == '__main__':
     if args.bro_log:
         args.bro_log = os.path.expanduser(args.bro_log)
 
-        # Create a bro reader on a given log file
-        reader = bro_log_reader.BroLogReader(args.bro_log)
-
-        # Create a Pandas dataframe from reader
-        bro_df = pd.DataFrame(reader.readrows())
+        # Create a Pandas dataframe from the Bro log
+        bro_df = log_to_dataframe.LogToDataFrame(args.bro_log)
 
         # Add query length
         bro_df['query_length'] = bro_df['query'].str.len()
@@ -83,14 +74,6 @@ if __name__ == '__main__':
         # Now use dataframe group by cluster
         show_fields = ['query', 'Z', 'proto', 'qtype_name', 'x', 'y', 'cluster']
         cluster_groups = bro_df[show_fields].groupby('cluster')
-
-        # Plot the Machine Learning results
-        fig, ax = plt.subplots()
-        colors = {0:'green', 1:'blue', 2:'red', 3:'orange', 4:'purple'}
-        for key, group in cluster_groups:
-            group.plot(ax=ax, kind='scatter', x='x', y='y', alpha=0.6, s=60,
-                       label='Cluster: {:d}'.format(key), color=colors[key])
-        plt.show()
 
         # Now print out the details for each cluster
         pd.set_option('display.width', 1000)

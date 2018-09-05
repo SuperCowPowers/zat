@@ -6,15 +6,15 @@ import argparse
 from pprint import pprint
 
 # Local imports
-from brothon import bro_log_reader
-from brothon.utils import vt_query
+from bat import bro_log_reader
+from bat.utils import vt_query
 
 if __name__ == '__main__':
     """Run a VirusTotal Query on Extracted File Hashes"""
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--bro-log', type=str, help='Specify a bro log to run BroLogReader test on')
+    parser.add_argument('bro_log', type=str, help='Specify a bro log to run BroLogReader test on')
     args, commands = parser.parse_known_args()
 
     # Check for unknown args
@@ -22,13 +22,8 @@ if __name__ == '__main__':
         print('Unrecognized args: %s' % commands)
         sys.exit(1)
 
-    # If no args just call help
-    if len(sys.argv) == 1:
-        parser.print_help()
-        sys.exit(1)
-
     # Sanity check that this is a file log
-    if not args.bro_log.endswith('files.log'):
+    if 'files' not in args.bro_log:
         print('This example only works with Bro files.log files..')
         sys.exit(1)
 

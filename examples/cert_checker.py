@@ -1,4 +1,4 @@
-"""Cert Checker BroThon Example"""
+"""Cert Checker bat Example"""
 from __future__ import print_function
 import os
 import sys
@@ -6,15 +6,15 @@ import argparse
 from pprint import pprint
 
 # Local imports
-from brothon import bro_log_reader
-from brothon.utils import vt_query
+from bat import bro_log_reader
+from bat.utils import vt_query
 
 if __name__ == '__main__':
     # Example to check all the x509 Certs from 'Let's Encrypt' for potential phishing/malicious sites
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--bro-log', type=str, help='Specify a bro log to run BroLogReader test on')
+    parser.add_argument('bro_log', type=str, help='Specify a bro log to run BroLogReader test on')
     args, commands = parser.parse_known_args()
 
     # Check for unknown args
@@ -22,13 +22,8 @@ if __name__ == '__main__':
         print('Unrecognized args: %s' % commands)
         sys.exit(1)
 
-    # If no args just call help
-    if len(sys.argv) == 1:
-        parser.print_help()
-        sys.exit(1)
-
     # Sanity check that this is a dns log
-    if not args.bro_log.endswith('x509.log'):
+    if 'x509' not in args.bro_log:
         print('This example only works with Bro x509.log files..')
         sys.exit(1)
 

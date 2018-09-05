@@ -16,8 +16,8 @@ from sklearn.cluster import MiniBatchKMeans
 import hdbscan
 
 # Local imports
-from brothon import bro_log_reader, live_simulator
-from brothon.analysis import dataframe_to_matrix, dataframe_cache
+from bat import bro_log_reader, live_simulator
+from bat import dataframe_to_matrix, dataframe_cache
 
 
 if __name__ == '__main__':
@@ -26,17 +26,12 @@ if __name__ == '__main__':
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--bro-log', type=str, help='Specify a bro log to run BroLogReader test on')
+    parser.add_argument('bro_log', type=str, help='Specify a bro log to run BroLogReader test on')
     args, commands = parser.parse_known_args()
 
     # Check for unknown args
     if commands:
         print('Unrecognized args: %s' % commands)
-        sys.exit(1)
-
-    # If no args just call help
-    if len(sys.argv) == 1:
-        parser.print_help()
         sys.exit(1)
 
     # File may have a tilde in it
@@ -55,11 +50,9 @@ if __name__ == '__main__':
             print('This example only works with Bro with http.log or dns.log files..')
             sys.exit(1)
 
-        # Remove previous output file if it exists
-        try:
-            os.remove('streaming_output.json')
-        except OSError:
-            pass
+        # Create a Bro log reader
+        print('Opening Data File: {:s}'.format(args.bro_log))
+        reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)
 
         # Create a Bro IDS log live simulator
         print('Opening Data File: {:s}'.format(args.bro_log))
@@ -93,12 +86,10 @@ if __name__ == '__main__':
                 # Add query length
                 bro_df['query_length'] = bro_df['query'].str.len()
 
-                # Convert dataframe to a matrix
-                if FIRST_TIME:
-                    bro_matrix = to_matrix.fit_transform(bro_df[features])
-                    FIRST_TIME = False
-                else:
-                    bro_matrix = to_matrix.transform(bro_df[features])
+                # Use the bat DataframeToMatrix class
+                features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name', 'rcode_name', 'query_length', 'id.resp_p']
+                to_matrix = dataframe_to_matrix.DataFrameToMatrix()
+                bro_matrix = to_matrix.fit_transform(bro_df[features])
                 print(bro_matrix.shape)
 
                 # Print out the range of the daterange and some stats
@@ -132,7 +123,7 @@ if __name__ == '__main__':
                     print(group[show_fields].head())
 
                 # Output to file
-                with open('streaming_output.json', 'w+') as fp:
+                with open('streaming_output.json', 'w') as fp:
                     for row in bro_df.to_dict('records'):
                         row['ts'] = str(row['ts'])
                         #print(row)

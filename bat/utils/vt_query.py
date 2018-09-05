@@ -9,7 +9,7 @@ import pprint
 import requests
 
 # Local imports
-from brothon.utils import cache
+from bat.utils import cache
 
 
 class VTQuery(object):
@@ -63,6 +63,10 @@ class VTQuery(object):
         # Call and return the internal query method
         return self._query('url', url, verbose)
 
+    @property
+    def size(self):
+        return self.query_cache.size
+
     def _query(self, query_type, query_str, verbose=False):
         """Internal query method for the VirusTotal Service
             Args:
@@ -88,11 +92,10 @@ class VTQuery(object):
         try:
             vt_output = response.json()
         except ValueError:
-            error_msg = 'VirusTotal no valid response, typically this means you are past your quota'
-            print(error_msg)
+            error_msg = 'VirusTotal no valid response, throttling and trying again...'
             if self.throttle:
                 if verbose:
-                    print('Throttling and trying again...')
+                    print(error_msg)
                 time.sleep(30)
                 return self._query(query_type, query_str)
 
@@ -148,6 +151,9 @@ def test():
     output = vt_query.query_file('4ecf79302ba0439f62e15d0526a297975e6bb32ea25c8c70a608916a609e5a9c')
     print('\n<<< Unit Test Cache>>>')
     pprint.pprint(output)
+
+    # Test Size
+    assert vt_query.size == 2
 
     # Test some error conditions
     output = vt_query.query_file('123')

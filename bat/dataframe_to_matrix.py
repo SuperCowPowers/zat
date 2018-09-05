@@ -6,14 +6,14 @@ import pandas as pd
 import numpy as np
 
 # Local imports
-from brothon.analysis import dummy_encoder
+from bat.utils import dummy_encoder
 
 
 class DataFrameToMatrix(object):
     """DataFrameToMatrix: Convert a DataFrame to a Numpy Matrix (ndarray) Class
         Notes:
-            fit_transform: Does a fit on the transform and returns a transformed matrix
-            transform: Based on previous fit parameters returns a transformed matrix
+            fit_transform: Does a fit and a transform and returns the transformed matrix
+            transform: Based on previous fit parameters returns the transformed matrix
     """
     def __init__(self):
         """Initialize the DataFrameToMatrix class"""

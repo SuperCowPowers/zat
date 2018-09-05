@@ -13,7 +13,7 @@ Types of Contributions
 Report Bugs
 ~~~~~~~~~~~
 
-Report bugs at https://github.com/kitware/BroThon/issues.
+Report bugs at https://github.com/kitware/bat/issues.
 
 If you are reporting a bug, please include:
 
@@ -43,7 +43,7 @@ articles, and such.
 Submit Feedback
 ~~~~~~~~~~~~~~~
 
-The best way to send feedback is to file an issue at https://github.com/kitware/BroThon/issues.
+The best way to send feedback is to file an issue at https://github.com/kitware/bat/issues.
 
 If you are proposing a feature:
 
@@ -55,13 +55,13 @@ If you are proposing a feature:
 Get Started!
 ------------
 
-Ready to contribute? Here's how to set up `BroThon` for
+Ready to contribute? Here's how to set up `bat` for
 local development.
 
-1. Fork_ the `BroThon` repo on GitHub.
+1. Fork_ the `bat` repo on GitHub.
 2. Clone your fork locally::
 
-    $ git clone git@github.com:your_name_here/BroThon.git
+    $ git clone git@github.com:your_name_here/bat.git
 
 3. Create a branch for local development::
 
@@ -94,7 +94,7 @@ Before you submit a pull request, check that it meets these guidelines:
    your new functionality into a function with a docstring, and add the
    feature to the list in README.rst.
 3. The pull request should work for Python 2.7, 3.5, 3.6, and PyPy.
-   Check https://travis-ci.org/kitware/BroThon
+   Check https://travis-ci.org/kitware/bat
    under pull requests for active pull requests or run the ``tox`` command and
    make sure that the tests pass for all supported Python versions.
 
@@ -104,4 +104,4 @@ Tips
 
 To run a subset of tests::
 
-	 $ py.test brothon
+	 $ py.test bat

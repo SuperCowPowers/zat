@@ -4,7 +4,7 @@ import os
 import time
 
 # Local imports
-from brothon.utils import file_utils
+from bat.utils import file_utils
 
 
 class FileTailer(object):
@@ -47,10 +47,7 @@ class FileTailer(object):
 
         except IOError as err:
             print('Error reading the file {0}: {1}'.format(self._filepath, err))
-            raise StopIteration
-
-        # Okay so we must be done
-        raise StopIteration
+            return
 
 
 def test():

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Setup.py for BroThon"""
+"""Setup.py for bat"""
 
 import os
 
@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 readme = open('README.rst').read()
 
 # Pull in the package info
-package_name = 'brothon'
+package_name = 'bat'
 package = __import__(package_name)
 version = package.__version__
 author = package.__author__
@@ -24,26 +24,28 @@ def get_files(dir_name):
 setup(
     name=package_name,
     version=version,
-    description='Bro + Python = Brothon!',
+    description='Bro Analysis Tools',
     long_description=readme,
     author=author,
     author_email=email,
-    url='https://github.com/kitware/BroThon',
+    url='https://github.com/kitware/bat',
     packages=find_packages(),
     include_package_data=True,
     data_files=get_files('data') + get_files('examples'),
     install_requires=[
         'requests',
         'watchdog',
-        'pandas',
+        'numpy',
         'scipy',
-        'scikit-learn'
+        'pandas',
+        'scikit-learn',
+        'pyarrow'
     ],
     extras_require={
         'all':  ['yara-python', 'tldextract']
     },
     license='Apache',
-    keywords='Bro IDS, Python, Networking, Security',
+    keywords='Bro, Python, Networking, Security, Scikit-Learn, Spark, Kafka, Parquet',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',

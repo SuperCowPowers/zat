@@ -1,4 +1,4 @@
-"""LiveSimulator: This class reads in various Bro IDS logs. The class utilizes
+"""LiveSimulator: This class reads in various Bro logs. The class utilizes
                  the BroLogReader and simply loops over the static bro log
                  file, replaying rows and changing any time stamps
         Args:
@@ -15,12 +15,12 @@ import itertools
 import numpy as np
 
 # Local Imports
-from brothon import bro_log_reader
-from brothon.utils import file_utils
+from bat import bro_log_reader
+from bat.utils import file_utils
 
 
 class LiveSimulator(object):
-    """LiveSimulator: This class reads in various Bro IDS logs. The class utilizes the
+    """LiveSimulator: This class reads in various Bro logs. The class utilizes the
                       BroLogReader and simply loops over the static bro log file
                       replaying rows at the specified EPS and changing timestamps to 'now()'
     """
@@ -64,7 +64,7 @@ class LiveSimulator(object):
 
                 # Check for max_rows
                 if self.max_rows and (num_rows >= self.max_rows):
-                    raise StopIteration
+                    return
 
     @staticmethod
     def replace_timestamp(row):

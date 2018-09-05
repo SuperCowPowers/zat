@@ -4,16 +4,16 @@ Examples
 
 To use Bro Python Utilities in a project::
 
-    import brothon
+    import bat
 
 BroLog to Python
 ----------------
-See brothon/examples/bro_pprint.py for full code listing.
+See bat/examples/bro_pprint.py for full code listing.
 
 .. code-block:: python
 
     from pprint import pprint
-    from brothon import bro_log_reader
+    from bat import bro_log_reader
     ...
         # Run the bro reader on a given log file
         reader = bro_log_reader.BroLogReader('dhcp.log')
@@ -37,50 +37,44 @@ See brothon/examples/bro_pprint.py for full code listing.
     'uid': 'CJsdG95nCNF1RXuN5'}
 
 
-Bro to Pandas DataFrame
+Bro log to Pandas DataFrame
 ---------------------------
-See brothon/examples/bro_to_pandas.py for full code listing. Notice that it's one line of code to convert to a Pandas DataFrame.
+See bat/examples/bro_to_pandas.py for full code listing. Notice that it's one line of code to convert to a Pandas DataFrame.
 
 .. code-block:: python
 
-    import pandas as pd
-    from brothon import bro_log_reader
+    from bat.log_to_dataframe import LogToDataFrame
     ...
-
-        # Create a bro reader on a given log file
-        reader = bro_log_reader.BroLogReader('http.log')
-
-        # Create a Pandas dataframe from reader
-        bro_df = pd.DataFrame(reader.readrows())
+        # Create a Pandas dataframe from a Bro log
+        bro_df = LogToDataFrame('/path/to/dns.log')
 
         # Print out the head of the dataframe
         print(bro_df.head())
 
-**Example Output**
+
+**Output:** All the Bro log data is in a Pandas DataFrame with proper types with 'ts' as the index
 
 ::
 
-                   host      id.orig_h  id.orig_p  response_body_len status_code             uri
-     hopraresidency.com  192.168.84.10       1030                372         200         /foo.js
-    blogs.redheberg.com  192.168.84.10       1031               2111         200     /mltools.js
-        santiyesefi.com  192.168.84.10       1034                327         404     /mltools.js
-         tudespacho.net  192.168.84.10       1033              12350         200  /32002245.html
-         tudespacho.net  192.168.84.10       1033               5176         200      /98765.pdf
+                                                        query      id.orig_h  id.orig_p id.resp_h \
+    ts
+    2013-09-15 17:44:27.631940                     guyspy.com  192.168.33.10       1030   4.2.2.3
+    2013-09-15 17:44:27.696869                 www.guyspy.com  192.168.33.10       1030   4.2.2.3
+    2013-09-15 17:44:28.060639   devrubn8mli40.cloudfront.net  192.168.33.10       1030   4.2.2.3
+    2013-09-15 17:44:28.141795  d31qbv1cthcecs.cloudfront.net  192.168.33.10       1030   4.2.2.3
+    2013-09-15 17:44:28.422704                crl.entrust.net  192.168.33.10       1030   4.2.2.3
 
 
 Bro to Scikit-Learn
 -----------------------
-See brothon/examples/bro_to_scikit.py for full code listing, we've shortened the code listing here
+See bat/examples/bro_to_scikit.py for full code listing, we've shortened the code listing here
 to demonstrate that it's literally just a few lines of code to get to Scikit-Learn.
 
 .. code-block:: python
 
 
-        # Create a bro reader on a given log file
-        reader = bro_log_reader.BroLogReader(args.bro_log)
-
-        # Create a Pandas dataframe from reader
-        bro_df = pd.DataFrame(reader.readrows())
+        # Create a Pandas dataframe from a Bro log
+        bro_df = log_to_dataframe.LogToDataFrame('/path/to/bro.log')
 
         # Use the Brothon DataframeToMatrix class (handles categorical data!)
         to_matrix = dataframe_to_matrix.DataFrameToMatrix()
@@ -121,12 +115,12 @@ to demonstrate that it's literally just a few lines of code to get to Scikit-Lea
 
 Bro Files Log to VirusTotal Query
 ---------------------------------
-See brothon/examples/file_log_vtquery.py for full code listing (code simplified below)
+See bat/examples/file_log_vtquery.py for full code listing (code simplified below)
 
 .. code-block:: python
 
-    from brothon import bro_log_reader
-    from brothon.utils import vt_query
+    from bat import bro_log_reader
+    from bat.utils import vt_query
     ...
         # Run the bro reader on on the files.log output
         reader = bro_log_reader.BroLogReader('files.log', tail=True) # This will dynamically monitor this Bro log
@@ -163,12 +157,12 @@ See brothon/examples/file_log_vtquery.py for full code listing (code simplified 
 
 Bro HTTP Log User Agents
 ------------------------
-See brothon/examples/http_user_agents.py for full code listing (code simplified below)
+See bat/examples/http_user_agents.py for full code listing (code simplified below)
 
 .. code-block:: python
 
     from collections import Counter
-    from brothon import bro_log_reader
+    from bat import bro_log_reader
     ...
         # Run the bro reader on a given log file counting up user agents
         http_agents = Counter()
@@ -209,13 +203,13 @@ See brothon/examples/http_user_agents.py for full code listing (code simplified 
 Yara rules on Bro extracted files
 ---------------------------------
 The example will dymancially monitor the extract_files directory and when a file is
-dropped by Bro IDS the code will run a set of Yara rules against that file.
-See brothon/examples/yara_matches.py for full code listing (code simplified below)
+dropped by Bro the code will run a set of Yara rules against that file.
+See bat/examples/yara_matches.py for full code listing (code simplified below)
 
 .. code-block:: python
 
     import yara
-    from brothon import dir_watcher
+    from bat import dir_watcher
     ...
 
     def yara_match(file_path, rules):
@@ -237,7 +231,7 @@ See brothon/examples/yara_matches.py for full code listing (code simplified belo
 
 ::
 
-    Loading Yara Rules from ../brothon/utils/yara_test/index.yar
+    Loading Yara Rules from ../bat/utils/yara_test/index.yar
     Watching Extract Files Directory: /home/ubuntu/software/bro/extract_files
     New Extracted File: /home/ubuntu/software/bro/extract_files/test.tmp
     Mathes:
@@ -245,14 +239,14 @@ See brothon/examples/yara_matches.py for full code listing (code simplified belo
 
 Risky Domains
 -------------
-The example will use the analysis in our `Risky Domains <https://github.com/Kitware/BroThon/blob/master/notebooks/Risky_Domains.ipynb>`_
+The example will use the analysis in our `Risky Domains <https://github.com/Kitware/bat/blob/master/notebooks/Risky_Domains.ipynb>`_
 notebook to flag domains that are 'at risk' and conduct a Virus Total query on those domains.
-See brothon/examples/risky_dns.py for full code listing (code simplified below)
+See bat/examples/risky_dns.py for full code listing (code simplified below)
 
 .. code-block:: python
 
-    from brothon import bro_log_reader
-    from brothon.utils import vt_query
+    from bat import bro_log_reader
+    from bat.utils import vt_query
     ...
 
         # Create a VirusTotal Query Class
@@ -280,7 +274,7 @@ See brothon/examples/risky_dns.py for full code listing (code simplified below)
 
 
 **Example Output:**
-To test this example simply do a "$ping uni10.tk" on a machine being monitored by your Bro IDS.
+To test this example simply do a "$ping uni10.tk" on a machine being monitored by your Bro.
 
 Note: You can also ping something like 'isaftaho.tk' which is not on any of the blacklist but will
 still hit. The script will obviously cast a much wider net than just the blacklists.
@@ -306,14 +300,14 @@ still hit. The script will obviously cast a much wider net than just the blackli
 Cert Checker
 ------------
 There's been discussion about Let's Encrypt issuing certficates to possible phishing/malicious site owners. This example
-will quickly check and dynamically monitor your Bro IDS x509 logs for certificates that may be from malicious sites.
+will quickly check and dynamically monitor your Bro x509 logs for certificates that may be from malicious sites.
 
-See brothon/examples/cert_checker.py for full code listing (code simplified below)
+See bat/examples/cert_checker.py for full code listing (code simplified below)
 
 .. code-block:: python
 
-    from brothon import bro_log_reader
-    from brothon.utils import vt_query
+    from bat import bro_log_reader
+    from bat.utils import vt_query
     ...
 
         # These domains may be spoofed with a certificate issued by 'Let's Encrypt'
@@ -342,7 +336,7 @@ See brothon/examples/cert_checker.py for full code listing (code simplified belo
 
 
 **Example Output:**
-Simply run this example script on your Bro IDS x509.log.
+Simply run this example script on your Bro x509.log.
 
 ::
 
@@ -380,21 +374,18 @@ Here we're demonstrating anomaly detection using the Isolated Forest algorithm. 
 anomalies are identified we then use clustering to group our anomalies into organized
 segments that allow an analyst to 'skim' the output groups instead of looking at each row.
 
-See brothon/examples/anomaly_detection.py for full code listing (code simplified below)
+See bat/examples/anomaly_detection.py for full code listing (code simplified below)
 
 .. code-block:: python
 
 
-        # Create a Bro IDS log reader
-        reader = bro_log_reader.BroLogReader(args.bro_log)
-
-        # Create a Pandas dataframe from reader
-        bro_df = pd.DataFrame(reader.readrows())
+        # Create a Pandas dataframe from a Bro log
+        bro_df = log_to_dataframe.LogToDataFrame('/path/to/dns.log')
 
         # Using Pandas we can easily and efficiently compute additional data metrics
         bro_df['query_length'] = bro_df['query'].str.len()
 
-        # Use the BroThon DataframeToMatrix class
+        # Use the bat DataframeToMatrix class
         features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name', 'rcode_name', 'query_length']
         to_matrix = dataframe_to_matrix.DataFrameToMatrix()
         bro_matrix = to_matrix.fit_transform(bro_df[features])
@@ -420,7 +411,7 @@ See brothon/examples/anomaly_detection.py for full code listing (code simplified
 
 
 **Example Output:**
-Run this example script on your Bro IDS dns.log...
+Run this example script on your Bro dns.log...
 
 ::
 
@@ -457,11 +448,41 @@ Run this example script on your Bro IDS dns.log...
     60  1    False   udp  j.maxmind.com  C_INTERNET          A    NOERROR            13        3
 
 
-Streaming Outlier Detector
---------------------------
-Here we're demonstrating a streaming anomaly detection to show the use of the dataframe_cache
-class. The dataframe_cache allows us to stream data from Bro IDS into a 'time-windowed'
-dataframe. In this example we blah blah..
+Tor detection and port number count
+-----------------------------------
+See bat/examples/tor_and_port_count.py for the code.
 
-- Every 5 seconds we run anomaly detection
-- The dataframe contains a window of data (30 seconds in this example)
+This example will go through ssl.log files and try to identify possible Tor traffic.
+This is done by using the well known pattern of the Issuer and Subject ID in the
+certificates. Please note that your Bro installation will have to be configured
+to log these fields for this to work. Further info about how to do that can be
+found here: `SSL Log Info <https://www.bro.org/sphinx/scripts/base/protocols/ssl/main.bro.html#type-SSL::Info>`_
+
+**Example Output:**
+Run this example script on your Bro ssl.log...
+
+::
+
+    Possible Tor connection found
+    From: 10.0.0.126 To: 82.96.35.7 Port: 443
+
+
+The script will also keep a count of which destination ports that SSL have been
+detected on. Something that might help with threat hunting since you might find
+traffic on a port you definitely wasn't expecting to be there.
+
+**Example Output:**
+Run this example script on your Bro ssl.log...
+
+::
+
+    Port statistics
+    443     513
+    8443    173
+    9997    21
+    9001    20
+    8080    2
+    80      2
+    5901    1
+    9081    1
+    447     1

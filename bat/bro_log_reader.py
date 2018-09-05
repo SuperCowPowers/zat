@@ -1,10 +1,10 @@
-"""BroLogReader: This class reads in various Bro IDS logs. The class inherits from
+"""BroLogReader: This class reads in various Bro logs. The class inherits from
                  the FileTailer class so it supports the following use cases:
                    - Read contents of a Bro log file        (tail=False)
                    - Read contents + 'tail -f' Bro log file (tail=True)
        Args:
             filepath (str): The full path the file (/full/path/to/the/file.txt)
-            delimiter (str): The delimiter in the Bro IDS logs (default='\t')
+            delimiter (str): The delimiter in the Bro logs (default='\t')
             tail (bool): Do a dynamic tail on the file (i.e. tail -f) (default=False)
 """
 from __future__ import print_function
@@ -13,28 +13,37 @@ import time
 import datetime
 
 # Local Imports
-from brothon.utils import file_tailer, file_utils
+from bat.utils import file_tailer, file_utils
 
 
 class BroLogReader(file_tailer.FileTailer):
-    """BroLogReader: This class reads in various Bro IDS logs. The class inherits from
+    """BroLogReader: This class reads in various Bro logs. The class inherits from
                      the FileTailer class so it supports the following use cases:
                        - Read contents of a Bro log file        (tail=False)
                        - Read contents + 'tail -f' Bro log file (tail=True)
            Args:
                 filepath (str): The full path the file (/full/path/to/the/file.txt)
-                delimiter (str): The delimiter in the Bro IDS logs (default='\t')
+                delimiter (str): The delimiter in the Bro logs (default='\t')
                 tail (bool): Do a dynamic tail on the file (i.e. tail -f) (default=False)
+                strict (bool): Raise an exception on conversions errors (default=False)
     """
 
-    def __init__(self, filepath, delimiter='\t', tail=False):
+    def __init__(self, filepath, delimiter='\t', tail=False, strict=False):
         """Initialization for the BroLogReader Class"""
+
+        # First check if the file exists and is readable
+        if not os.access(filepath, os.R_OK):
+            raise IOError('Could not read/access bro log file: {:s}'.format(filepath))
+
+        # Setup some class instance vars
         self._filepath = filepath
         self._delimiter = delimiter
         self._tail = tail
+        self._strict = strict
 
         # Setup the Bro to Python Type mapper
         self.field_names = []
+        self.field_types = []
         self.type_converters = []
         self.type_mapper = {'bool': lambda x: True if x == 'T' else False,
                             'count': int,
@@ -43,8 +52,12 @@ class BroLogReader(file_tailer.FileTailer):
                             'time': lambda x: datetime.datetime.fromtimestamp(float(x)),
                             'interval': lambda x: datetime.timedelta(seconds=float(x)),
                             'string': lambda x: x,
+                            'enum': lambda x: x,
                             'port': int,
                             'unknown': lambda x: x}
+        self.dash_mapper = {'bool': False, 'count': 0, 'int': 0, 'port': 0, 'double': 0.0,
+                            'time': datetime.datetime.fromtimestamp(86400), 'interval': datetime.timedelta(seconds=0),
+                            'string': '-', 'unknown:': '-'}
 
         # Initialize the Parent Class
         super(BroLogReader, self).__init__(self._filepath, full_read=True, tail=self._tail)
@@ -83,21 +96,18 @@ class BroLogReader(file_tailer.FileTailer):
             else:
                 break
 
-        # Okay we must be all done
-        raise StopIteration
-
     def _readrows(self):
         """Internal method _readrows, see readrows() for description"""
 
         # Read in the Bro Headers
-        offset, self.field_names, self.type_converters = self._parse_bro_header(self._filepath)
+        offset, self.field_names, self.field_types, self.type_converters = self._parse_bro_header(self._filepath)
 
         # Use parent class to yield each row as a dictionary
         for line in self.readlines(offset=offset):
 
             # Check for #close
             if line.startswith('#close'):
-                raise StopIteration
+                return
 
             # Yield the line as a dict
             yield self.make_dict(line.strip().split(self._delimiter))
@@ -139,25 +149,29 @@ class BroLogReader(file_tailer.FileTailer):
             offset = bro_file.tell()
 
         # Return the header info
-        return offset, field_names, type_converters
+        return offset, field_names, field_types, type_converters
 
     def make_dict(self, field_values):
         ''' Internal method that makes sure any dictionary elements
             are properly cast into the correct types.
         '''
         data_dict = {}
-        for key, value, converter in zip(self.field_names, field_values, self.type_converters):
+        for key, value, field_type, converter in zip(self.field_names, field_values, self.field_types, self.type_converters):
             try:
-                data_dict[key] = '-' if value == '-' else converter(value)
+                # We have to deal with the '-' based on the field_type
+                data_dict[key] = self.dash_mapper.get(field_type, '-') if value == '-' else converter(value)
             except ValueError as exc:
                 print('Conversion Issue for key:{:s} value:{:s}\n{:s}'.format(key, str(value), str(exc)))
                 data_dict[key] = value
+                if self._strict:
+                    raise exc
 
         return data_dict
 
 
 def test():
     """Test for BroLogReader Python Class"""
+    import pytest
 
     # Grab a test file
     data_path = file_utils.relative_dir(__file__, '../data')
@@ -173,10 +187,20 @@ def test():
             print(line)
     print('Read with NoTail Test successful!')
 
+    # Test an empty log (a log with header/close but no data rows)
+    test_path = os.path.join(data_path, 'http_empty.log')
+    reader = BroLogReader(test_path)
+    for line in reader.readrows():
+        print(line)
+
     # Test some of the error conditions
     reader.field_names = ['good', 'error']
     reader.type_converters = [int, lambda x: datetime.datetime.fromtimestamp(float(x))]
     reader.make_dict([5, '0, .5, .5'])
+
+    # Test invalid file path
+    with pytest.raises(IOError):
+        BroLogReader('nowhere.log')
 
     # Now include tailing (note: as an automated test this needs to timeout quickly)
     try:

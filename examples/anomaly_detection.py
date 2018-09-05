@@ -12,8 +12,8 @@ from sklearn.ensemble import IsolationForest
 from sklearn.cluster import KMeans
 
 # Local imports
-from brothon import bro_log_reader
-from brothon.analysis import dataframe_to_matrix
+from bat import log_to_dataframe
+from bat import dataframe_to_matrix
 
 def entropy(string):
     """Compute entropy on the string"""
@@ -26,17 +26,12 @@ if __name__ == '__main__':
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--bro-log', type=str, help='Specify a bro log to run BroLogReader test on')
+    parser.add_argument('bro_log', type=str, help='Specify a bro log to run BroLogReader test on')
     args, commands = parser.parse_known_args()
 
     # Check for unknown args
     if commands:
         print('Unrecognized args: %s' % commands)
-        sys.exit(1)
-
-    # If no args just call help
-    if len(sys.argv) == 1:
-        parser.print_help()
         sys.exit(1)
 
     # File may have a tilde in it
@@ -54,12 +49,13 @@ if __name__ == '__main__':
             print('This example only works with Bro with http.log or dns.log files..')
             sys.exit(1)
 
-        # Create a Bro IDS log reader
-        print('Opening Data File: {:s}'.format(args.bro_log))
-        reader = bro_log_reader.BroLogReader(args.bro_log)
-
-        # Create a Pandas dataframe from reader
-        bro_df = pd.DataFrame(reader.readrows())
+        # Create a Pandas dataframe from a Bro log
+        #bro_df = log_to_dataframe.LogToDataFrame(args.bro_log)
+        try:
+            bro_df = log_to_dataframe.LogToDataFrame(args.bro_log)
+        except IOError:
+            print('Could not open or parse the specified logfile: %s' % args.bro_log)
+            sys.exit(1)
         print('Read in {:d} Rows...'.format(len(bro_df)))
 
         # Using Pandas we can easily and efficiently compute additional data metrics
@@ -70,7 +66,7 @@ if __name__ == '__main__':
             bro_df['answer_length'] = bro_df['answers'].str.len()
             bro_df['entropy'] = bro_df['query'].map(lambda x: entropy(x))
 
-        # Use the BroThon DataframeToMatrix class
+        # Use the bat DataframeToMatrix class
         to_matrix = dataframe_to_matrix.DataFrameToMatrix()
         bro_matrix = to_matrix.fit_transform(bro_df[features])
         print(bro_matrix.shape)
