@@ -6,11 +6,14 @@ import argparse
 import time
 import math
 from collections import Counter
+import json
 
 # Third Party Imports
 import pandas as pd
 from sklearn.ensemble import IsolationForest
 from sklearn.cluster import KMeans
+from sklearn.cluster import MiniBatchKMeans
+import hdbscan
 
 # Local imports
 from bat import bro_log_reader, live_simulator
@@ -51,15 +54,25 @@ if __name__ == '__main__':
         print('Opening Data File: {:s}'.format(args.bro_log))
         reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)
 
-        # OR you could create a live simulator to test it out on a static log file
-        # reader = live_simulator.LiveSimulator(args.bro_log)
+        # Create a Bro IDS log live simulator
+        print('Opening Data File: {:s}'.format(args.bro_log))
+        reader = live_simulator.LiveSimulator(args.bro_log, eps=10) # 10 events per second
 
         # Create a Dataframe Cache
         df_cache = dataframe_cache.DataFrameCache(max_cache_time=600)  # 10 minute cache
 
+        # Streaming Clustering Class
+        batch_kmeans = MiniBatchKMeans(n_clusters=4, verbose=True)
+        # num_clusters = min(len(odd_df), 4) # 4 clusters unless we have less than 4 observations
+
+        # Use the BroThon DataframeToMatrix class
+        features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name', 'rcode_name', 'query_length', 'id.resp_p']
+        to_matrix = dataframe_to_matrix.DataFrameToMatrix()
+
         # Add each new row into the cache
-        time_delta = 30
+        time_delta = 10
         timer = time.time() + time_delta
+        FIRST_TIME = True
         for row in reader.readrows():
             df_cache.add_row(row)
 
@@ -83,20 +96,24 @@ if __name__ == '__main__':
                 print('DataFrame TimeRange: {:s} --> {:s}'.format(str(bro_df['ts'].min()), str(bro_df['ts'].max())))
 
                 # Train/fit and Predict anomalous instances using the Isolation Forest model
-                odd_clf = IsolationForest(contamination=0.01) # Marking 1% as odd
+                odd_clf = IsolationForest(contamination=0.2) # Marking 20% as odd
                 odd_clf.fit(bro_matrix)
+                bro_df['anomalous'] = [predict==-1 for predict in odd_clf.predict(bro_matrix)]
 
                 # Now we create a new dataframe using the prediction from our classifier
-                odd_df = bro_df[odd_clf.predict(bro_matrix) == -1]
+                odd_df = bro_df[bro_df['anomalous']]
 
                 # Now we're going to explore our odd observations with help from KMeans
-                num_clusters = min(len(odd_df), 10) # 10 clusters unless we have less than 10 observations
-                odd_matrix = to_matrix.fit_transform(odd_df[features])
-                odd_df['cluster'] = KMeans(n_clusters=num_clusters).fit_predict(odd_matrix)
-                print(odd_matrix.shape)
+                odd_matrix = to_matrix.transform(odd_df[features])
+                #clusters = KMeans(n_clusters=num_clusters).fit_predict(odd_matrix).tolist()
+                batch_kmeans.partial_fit(odd_matrix)
+                clusters = batch_kmeans.predict(odd_matrix).tolist()
+
+                # Set the cluster number for all the entries in the original dataframe
+                bro_df['cluster'] = [-1 if not anom else clusters.pop(0) for anom in bro_df['anomalous'] ]
 
                 # Now group the dataframe by cluster
-                cluster_groups = odd_df.groupby('cluster')
+                cluster_groups = bro_df.groupby('cluster')
 
                 # Now print out the details for each cluster
                 show_fields = ['id.orig_h', 'id.resp_h'] + features
@@ -105,5 +122,10 @@ if __name__ == '__main__':
                     print('\nCluster {:d}: {:d} observations'.format(key, len(group)))
                     print(group[show_fields].head())
 
-
-
+                # Output to file
+                with open('streaming_output.json', 'w') as fp:
+                    for row in bro_df.to_dict('records'):
+                        row['ts'] = str(row['ts'])
+                        #print(row)
+                        json.dump(row, fp)
+                        fp.write('\n')
