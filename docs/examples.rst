@@ -239,7 +239,7 @@ See bat/examples/yara_matches.py for full code listing (code simplified below)
 
 Risky Domains
 -------------
-The example will use the analysis in our `Risky Domains <https://github.com/Kitware/bat/blob/master/notebooks/Risky_Domains.ipynb>`_
+The example will use the analysis in our `Risky Domains <https://github.com/SuperCowPowers/bat/blob/master/notebooks/Risky_Domains.ipynb>`_
 notebook to flag domains that are 'at risk' and conduct a Virus Total query on those domains.
 See bat/examples/risky_dns.py for full code listing (code simplified below)
 

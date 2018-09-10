@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'bat'
-copyright = u'2017, Kitware Inc'
+copyright = u'2017, SuperCowPowers Inc'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

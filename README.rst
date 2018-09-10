@@ -89,13 +89,13 @@ Analysis Notebooks
 ------------------
 BAT enables the processing, analysis, and machine learning of realtime data coming from Bro.
 
-- Bro to Scikit-Learn: `Bro to Scikit <https://nbviewer.jupyter.org/github/Kitware/bat/blob/master/notebooks/Bro_to_Scikit_Learn.ipynb>`__
-- Bro to Matplotlib: `Bro to Plot <https://nbviewer.jupyter.org/github/Kitware/bat/blob/master/notebooks/Bro_to_Plot.ipynb>`__
-- Bro to Parquet to Spark: `Bro->Parquet->Spark <https://nbviewer.jupyter.org/github/Kitware/bat/blob/master/notebooks/Bro_to_Parquet_to_Spark.ipynb>`__
-- Bro to Kafka to Spark: `Bro->Kafka->Spark <https://nbviewer.jupyter.org/github/Kitware/bat/blob/master/notebooks/Bro_to_Kafka_to_Spark.ipynb>`__
-- Clustering: Picking K (or not): `Clustering K Hyperparameter <https://nbviewer.jupyter.org/github/Kitware/bat/blob/master/notebooks/Clustering_Picking_K.ipynb>`__
-- Anomaly Detection Exploration: `Anomaly Detection <https://nbviewer.jupyter.org/github/Kitware/bat/blob/master/notebooks/Anomaly_Detection.ipynb>`__
-- Risky Domains Stats and Deployment: `Risky Domains <https://nbviewer.jupyter.org/github/Kitware/bat/blob/master/notebooks/Risky_Domains.ipynb>`__
+- Bro to Scikit-Learn: `Bro to Scikit <https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Scikit_Learn.ipynb>`__
+- Bro to Matplotlib: `Bro to Plot <https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Plot.ipynb>`__
+- Bro to Parquet to Spark: `Bro->Parquet->Spark <https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Parquet_to_Spark.ipynb>`__
+- Bro to Kafka to Spark: `Bro->Kafka->Spark <https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Kafka_to_Spark.ipynb>`__
+- Clustering: Picking K (or not): `Clustering K Hyperparameter <https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Clustering_Picking_K.ipynb>`__
+- Anomaly Detection Exploration: `Anomaly Detection <https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Anomaly_Detection.ipynb>`__
+- Risky Domains Stats and Deployment: `Risky Domains <https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Risky_Domains.ipynb>`__
 
 Install
 -------
@@ -119,11 +119,11 @@ Thanks
 
 .. |kitware-logo| image:: https://www.kitware.com/img/small_logo_over.png
    :target: https://www.kitware.com
-   :alt: Kitware Logo
-.. |travis| image:: https://travis-ci.org/Kitware/bat.svg?branch=master
-   :target: https://travis-ci.org/Kitware/bat
-.. |Coverage Status| image:: https://coveralls.io/repos/github/Kitware/bat/badge.svg?branch=master
-   :target: https://coveralls.io/github/Kitware/bat?branch=master
+   :alt: SuperCowPowers Logo
+.. |travis| image:: https://travis-ci.org/SuperCowPowers/bat.svg?branch=master
+   :target: https://travis-ci.org/SuperCowPowers/bat
+.. |Coverage Status| image:: https://coveralls.io/repos/github/SuperCowPowers/bat/badge.svg?branch=master
+   :target: https://coveralls.io/github/SuperCowPowers/bat?branch=master
 .. |version| image:: https://img.shields.io/pypi/v/bat.svg
    :target: https://pypi.python.org/pypi/bat
 .. |wheel| image:: https://img.shields.io/pypi/wheel/bat.svg
