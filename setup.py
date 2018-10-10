@@ -5,7 +5,7 @@ import os
 
 from setuptools import setup, find_packages
 
-readme = open('README.rst').read()
+readme = open('README.md').read()
 
 # Pull in the package info
 package_name = 'bat'
@@ -28,7 +28,7 @@ setup(
     long_description=readme,
     author=author,
     author_email=email,
-    url='https://github.com/kitware/bat',
+    url='https://github.com/SuperCowPowers/bat',
     packages=find_packages(),
     include_package_data=True,
     data_files=get_files('data') + get_files('examples'),

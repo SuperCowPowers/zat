@@ -1,17 +1,15 @@
-Bro Analysis Tools (BAT) [![travis](https://travis-ci.org/SuperCowPowers/bat.svg?branch=master)](https://travis-ci.org/SuperCowPowers/bat) [![Coverage Status](https://coveralls.io/repos/github/SuperCowPowers/bat/badge.svg?branch=master)](https://coveralls.io/github/SuperCowPowers/bat?branch=master) [![supported-versions](https://img.shields.io/pypi/pyversions/bat.svg)](https://pypi.python.org/pypi/bat) [![license](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://choosealicense.com/licenses/apache-2.0)
-===============================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+## Bro Analysis Tools (BAT) [![travis](https://travis-ci.org/SuperCowPowers/bat.svg?branch=master)](https://travis-ci.org/SuperCowPowers/bat) [![Coverage Status](https://coveralls.io/repos/github/SuperCowPowers/bat/badge.svg?branch=master)](https://coveralls.io/github/SuperCowPowers/bat?branch=master) [![supported-versions](https://img.shields.io/pypi/pyversions/bat.svg)](https://pypi.python.org/pypi/bat) [![license](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://choosealicense.com/licenses/apache-2.0)
+
 
 The BAT Python package supports the processing and analysis of Bro data
 with Pandas, scikit-learn, and Spark
 
-BroCon 2017 Presentation
-------------------------
+## BroCon 2017 Presentation
 
 Data Analysis, Machine Learning, Bro, and You!
 ([Video](https://www.youtube.com/watch?v=pG5lU9CLnIU))
 
-Why BAT?
---------
+## Why BAT?
 
 Bro already has a flexible, powerful scripting language why should I use
 BAT?
@@ -25,10 +23,9 @@ bridge from raw Bro data to packages like Pandas, scikit-learn, and
 Spark. We also have example notebooks that show step-by-step how to get
 from here to there.
 
-Example: Pull in Bro Logs as Python Dictionaries
-------------------------------------------------
+###Example: Pull in Bro Logs as Python Dictionaries
 
-``` {.sourceCode .python}
+```python
 from bat import bro_log_reader
 ...
     # Run the bro reader on a given log file
@@ -52,10 +49,9 @@ types properly converted.
     'uid': 'CJsdG95nCNF1RXuN5'}
     ...
 
-Example: Bro log to Pandas DataFrame (in one line of code)
-----------------------------------------------------------
+### Example: Bro log to Pandas DataFrame (in one line of code)
 
-``` {.sourceCode .python}
+```python
 from bat.log_to_dataframe import LogToDataFrame
 ...
     # Create a Pandas dataframe from a Bro log
@@ -68,17 +64,17 @@ from bat.log_to_dataframe import LogToDataFrame
 **Output:** All the Bro log data is in a Pandas DataFrame with proper
 types and timestamp as the index
 
-    query      id.orig_h  id.orig_p id.resp_h \
+```
+                                                    query      id.orig_h  id.orig_p id.resp_h
+ts
+2013-09-15 17:44:27.631940                     guyspy.com  192.168.33.10       1030   4.2.2.3
+2013-09-15 17:44:27.696869                 www.guyspy.com  192.168.33.10       1030   4.2.2.3
+2013-09-15 17:44:28.060639   devrubn8mli40.cloudfront.net  192.168.33.10       1030   4.2.2.3
+2013-09-15 17:44:28.141795  d31qbv1cthcecs.cloudfront.net  192.168.33.10       1030   4.2.2.3
+2013-09-15 17:44:28.422704                crl.entrust.net  192.168.33.10       1030   4.2.2.3
+```
 
-> ts 2013-09-15 17:44:27.631940 guyspy.com 192.168.33.10 1030 4.2.2.3
-> 2013-09-15 17:44:27.696869 www.guyspy.com 192.168.33.10 1030 4.2.2.3
-> 2013-09-15 17:44:28.060639 devrubn8mli40.cloudfront.net 192.168.33.10
-> 1030 4.2.2.3 2013-09-15 17:44:28.141795 d31qbv1cthcecs.cloudfront.net
-> 192.168.33.10 1030 4.2.2.3 2013-09-15 17:44:28.422704 crl.entrust.net
-> 192.168.33.10 1030 4.2.2.3
-
-More Examples
--------------
+## More Examples
 
 -   Easy ingestion of any Bro Log into Python (dynamic tailing and log
     rotations are handled)
@@ -92,8 +88,7 @@ More Examples
     Examples](https://bat-tools.readthedocs.io/en/latest/examples.html)
     for more details.
 
-Analysis Notebooks
-------------------
+## Analysis Notebooks
 
 BAT enables the processing, analysis, and machine learning of realtime
 data coming from Bro.
