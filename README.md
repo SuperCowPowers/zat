@@ -23,7 +23,7 @@ bridge from raw Bro data to packages like Pandas, scikit-learn, and
 Spark. We also have example notebooks that show step-by-step how to get
 from here to there.
 
-###Example: Pull in Bro Logs as Python Dictionaries
+### Example: Pull in Bro Logs as Python Dictionaries
 
 ```python
 from bat import bro_log_reader
