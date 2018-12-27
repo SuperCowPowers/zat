@@ -123,5 +123,3 @@ Thanks
 
 -   The DummyEncoder is based on Tom Augspurger's great PyData Chicago
     2016 [Talk](https://youtu.be/KLPtEBokqQ0)
-
-[![SuperCowPowers Logo](https://www.kitware.com/img/small_logo_over.png)](https://www.kitware.com)

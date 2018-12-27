@@ -32,14 +32,14 @@ def df_to_parquet(df, filename, compression='SNAPPY'):
     pq.write_table(arrow_table, filename, compression=compression, use_deprecated_int96_timestamps=True)
 
 
-def parquet_to_df(filename, nthreads=1):
+def parquet_to_df(filename, use_threads=1):
     """parquet_to_df: Reads a Parquet file into a Pandas DataFrame
         Args:
             filename (string): The full path to the filename for the Parquet file
             ntreads (int): The number of threads to use (defaults to 1)
     """
     try:
-        return pq.read_table(filename, nthreads=nthreads).to_pandas()
+        return pq.read_table(filename, use_threads=use_threads).to_pandas()
     except pa.lib.ArrowIOError:
         print('Could not read parquet file {:s}'.format(filename))
         return None

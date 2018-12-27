@@ -5,7 +5,7 @@ Credits
 Development Lead
 ----------------
 
-* Brian Wylie <brian.wylie@kitware.com>
+* Brian Wylie <briford@supercowpowers.com>
 
 Contributors
 ------------
