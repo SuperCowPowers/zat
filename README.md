@@ -74,6 +74,16 @@ ts
 2013-09-15 17:44:28.422704                crl.entrust.net  192.168.33.10       1030   4.2.2.3
 ```
 
+### Example: Large Bro log to Pandas DataFrame (in one line of code)
+
+```python
+from bat.log_to_dataframe import LogToDataFrame
+...
+    # Create a Pandas dataframe from a Bro large file
+    bro_df = LogToDataFrame('/path/to/dns.log', is_large=True)
+
+```
+
 ## More Examples
 
 -   Easy ingestion of any Bro Log into Python (dynamic tailing and log
