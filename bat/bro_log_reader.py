@@ -1,5 +1,5 @@
 """BroLogReader: This class reads in various Bro logs. The class inherits from
-                 the FileTailer class so it supports the following use cases:
+                 the FileTailer class so it supporFOOOOts the following use cases:
                    - Read contents of a Bro log file        (tail=False)
                    - Read contents + 'tail -f' Bro log file (tail=True)
        Args:
@@ -11,6 +11,7 @@ from __future__ import print_function
 import os
 import time
 import datetime
+import pandas as pd
 
 # Local Imports
 from bat.utils import file_tailer, file_utils
@@ -61,6 +62,63 @@ class BroLogReader(file_tailer.FileTailer):
 
         # Initialize the Parent Class
         super(BroLogReader, self).__init__(self._filepath, full_read=True, tail=self._tail)
+
+    def large_file_parser(self):
+        '''Function will read bro log in in 10^6 chuncks'''
+        #Use existing methods to grab log file's fields
+        offset, field_names, field_types, type_converters = self._parse_bro_header(self._filepath)
+        type_dict={ field_names[i]:field_types[i] for i in range(len(field_types))}
+        df_chunk = pd.read_csv(self._filepath, sep='\t', names=field_names, comment="#", chunksize=10**6)
+        chunk_list = []
+        for chunk in df_chunk:
+            chunk_list.append(chunk)
+            df_concat = pd.concat(chunk_list)
+        return self.compress(df_concat,type_dict)
+
+    def compress(self, dframe, type_dict):
+        '''A function that will take a dataframe and convert column to a bro/zeek log primative type or category'''
+        for name in type_dict.keys():
+            proFields={'uid','ts','duration'}
+            try:
+                colLen=dframe[name].value_counts().count()
+                if colLen < 1024 and name not in proFields:
+                     dframe[name]=dframe[name].astype('category')
+                else: dframe[name]=dframe[name].astype(self.get_default_type(type_dict[name]), errors='ignore')
+            except TypeError:
+                dframe[name]=dframe[name].astype(self.get_default_type(type_dict[name]))
+
+            except ValueError:
+                dframe[name]=dframe[name].astype('object')
+
+        return dframe
+
+    def get_default_type(self,t):
+        '''Looks up a type as specified in bro/zeek log and returns a pd/np type '''
+        zeek2pd={
+            'bool':'bool',	
+            'count':'uint64',
+            'int':'uint32',
+            'double':'float32',
+            'time':'datetime64[ns]',
+            'interval':'float32',
+            'string':'object',
+            'pattern':'category',
+            'port':'uint16',
+            'addr':'category',
+            'subnet':'category',
+            'enum':'category',
+            'table':'category',
+            'set':'category',
+            'vector':'category',
+            'record':'category',
+            'function':'category',
+            'event':'category',
+            'hook':'category',
+            'file':'category',
+            'opaque':'category',
+            'any':'category'}
+        if t in zeek2pd: return zeek2pd[t]
+        else: return 'object'
 
     def readrows(self):
         """The readrows method reads in the header of the Bro log and
@@ -144,7 +202,6 @@ class BroLogReader(file_tailer.FileTailer):
             type_converters = []
             for field_type in field_types:
                 type_converters.append(self.type_mapper.get(field_type, self.type_mapper['unknown']))
-
             # Keep the header offset
             offset = bro_file.tell()
 
@@ -165,7 +222,6 @@ class BroLogReader(file_tailer.FileTailer):
                 data_dict[key] = value
                 if self._strict:
                     raise exc
-
         return data_dict
 
 
