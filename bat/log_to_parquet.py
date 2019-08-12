@@ -20,11 +20,6 @@ def _make_df(rows):
     # Make DataFrame
     df = pd.DataFrame(rows).set_index('ts')
 
-    # TimeDelta Support: https://issues.apache.org/jira/browse/ARROW-835
-    for column in df.columns:
-        if(df[column].dtype == 'timedelta64[ns]'):
-            print('Converting timedelta column {:s}...'.format(column))
-            df[column] = df[column].astype(str)
     return df
 
 
@@ -35,10 +30,6 @@ def log_to_parquet(bro_log, parquet_file, compression='SNAPPY', row_group_size=1
             parquet_file (string): The full path to the filename for the Parquet file
             compression (string): The compression algo to use (defaults to 'SNAPPY')
             row_group_size (int): The size of the parquet row groups (defaults to 1000000)
-        Notes:
-            Right now there are two open Parquet issues
-            - Timestamps in Spark: https://issues.apache.org/jira/browse/ARROW-1499
-            - TimeDelta Support: https://issues.apache.org/jira/browse/ARROW-835
     """
 
     # Set up various parameters
@@ -111,10 +102,7 @@ def test():
     # Print out the head
     print(new_dns_df.head())
 
-    # Make sure our conversions didn't lose type info
-    # TODO: Uncomment this test when the following PR is fixed
-    #       - TimeDelta Support: https://issues.apache.org/jira/browse/ARROW-835
-    # assert(dns_df.dtypes.values.tolist() == new_dns_df.dtypes.values.tolist())
+    assert(dns_df.dtypes.values.tolist() == new_dns_df.dtypes.values.tolist())
 
     # Test an empty log (a log with header/close but no data rows)
     test_path = os.path.join(data_path, 'http_empty.log')
