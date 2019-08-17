@@ -123,3 +123,4 @@ Thanks
 
 -   The DummyEncoder is based on Tom Augspurger's great PyData Chicago
     2016 [Talk](https://youtu.be/KLPtEBokqQ0)
+

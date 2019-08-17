@@ -18,18 +18,10 @@ def df_to_parquet(df, filename, compression='SNAPPY'):
             filename (string): The full path to the filename for the Parquet file
     """
 
-    # Right now there are two open Parquet issues
-    # Timestamps in Spark: https://issues.apache.org/jira/browse/ARROW-1499
-    # TimeDelta Support: https://issues.apache.org/jira/browse/ARROW-835
-    for column in df.columns:
-        if(df[column].dtype == 'timedelta64[ns]'):
-            print('Converting timedelta column {:s}...'.format(column))
-            df[column] = df[column].astype(str)
-
     arrow_table = pa.Table.from_pandas(df)
     if compression == 'UNCOMPRESSED':
         compression = None
-    pq.write_table(arrow_table, filename, compression=compression, use_deprecated_int96_timestamps=True)
+    pq.write_table(arrow_table, filename, compression=compression, flavor='spark')
 
 
 def parquet_to_df(filename, use_threads=1):
