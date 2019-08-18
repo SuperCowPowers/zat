@@ -37,44 +37,25 @@ class LogToDataFrame(pd.DataFrame):
 def test():
     """Test for LogToDataFrame Class"""
     import os
-    import pytest
-    import time
-    from bat.utils import file_utils
     pd.set_option('display.width', 1000)
+    from bat.utils import file_utils
 
     # Grab a test file
-    data_path = '/home/benklim/.local/lib/python3.5/site-packages/bat/data/'
-    # For each file, create the Class and test the reader
-    #files = ['app_stats.log', 'conn.log', 'dhcp.log', 'dns.log', 'files.log', 'ftp.log',
-    #         'http.log', 'notice.log', 'smtp.log', 'ssl.log', 'weird.log', 'x509.log',
-    #         'dns_16M.log', 'conn_1070lines.log', 'dhcp_002.log', 'http_3M.log', 'notice.log',
-    #         'tor_ssl.log', 'conn_10Mlines.log']  
-    files = ['app_stats.log', 'conn.log', 'dhcp.log', 'dns.log', 'files.log', 'ftp.log',
-             'http.log', 'notice.log', 'smtp.log', 'ssl.log', 'weird.log', 'x509.log',
-             'conn_1070lines.log', 'dhcp_002.log', 'notice.log', 'tor_ssl.log']  
+    data_path = file_utils.relative_dir(__file__, '../data')
+    test_path = os.path.join(data_path, 'http.log')
 
-    for bro_log in files:
-        test_path = os.path.join(data_path, bro_log)
-        print('Opening Data File: {:s}'.format(test_path))
-        start = time.time()
-        bro_df = LogToDataFrame(test_path, is_large=True)
-        end = time.time()
-        print("Time to create dataframe is "+str(end-start))
+    # Convert it to a Pandas DataFrame
+    http_df = LogToDataFrame(test_path)
 
-        #Print out the type info and memory footprint of the DataFrame
-        print(bro_df.info())
-        
-        # Print out the datatypes
-        print(bro_df.dtypes)
-        
-        # Print out the head
-        #print(bro_df.head())
-        print("#################################################")
+    # Print out the head
+    print(http_df.head())
+
+    # Print out the datatypes
+    print(http_df.dtypes)
+
     # Test an empty log (a log with header/close but no data rows)
     test_path = os.path.join(data_path, 'http_empty.log')
-    
-    test_path = os.path.join(data_path, 'http_empty.log')
-    http_df = LogToDataFrame(test_path, is_large=True)
+    http_df = LogToDataFrame(test_path)
 
     # Print out the head
     print(http_df.head())
