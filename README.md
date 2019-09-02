@@ -49,13 +49,14 @@ types properly converted.
     'uid': 'CJsdG95nCNF1RXuN5'}
     ...
 
-### Example: Bro log to Pandas DataFrame (in one line of code)
+### Example: Bro log to Pandas DataFrame
 
 ```python
 from bat.log_to_dataframe import LogToDataFrame
 ...
     # Create a Pandas dataframe from a Bro log
-    bro_df = LogToDataFrame('/path/to/dns.log')
+    log_to_df = LogToDataFrame()
+    bro_df = log_to_df.create_dataframe('/path/to/dns.log')
 
     # Print out the head of the dataframe
     print(bro_df.head())

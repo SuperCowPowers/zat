@@ -25,10 +25,20 @@ if __name__ == '__main__':
         args.bro_log = os.path.expanduser(args.bro_log)
 
         # Create a Pandas dataframe from a Bro log
-        bro_df = LogToDataFrame(args.bro_log)
+        log_to_df = LogToDataFrame()
+        bro_df = log_to_df.create_dataframe(args.bro_log)
 
         # Print out the head of the dataframe
         print(bro_df.head())
 
         # Print out the types of the columns
         print(bro_df.dtypes)
+
+        # Print out size and memory usage
+        print('DF Shape: {:s}'.format(str(bro_df.shape)))
+        print('DF Memory:')
+        memory_usage = bro_df.memory_usage(deep=True)
+        total = memory_usage.sum()
+        for item in memory_usage.items():
+            print('\t {:s}: \t{:.2f} MB'.format(item[0], item[1]/1e6))
+        print('DF Total: {:.2f} GB'.format(total/(1e9)))
