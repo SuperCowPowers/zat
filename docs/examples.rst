@@ -46,7 +46,8 @@ See bat/examples/bro_to_pandas.py for full code listing. Notice that it's one li
     from bat.log_to_dataframe import LogToDataFrame
     ...
         # Create a Pandas dataframe from a Bro log
-        bro_df = LogToDataFrame('/path/to/dns.log')
+        log_to_df = LogToDataFrame()
+        bro_df = log_to_df.create_dataframe('/path/to/dns.log')
 
         # Print out the head of the dataframe
         print(bro_df.head())
@@ -74,7 +75,8 @@ to demonstrate that it's literally just a few lines of code to get to Scikit-Lea
 
 
         # Create a Pandas dataframe from a Bro log
-        bro_df = log_to_dataframe.LogToDataFrame('/path/to/bro.log')
+        log_to_df = LogToDataFrame()
+        bro_df = log_to_df.create_dataframe('/path/to/bro.log')
 
         # Use the Brothon DataframeToMatrix class (handles categorical data!)
         to_matrix = dataframe_to_matrix.DataFrameToMatrix()
@@ -380,7 +382,8 @@ See bat/examples/anomaly_detection.py for full code listing (code simplified bel
 
 
         # Create a Pandas dataframe from a Bro log
-        bro_df = log_to_dataframe.LogToDataFrame('/path/to/dns.log')
+        log_to_df = LogToDataFrame()
+        bro_df = log_to_df.create_dataframe('/path/to/dns.log')
 
         # Using Pandas we can easily and efficiently compute additional data metrics
         bro_df['query_length'] = bro_df['query'].str.len()

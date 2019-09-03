@@ -15,6 +15,7 @@ clean: clean-build clean-pyc
 
 clean-build:
 	find . -name 'build' -exec rm -rf {} +
+	find . -name '_build' -exec rm -rf {} +
 	find . -name 'dist' -exec rm -rf {} +
 	find . -name '*.egg-info' -exec rm -rf {} +
 	find . -name '*.tar.gz' -exec rm -rf {} +
