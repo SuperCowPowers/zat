@@ -4,6 +4,9 @@
 The BAT Python package supports the processing and analysis of Bro data
 with Pandas, scikit-learn, and Spark
 
+### Recent: Large Log to Dataframe Improvements
+See our recent work on improving Pandas dataframes from large log files: [Large Dataframes](docs/large_dataframes.md)
+
 ## BroCon 2017 Presentation
 
 Data Analysis, Machine Learning, Bro, and You!

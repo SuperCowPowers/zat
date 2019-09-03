@@ -31,15 +31,18 @@ A new PR focused specifically on memory/time improvements for large data frames.
 
 ## Performance Results
 
-| Code       | Memory (peak) | Memory (DF)       | Total Time*  | Notes            |
-|------------|---------------|-------------------|--------------|------------------|
-| Baseline   | ~34.6 GB      | 13.8 GB           | 8m 19s       |                  |
-| bhklimk PR | ~19 GB        | 18.62 -> 7.0 GB** | 5m 12s       |                  |
-| PR 76.     | ~5.6 GB       | 3.7 GB            | 1m 24s       | WIP              |
+| Code         | Memory (peak) | Memory (DF)       | Total Time*  | Notes            |
+|--------------|---------------|-------------------|--------------|------------------|
+| Baseline     | ~34.6 GB      | 13.8 GB           | 8m 19s       |                  |
+| bhklimk PR   | ~19 GB        | 18.62 -> 7.0 GB** | 5m 12s       |                  |
+| PR 76        | ~5.6 GB       | 3.8 GB            | 2m 57s       |                  |
+| PR 76 (chunk)***| ~12 GB        | 11.8 GB           | 3m 51s       |                  |
 
-\* Computing the 'deep memory' use of the large data frames added about more time to all of the tests.
+\* Computing the 'deep memory' use of the large data frames added about 1 minute of time to all of the tests.
 
 \*\* bhklimk PR builds a large data frame and then compresses it by converting the columns to categorical types.
+
+*** Used the read_csv chunksize=1e6 parameter and then pd.concat the chunked dataframes (see observation 'Chunking' below)
 
 ## Observations
 **Time:**
@@ -47,6 +50,18 @@ As noted in this issue <https://github.com/SuperCowPowers/bat/issues/23> the bas
 
 **Memory:**
 As we've demonstrated in some of our notebooks examples, properly encoding categorical data will provide a significant memory reduction [Categorical Notebook](https://nbviewer.jupyter.org/github/SuperCowPowers/scp-labs/blob/master/notebooks/Categorical_Data_Guide.ipynb).
+
+**Details:**
+The proper conversion of 'time' to datetime and 'interval' to timedelta are taken care of by PR 76. Also the 'ts' field is properly set as the index of the dataframe.
+
+**Chunking:**
+So every Stack Overflow answer about reading in large dataframes uses a chunking approach, we obviously tried that first and it was a total fail on multiple dimensions.
+
+1. **Size/Memory:** Chunking the dataframe into pieces and then immediately combining those pieces with pd.concat, is a bit like chopping up a log and then reassembling it. You end up with the same log. So since the final size in memory is a big factor in our 'optimization' this doesn't really help us much in theory and made things worse in practice (see item 3 below).
+1. **Time:** The chunking + concat combine code took more time to execute than just simply reading in the whole dataframe.
+1. **Memory (again):** Simple categorical types 'survived' the concat process, slightly more complex ones got punted down to the 'object' type which basically ruined the whole point of a compact dataframe that heavily engages categories. In particular 'photo' and 'local\_orig' remained categorical types, 'id.orig\_h', 'id.resp\_h', 'service', 'conn\_state', and 'history' did **not**. See detailed test output below.
+
+**Note:** I'm happy to be wrong about any of these points, please replicate the test above and smack me with some science, I'll gladly eat some crow if it means we get better/faster dataframe construction :)
 
 ## Detailed Test Output
 **Baseline**
@@ -186,26 +201,42 @@ sys	0m18.816s
 **PR 76**
 
 ```
-(py37) $ time python bro_to_pandas.py ~/data/bro/conn.log 
-uid                 object
-id.orig_h         category
-id.orig_p           UInt16
-id.resp_h         category
-id.resp_p           UInt16
-proto             category
-service           category
-duration           float64
-orig_bytes         float64
-resp_bytes         float64
-conn_state        category
-local_orig        category
-missed_bytes       float64
-history           category
-orig_pkts          float64
-orig_ip_bytes      float64
-resp_pkts          float64
-resp_ip_bytes      float64
-tunnel_parents    category
+time python bro_to_pandas.py /Users/briford/data/bro/conn.log 
+Could not find type for addr using category...
+Could not find type for addr using category...
+Could not find type for enum using category...
+Could not find type for string using category...
+Could not find type for string using category...
+Could not find type for string using category...
+Could not find type for table[string] using category...
+                                              uid       id.orig_h  ...  resp_ip_bytes tunnel_parents
+ts                                                                 ...                              
+2012-03-16 12:30:00.000000000  CCUIP21wTjqkj8ZqX5  192.168.202.79  ...             52        (empty)
+2012-03-16 12:30:00.000000000  Csssjd3tX0yOTPDpng  192.168.202.79  ...            994        (empty)
+2012-03-16 12:30:00.000000000  CHEt7z3AzG4gyCNgci  192.168.202.79  ...            382        (empty)
+2012-03-16 12:30:00.009999990  CKnDAp2ohlvN6rpiXl  192.168.202.79  ...            382        (empty)
+2012-03-16 12:30:00.000000000    CGUBcoXKxBE8gTNl  192.168.202.79  ...           1744        (empty)
+
+[5 rows x 19 columns]
+uid                        object
+id.orig_h                category
+id.orig_p                  UInt16
+id.resp_h                category
+id.resp_p                  UInt16
+proto                    category
+service                  category
+duration          timedelta64[ns]
+orig_bytes                 UInt64
+resp_bytes                 UInt64
+conn_state               category
+local_orig               category
+missed_bytes               UInt64
+history                  category
+orig_pkts                  UInt64
+orig_ip_bytes              UInt64
+resp_pkts                  UInt64
+resp_ip_bytes              UInt64
+tunnel_parents           category
 dtype: object
 DF Shape: (22694356, 19)
 DF Memory:
@@ -218,21 +249,76 @@ DF Memory:
 	 proto: 	22.69 MB
 	 service: 	22.70 MB
 	 duration: 	181.55 MB
-	 orig_bytes: 	181.55 MB
-	 resp_bytes: 	181.55 MB
+	 orig_bytes: 	204.25 MB
+	 resp_bytes: 	204.25 MB
 	 conn_state: 	22.70 MB
 	 local_orig: 	22.69 MB
-	 missed_bytes: 	181.55 MB
+	 missed_bytes: 	204.25 MB
 	 history: 	45.45 MB
-	 orig_pkts: 	181.55 MB
-	 orig_ip_bytes: 	181.55 MB
-	 resp_pkts: 	181.55 MB
-	 resp_ip_bytes: 	181.55 MB
+	 orig_pkts: 	204.25 MB
+	 orig_ip_bytes: 	204.25 MB
+	 resp_pkts: 	204.25 MB
+	 resp_ip_bytes: 	204.25 MB
 	 tunnel_parents: 	22.70 MB
-DF Total: 3.72 GB
+DF Total: 3.88 GB
 
-real	1m27.572s
-user	1m22.787s
-sys	0m5.180s
+real	2m57.822s
+user	2m52.370s
+sys	0m6.031s
+```
+
+**PR 76 (with chunking)**
+
+```
+$ time python bro_to_pandas.py /Users/briford/data/bro/conn.log 
+
+uid                        object
+id.orig_h                  object
+id.orig_p                  UInt16
+id.resp_h                  object
+id.resp_p                  UInt16
+proto                    category
+service                    object
+duration          timedelta64[ns]
+orig_bytes                 UInt64
+resp_bytes                 UInt64
+conn_state                 object
+local_orig               category
+missed_bytes               UInt64
+history                    object
+orig_pkts                  UInt64
+orig_ip_bytes              UInt64
+resp_pkts                  UInt64
+resp_ip_bytes              UInt64
+tunnel_parents             object
+
+DF Shape: (22694356, 19)
+DF Memory:
+	 Index: 	181.55 MB
+	 uid: 	1696.11 MB
+	 id.orig_h: 	1623.26 MB
+	 id.orig_p: 	68.08 MB
+	 id.resp_h: 	1608.96 MB
+	 id.resp_p: 	68.08 MB
+	 proto: 	22.69 MB
+	 service: 	745.42 MB
+	 duration: 	181.55 MB
+	 orig_bytes: 	204.25 MB
+	 resp_bytes: 	204.25 MB
+	 conn_state: 	1352.43 MB
+	 local_orig: 	22.69 MB
+	 missed_bytes: 	204.25 MB
+	 history: 	1405.51 MB
+	 orig_pkts: 	204.25 MB
+	 orig_ip_bytes: 	204.25 MB
+	 resp_pkts: 	204.25 MB
+	 resp_ip_bytes: 	204.25 MB
+	 tunnel_parents: 	1452.44 MB
+DF Total: 11.86 GB
+
+real	3m51.152s
+user	3m45.320s
+sys	0m6.254s
+
 ```
 
