@@ -23,16 +23,15 @@ class LogToDataFrame(object):
 
         # First Level Type Mapping
         #    This map defines the types used when first reading in the Bro log into a 'chunk' dataframes.
-        #    Types (like time/interval/bool) will be defined as one type at first but then
+        #    Types (like time and interval) will be defined as one type at first but then
         #    will undergo further processing to produce correct types with correct values.
-        #    Also some object types will be changed into categorical types based on value distributions.
         # See: https://stackoverflow.com/questions/29245848/what-are-all-the-dtypes-that-pandas-recognizes
         #      for more info on supported types.
-        self.type_map = {'bool': 'category',  # Can't hold NaN values in 'bool', secondary processing into UInt8
-                         'count': 'UInt32',
+        self.type_map = {'bool': 'category',  # Can't hold NaN values in 'bool', so we're going to use category
+                         'count': 'UInt64',
                          'int': 'Int32',
                          'double': 'float',
-                         'time': 'float',      # Secondary Processing into datetime
+                         'time': 'float',   # Secondary Processing into datetime
                          'interval': 'float',  # Secondary processing into timedelta
                          'port': 'UInt16'
                          }
@@ -53,6 +52,13 @@ class LogToDataFrame(object):
 
         # Now actually read the Bro Log using Pandas read CSV
         self._df = pd.read_csv(log_filename, sep='\t', names=field_names, dtype=pandas_types, comment="#", na_values='-')
+
+        # Now we convert 'time' and 'interval' fields to datetime and timedelta respectively
+        for name, bro_type in zip(field_names, field_types):
+            if bro_type == 'time':
+                self._df[name] = pd.to_datetime(self._df[name], unit='s')
+            if bro_type == 'interval':
+                self._df[name] = pd.to_timedelta(self._df[name], unit='s')
 
         # Set the index
         if ts_index and not self._df.empty:
