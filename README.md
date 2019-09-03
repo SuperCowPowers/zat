@@ -4,6 +4,9 @@
 The BAT Python package supports the processing and analysis of Bro data
 with Pandas, scikit-learn, and Spark
 
+### Recent: Large Log to Dataframe Improvements
+See our recent work on improving Pandas dataframes from large log files: [Large Dataframes](docs/large_dataframes.md)
+
 ## BroCon 2017 Presentation
 
 Data Analysis, Machine Learning, Bro, and You!
@@ -49,13 +52,14 @@ types properly converted.
     'uid': 'CJsdG95nCNF1RXuN5'}
     ...
 
-### Example: Bro log to Pandas DataFrame (in one line of code)
+### Example: Bro log to Pandas DataFrame
 
 ```python
 from bat.log_to_dataframe import LogToDataFrame
 ...
     # Create a Pandas dataframe from a Bro log
-    bro_df = LogToDataFrame('/path/to/dns.log')
+    log_to_df = LogToDataFrame()
+    bro_df = log_to_df.create_dataframe('/path/to/dns.log')
 
     # Print out the head of the dataframe
     print(bro_df.head())

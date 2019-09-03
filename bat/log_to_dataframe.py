@@ -4,31 +4,115 @@ from __future__ import print_function
 # Third Party
 import pandas as pd
 
-# Local Imports
+# Local
 from bat import bro_log_reader
 
 
-class LogToDataFrame(pd.DataFrame):
+class LogToDataFrame(object):
     """LogToDataFrame: Converts a Bro log to a Pandas DataFrame
-        Args:
-            log_fllename (string): The full path to the Bro log
-            ts_index (bool): Set the index to the 'ts' field (default = True)
         Notes:
-            This class is fairly simple right now but will probably have additional
-            functionality for formal type specifications and performance enhancements
+            This class has recently been overhauled from a simple loader to a more
+            complex class that should in theory:
+              - Select better types for each column
+              - Should be faster
+              - Produce smaller memory footprint dataframes
+            If you have any issues/problems with this class please submit a GitHub issue.
     """
-    def __init__(self, log_filename, ts_index=True):
+    def __init__(self):
         """Initialize the LogToDataFrame class"""
 
-        # Create a bro reader on a given log file
-        reader = bro_log_reader.BroLogReader(log_filename)
+        # First Level Type Mapping
+        #    This map defines the types used when first reading in the Bro log into a 'chunk' dataframes.
+        #    Types (like time and interval) will be defined as one type at first but then
+        #    will undergo further processing to produce correct types with correct values.
+        # See: https://stackoverflow.com/questions/29245848/what-are-all-the-dtypes-that-pandas-recognizes
+        #      for more info on supported types.
+        self.type_map = {'bool': 'category',  # Can't hold NaN values in 'bool', so we're going to use category
+                         'count': 'UInt64',
+                         'int': 'Int32',
+                         'double': 'float',
+                         'time': 'float',   # Secondary Processing into datetime
+                         'interval': 'float',  # Secondary processing into timedelta
+                         'port': 'UInt16'
+                         }
 
-        # Create a Pandas dataframe from reader
-        super(LogToDataFrame, self).__init__(reader.readrows())
+    def create_dataframe(self, log_filename, ts_index=True, aggressive_category=True):
+        """ Create a Pandas dataframe from a Bro/Zeek log file
+            Args:
+               log_fllename (string): The full path to the Bro log
+               ts_index (bool): Set the index to the 'ts' field (default = True)
+        """
+
+        # Create a Bro log reader just to read in the header for names and types
+        _bro_reader = bro_log_reader.BroLogReader(log_filename)
+        _, field_names, field_types, _ = _bro_reader._parse_bro_header(log_filename)
+
+        # Get the appropriate types for the Pandas Dataframe
+        pandas_types = self.pd_column_types(field_names, field_types, aggressive_category)
+
+        # Now actually read the Bro Log using Pandas read CSV
+        self._df = pd.read_csv(log_filename, sep='\t', names=field_names, dtype=pandas_types, comment="#", na_values='-')
+
+        # Now we convert 'time' and 'interval' fields to datetime and timedelta respectively
+        for name, bro_type in zip(field_names, field_types):
+            if bro_type == 'time':
+                self._df[name] = pd.to_datetime(self._df[name], unit='s')
+            if bro_type == 'interval':
+                self._df[name] = pd.to_timedelta(self._df[name], unit='s')
 
         # Set the index
-        if ts_index and not self.empty:
-            self.set_index('ts', inplace=True)
+        if ts_index and not self._df.empty:
+            self._df.set_index('ts', inplace=True)
+        return self._df
+
+    def pd_column_types(self, column_names, column_types, aggressive_category):
+        """Given a set of names and types, construct a dictionary to be used
+           as the Pandas read_csv dtypes argument"""
+
+        # Agressive Category means that types not in the current type_map are
+        # mapped to a 'category' if aggressive_category is False then they
+        # are mapped to an 'object' type
+        unknown_type = 'category' if aggressive_category else 'object'
+
+        pandas_types = {}
+        for name, bro_type in zip(column_names, column_types):
+
+            # Grab the type
+            item_type = self.type_map.get(bro_type)
+
+            # Sanity Check
+            if not item_type:
+                # UID always get mapped to object
+                if name == 'uid':
+                    item_type = 'object'
+                else:
+                    print('Could not find type for {:s} using {:s}...'.format(bro_type, unknown_type))
+                    item_type = unknown_type
+
+            # Set the pandas type
+            pandas_types[name] = item_type
+
+        # Return the dictionary of name: type
+        return pandas_types
+
+    def secondary_processing(self):
+        """Processing some of the columns that can't be directly read in/parsed by read_csv"""
+        # WIP: Put in processing for bool, datetime, and timedelta
+        return self._df
+
+    def chunk_processing(self, df_chunk):
+        """This method processes each chunk of the dataframe
+           - Convert the type to the best/most compact type
+           - Determine if object types can be converted to categorical
+           - Process 'odd' types into proper Pandas types
+               - 'bool' with 'T'/'F' into proper boolean with True/False
+               - 'time' from timestamp to datetime
+               - 'interval' to timedelta
+           - Process 'dashes':
+               The bro output will often have a '-' in the field, this means
+               different things depending on the column, so we have logic that
+               changes '-' to the 'right thing'.
+        """
 
 
 # Simple test of the functionality
@@ -40,26 +124,37 @@ def test():
 
     # Grab a test file
     data_path = file_utils.relative_dir(__file__, '../data')
-    test_path = os.path.join(data_path, 'http.log')
+    log_path = os.path.join(data_path, 'conn.log')
 
     # Convert it to a Pandas DataFrame
-    http_df = LogToDataFrame(test_path)
+    log_to_df = LogToDataFrame()
+    my_df = log_to_df.create_dataframe(log_path)
 
     # Print out the head
-    print(http_df.head())
+    print(my_df.head())
 
     # Print out the datatypes
-    print(http_df.dtypes)
+    print(my_df.dtypes)
+
+    # Test a bunch
+    tests = ['app_stats.log', 'dns.log', 'http.log', 'notice.log', 'tor_ssl.log',
+             'conn.log', 'dhcp_002.log', 'files.log',  'smtp.log', 'weird.log',
+             'ftp.log',  'ssl.log', 'x509.log']
+    for log_path in [os.path.join(data_path, log) for log in tests]:
+        print('Testing: {:s}...'.format(log_path))
+        my_df = log_to_df.create_dataframe(log_path)
+        print(my_df.head())
+        print(my_df.dtypes)
 
     # Test an empty log (a log with header/close but no data rows)
-    test_path = os.path.join(data_path, 'http_empty.log')
-    http_df = LogToDataFrame(test_path)
+    log_path = os.path.join(data_path, 'http_empty.log')
+    my_df = log_to_df.create_dataframe(log_path)
 
     # Print out the head
-    print(http_df.head())
+    print(my_df.head())
 
     # Print out the datatypes
-    print(http_df.dtypes)
+    print(my_df.dtypes)
 
     print('LogToDataFrame Test successful!')
 
