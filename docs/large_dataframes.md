@@ -28,6 +28,8 @@ The PR from <https://github.com/bhklimk> shown here: [PR 75](https://github.com/
 
 **PR 76:**
 A new PR focused specifically on memory/time improvements for large data frames.
+[PR 76](https://github.com/SuperCowPowers/bat/pull/76)
+
 
 ## Performance Results
 
@@ -59,10 +61,13 @@ So every Stack Overflow answer about reading in large dataframes uses a chunking
 
 1. **Size/Memory:** Chunking the dataframe into pieces and then immediately combining those pieces with pd.concat, is a bit like chopping up a log and then reassembling it. You end up with the same log. So since the final size in memory is a big factor in our 'optimization' this doesn't really help us much in theory and made things worse in practice (see item 3 below).
 1. **Time:** The chunking + concat combine code took more time to execute than just simply reading in the whole dataframe.
-1. **Memory (again):** Simple categorical types 'survived' the concat process, slightly more complex ones got punted down to the 'object' type which basically ruined the whole point of a compact dataframe that heavily engages categories. In particular 'photo' and 'local\_orig' remained categorical types, 'id.orig\_h', 'id.resp\_h', 'service', 'conn\_state', and 'history' did **not**. See detailed test output below.
+1. **Memory (again):** Simple categorical types 'survived' the concat process, slightly more complex ones got punted down to the 'object' type which basically ruined the whole point of a compact dataframe that heavily engages categories. In particular 'proto' and 'local\_orig' remained categorical types, 'id.orig\_h', 'id.resp\_h', 'service', 'conn\_state', and 'history' did **not**. See detailed test output below.
 
 **Note:** I'm happy to be wrong about any of these points, please replicate the test above and smack me with some science, I'll gladly eat some crow if it means we get better/faster dataframe construction :)
 
+## Final Decision:
+After Benjamin Klimkowski <https://github.com/bhklimk> and I both did some testing and discussion we've decided to use [PR 76](https://github.com/SuperCowPowers/bat/pull/76) (without 'chunking').
+ 
 ## Detailed Test Output
 **Baseline**
 
@@ -201,23 +206,6 @@ sys	0m18.816s
 **PR 76**
 
 ```
-time python bro_to_pandas.py /Users/briford/data/bro/conn.log 
-Could not find type for addr using category...
-Could not find type for addr using category...
-Could not find type for enum using category...
-Could not find type for string using category...
-Could not find type for string using category...
-Could not find type for string using category...
-Could not find type for table[string] using category...
-                                              uid       id.orig_h  ...  resp_ip_bytes tunnel_parents
-ts                                                                 ...                              
-2012-03-16 12:30:00.000000000  CCUIP21wTjqkj8ZqX5  192.168.202.79  ...             52        (empty)
-2012-03-16 12:30:00.000000000  Csssjd3tX0yOTPDpng  192.168.202.79  ...            994        (empty)
-2012-03-16 12:30:00.000000000  CHEt7z3AzG4gyCNgci  192.168.202.79  ...            382        (empty)
-2012-03-16 12:30:00.009999990  CKnDAp2ohlvN6rpiXl  192.168.202.79  ...            382        (empty)
-2012-03-16 12:30:00.000000000    CGUBcoXKxBE8gTNl  192.168.202.79  ...           1744        (empty)
-
-[5 rows x 19 columns]
 uid                        object
 id.orig_h                category
 id.orig_p                  UInt16
@@ -240,31 +228,31 @@ tunnel_parents           category
 dtype: object
 DF Shape: (22694356, 19)
 DF Memory:
-	 Index: 	181.55 MB
-	 uid: 	1696.11 MB
-	 id.orig_h: 	45.43 MB
-	 id.orig_p: 	68.08 MB
-	 id.resp_h: 	45.94 MB
-	 id.resp_p: 	68.08 MB
-	 proto: 	22.69 MB
-	 service: 	22.70 MB
-	 duration: 	181.55 MB
-	 orig_bytes: 	204.25 MB
-	 resp_bytes: 	204.25 MB
-	 conn_state: 	22.70 MB
-	 local_orig: 	22.69 MB
-	 missed_bytes: 	204.25 MB
-	 history: 	45.45 MB
-	 orig_pkts: 	204.25 MB
-	 orig_ip_bytes: 	204.25 MB
-	 resp_pkts: 	204.25 MB
-	 resp_ip_bytes: 	204.25 MB
-	 tunnel_parents: 	22.70 MB
+	 Index:         181.55 MB
+	 uid:          1696.11 MB
+	 id.orig_h:      45.43 MB
+	 id.orig_p:      68.08 MB
+	 id.resp_h:      45.94 MB
+	 id.resp_p:      68.08 MB
+	 proto:          22.69 MB
+	 service:        22.70 MB
+	 duration:      181.55 MB
+	 orig_bytes:    204.25 MB
+	 resp_bytes:    204.25 MB
+	 conn_state:     22.70 MB
+	 local_orig:     22.69 MB
+	 missed_bytes:  204.25 MB
+	 history:        45.45 MB
+	 orig_pkts:     204.25 MB
+	 orig_ip_bytes: 204.25 MB
+	 resp_pkts:     204.25 MB
+	 resp_ip_bytes: 204.25 MB
+	 tunnel_parents: 22.70 MB
 DF Total: 3.88 GB
 
 real	2m57.822s
 user	2m52.370s
-sys	0m6.031s
+sys	   0m6.031s
 ```
 
 **PR 76 (with chunking)**
