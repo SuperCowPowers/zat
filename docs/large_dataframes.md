@@ -6,7 +6,7 @@ We have several outstanding issues for needed improvements to support the ingest
 
 There's also a PR from <https://github.com/bhklimk> with some good suggestions.
 
-Big thanks to Benjamin Klimkowski <https://github.com/bhklimk>. The ideas/suggestions that Ben gave in [PR 75](https://github.com/SuperCowPowers/bat/pull/75) were well received. The PR itself has issues with 'cruft' and some of the details but the core concepts are solid, so we're going to borrow those and we've made a new PR that is more aligned with the existing implementation. Thanks again to Ben for helping us improve the performance on large Bro/Zeek files.
+Big thanks to Benjamin Klimkowski <https://github.com/bhklimk>. The ideas/suggestions that Ben gave in [PR 75](https://github.com/SuperCowPowers/bat/pull/75) were well received. The PR itself had some issues with 'cruft' and other details but the core concepts were solid, so we borrowed those and made a new PR that is more aligned with the existing implementation. Thanks again to Ben for helping us improve the performance on large Bro/Zeek files.
 
 **Test Data:**
 Since conn.log is typically the most voluminous, we're going to use this 2.5 Gig conn.long file for our performance testing.
