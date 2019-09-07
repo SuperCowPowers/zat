@@ -28,16 +28,16 @@ from here to there.
 
 
 ### Getting Started
-- [Examples of Using BAT](docs/examples.md)
+- [Examples of Using BAT](https://supercowpowers.github.io/bat/examples.html)
 
 ### How-To Analysis Notebooks
 
-- [Bro to Scikit-Learn] (https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Scikit_Learn.ipynb)
-- [Bro to Matplotlib] (https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Plot.ipynb)
-- [Bro to Parquet to Spark] (https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Parquet_to_Spark.ipynb)
-- [Bro to Kafka to Spark] (https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Kafka_to_Spark.ipynb)
-- [Clustering: Picking K (or not)] (https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Clustering_Picking_K.ipynb)
-- [Anomaly Detection Exploration] (https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Anomaly_Detection.ipynb)
+- [Bro to Scikit-Learn](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Scikit_Learn.ipynb)
+- [Bro to Matplotlib](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Plot.ipynb)
+- [Bro to Parquet to Spark](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Parquet_to_Spark.ipynb)
+- [Bro to Kafka to Spark](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Kafka_to_Spark.ipynb)
+- [Clustering: Picking K (or not)](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Clustering_Picking_K.ipynb)
+- [Anomaly Detection Exploration](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Anomaly_Detection.ipynb)
 - [Risky Domains Stats and Deployment](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Risky_Domains.ipynb)
 
 Install

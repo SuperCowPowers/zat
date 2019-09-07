@@ -1,9 +1,6 @@
 # BAT Documentation
 **Welcome to the Bro Analysis Tools Documentation**
 
-The BAT Python package supports the processing and analysis of Bro data
-with Pandas, scikit-learn, and Spark
-
 ### Getting Started
 - [Examples of Using BAT](examples.md)
 
