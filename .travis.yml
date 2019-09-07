@@ -18,10 +18,16 @@ before_install:
   - pip --version
   - uname -a
   - lsb_release -a
+
 install:
   - pip install tox 
+
 script:
   - tox -e $TOXENV
+
+after_success:
+  - codecov
+
 notifications:
   email:
     on_success: never
