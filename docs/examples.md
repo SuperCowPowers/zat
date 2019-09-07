@@ -1,17 +1,19 @@
-Examples
-========
+# Examples of Using BAT
 
-To use Bro Python Utilities in a project:
+This documents shows a wide variety of ways to use the BAT toolkit to process Bro/Zeek output.
 
-    import bat
+-   Any Bro Log into Python (dynamic tailing and log
+    rotations are handled)
+-   Bro Logs to Pandas Dataframes and Scikit-Learn
+-   Dynamically monitor files.log and make VirusTotal Queries
+-   Dynamically monitor http.log and show 'uncommon' User Agents
+-   Running Yara Signatures on Extracted Files
+-   Checking x509 Certificates
+-   Anomaly Detection
 
-BroLog to Python
-----------------
+### Pull in Bro/Zeek Logs as Python Dictionaries
 
-See bat/examples/bro\_pprint.py for full code listing.
-
-``` {.python}
-from pprint import pprint
+```python
 from bat import bro_log_reader
 ...
     # Run the bro reader on a given log file
@@ -20,8 +22,8 @@ from bat import bro_log_reader
         pprint(row)
 ```
 
-**Example Output:** You get back a nice Python Dictionary with
-timestamps and types properly converted.
+**Output:** Each row is a nice Python Dictionary with timestamps and
+types properly converted.
 
     {'assigned_ip': '192.168.84.10',
     'id.orig_h': '192.168.84.10',
@@ -33,14 +35,11 @@ timestamps and types properly converted.
     'trans_id': 495764278,
     'ts': datetime.datetime(2012, 7, 20, 3, 14, 12, 219654),
     'uid': 'CJsdG95nCNF1RXuN5'}
+    ...
 
-Bro log to Pandas DataFrame
----------------------------
+### Bro/Zeek log to Pandas DataFrame
 
-See bat/examples/bro\_to\_pandas.py for full code listing. Notice that
-it\'s one line of code to convert to a Pandas DataFrame.
-
-``` {.python}
+```python
 from bat.log_to_dataframe import LogToDataFrame
 ...
     # Create a Pandas dataframe from a Bro log
@@ -52,23 +51,21 @@ from bat.log_to_dataframe import LogToDataFrame
 ```
 
 **Output:** All the Bro log data is in a Pandas DataFrame with proper
-types with \'ts\' as the index
+types and timestamp as the index
 
-    query      id.orig_h  id.orig_p id.resp_h \
+```
+                                                    query      id.orig_h  id.orig_p id.resp_h
+ts
+2013-09-15 17:44:27.631940                     guyspy.com  192.168.33.10       1030   4.2.2.3
+2013-09-15 17:44:27.696869                 www.guyspy.com  192.168.33.10       1030   4.2.2.3
+2013-09-15 17:44:28.060639   devrubn8mli40.cloudfront.net  192.168.33.10       1030   4.2.2.3
+2013-09-15 17:44:28.141795  d31qbv1cthcecs.cloudfront.net  192.168.33.10       1030   4.2.2.3
+2013-09-15 17:44:28.422704                crl.entrust.net  192.168.33.10       1030   4.2.2.3
+```
 
-> ts 2013-09-15 17:44:27.631940 guyspy.com 192.168.33.10 1030 4.2.2.3
-> 2013-09-15 17:44:27.696869 www.guyspy.com 192.168.33.10 1030 4.2.2.3
-> 2013-09-15 17:44:28.060639 devrubn8mli40.cloudfront.net 192.168.33.10
-> 1030 4.2.2.3 2013-09-15 17:44:28.141795 d31qbv1cthcecs.cloudfront.net
-> 192.168.33.10 1030 4.2.2.3 2013-09-15 17:44:28.422704 crl.entrust.net
-> 192.168.33.10 1030 4.2.2.3
-
-Bro to Scikit-Learn
--------------------
-
-See bat/examples/bro\_to\_scikit.py for full code listing, we\'ve
-shortened the code listing here to demonstrate that it\'s literally just
-a few lines of code to get to Scikit-Learn.
+### Bro Log to Scikit-Learn
+See bat/examples/bro\_to\_scikit.py for full code listing, we've
+shortened the code listing here to demonstrate that it's literally just a few lines of code to get to Scikit-Learn.
 
 ``` {.python}
 # Create a Pandas dataframe from a Bro log
@@ -110,8 +107,7 @@ pca = PCA(n_components=2).fit_transform(bro_matrix)
     55  abcsuperlongcrazydnsqueryforanomalydetectionj....  0   udp          A -0.622886 -0.222030        4
     56  qrssuperlongcrazydnsqueryforanomalydetectionj....  0   udp          A -0.571959 -0.236560        4
 
-Bro Files Log to VirusTotal Query
----------------------------------
+### Bro Files Log to VirusTotal Query
 
 See bat/examples/file\_log\_vtquery.py for full code listing (code
 simplified below)
@@ -153,8 +149,7 @@ VirusTotal Service.
             (u'Exploit:Java/CVE-2012-1723', 1),
             (u'UnclassifiedMalware', 1)]}
 
-Bro HTTP Log User Agents
-------------------------
+### Bro HTTP Log User Agents
 
 See bat/examples/http\_user\_agents.py for full code listing (code
 simplified below)
@@ -196,12 +191,10 @@ from bat import bro_log_reader
      ...
      ('Mozilla/5.0 (compatible; Nmap Scripting Engine; http://nmap.org/book/nse.html)', 6166),
 
-Yara rules on Bro extracted files
----------------------------------
+### Yara rules on Bro extracted files
 
 The example will dymancially monitor the extract\_files directory and
-when a file is dropped by Bro the code will run a set of Yara rules
-against that file. See bat/examples/yara\_matches.py for full code
+when a file is dropped by Bro the code will run a set of Yara rules against that file. See bat/examples/yara\_matches.py for full code
 listing (code simplified below)
 
 ``` {.python}
@@ -232,13 +225,10 @@ def yara_match(file_path, rules):
     Mathes:
     [AURIGA_driver_APT1]
 
-Risky Domains
--------------
+### Risky Domains
 
 The example will use the analysis in our [Risky
-Domains](https://github.com/SuperCowPowers/bat/blob/master/notebooks/Risky_Domains.ipynb)
-notebook to flag domains that are \'at risk\' and conduct a Virus Total
-query on those domains. See bat/examples/risky\_dns.py for full code
+Domains](https://github.com/SuperCowPowers/bat/blob/master/notebooks/Risky_Domains.ipynb) notebook to flag domains that are 'at risk' and conduct a Virus Total query on those domains. See bat/examples/risky\_dns.py for full code
 listing (code simplified below)
 
 ``` {.python}
@@ -270,36 +260,32 @@ from bat.utils import vt_query
                 pprint(results)
 ```
 
-**Example Output:** To test this example simply do a \"\$ping uni10.tk\"
-on a machine being monitored by your Bro.
+**Example Output:** To test this example simply do a \"\$ping uni10.tk\" on a machine being monitored by your Bro.
 
-Note: You can also ping something like \'isaftaho.tk\' which is not on
-any of the blacklist but will still hit. The script will obviously cast
-a much wider net than just the blacklists.
+Note: You can also ping something like 'isaftaho.tk' which is not on any of the blacklist but will still hit. The script will obviously cast a much wider net than just the blacklists.
 
-    $ python risky_dns.py -f /usr/local/var/spool/bro/dns.log
-      Successfully monitoring /usr/local/var/spool/bro/dns.log...
+```
+$ python risky_dns.py -f /usr/local/var/spool/bro/dns.log
+Successfully monitoring /usr/local/var/spool/bro/dns.log...
 
-      OMG the Network is on Fire!!!
-      {'filescan_id': None,
-       'positives': 9,
-       'query': 'uni10.tk',
-       'scan_date': '2016-12-19 23:49:04',
-       'scan_results': [('clean site', 55),
-                        ('malicious site', 5),
-                        ('unrated site', 4),
-                        ('malware site', 4),
-                        ('suspicious site', 1)],
-       'total': 69,
-       'url': 'http://uni10.tk/'}
+OMG the Network is on Fire!!!
+{'filescan_id': None,
+ 'positives': 9,
+ 'query': 'uni10.tk',
+ 'scan_date': '2016-12-19 23:49:04',
+ 'scan_results': [('clean site', 55),
+                  ('malicious site', 5),
+                  ('unrated site', 4),
+                  ('malware site', 4),
+                  ('suspicious site', 1)],
+ 'total': 69,
+ 'url': 'http://uni10.tk/'}
+```
 
-Cert Checker
-------------
+### Cert Checker
 
-There\'s been discussion about Let\'s Encrypt issuing certficates to
-possible phishing/malicious site owners. This example will quickly check
-and dynamically monitor your Bro x509 logs for certificates that may be
-from malicious sites.
+There's been discussion about Let's Encrypt issuing certificates to possible phishing/malicious site owners. This example will quickly check
+and dynamically monitor your Bro x509 logs for certificates that may be from malicious sites.
 
 See bat/examples/cert\_checker.py for full code listing (code simplified
 below)
@@ -362,13 +348,11 @@ from bat.utils import vt_query
        'total': 64,
        'url': 'http://paypal.migems.com/'}
 
-Anomaly Detection
------------------
+### Anomaly Detection
 
-Here we\'re demonstrating anomaly detection using the Isolated Forest
+Here we're demonstrating anomaly detection using the Isolated Forest
 algorithm. Once anomalies are identified we then use clustering to group
-our anomalies into organized segments that allow an analyst to \'skim\'
-the output groups instead of looking at each row.
+our anomalies into organized segments that allow an analyst to 'skim' the output groups instead of looking at each row.
 
 See bat/examples/anomaly\_detection.py for full code listing (code
 simplified below)
@@ -440,16 +424,11 @@ for key, group in cluster_groups:
     59  1    False   udp  j.maxmind.com  C_INTERNET          A    NOERROR            13        3
     60  1    False   udp  j.maxmind.com  C_INTERNET          A    NOERROR            13        3
 
-Tor detection and port number count
------------------------------------
+### Tor detection and port number count
 
 See bat/examples/tor\_and\_port\_count.py for the code.
 
-This example will go through ssl.log files and try to identify possible
-Tor traffic. This is done by using the well known pattern of the Issuer
-and Subject ID in the certificates. Please note that your Bro
-installation will have to be configured to log these fields for this to
-work. Further info about how to do that can be found here: [SSL Log
+This example will go through ssl.log files and try to identify possible Tor traffic. This is done by using the well known pattern of the Issuer and Subject ID in the certificates. Please note that your Bro installation will have to be configured to log these fields for this to work. Further info about how to do that can be found here: [SSL Log
 Info](https://www.bro.org/sphinx/scripts/base/protocols/ssl/main.bro.html#type-SSL::Info)
 
 **Example Output:** Run this example script on your Bro ssl.log\...
@@ -459,7 +438,7 @@ Info](https://www.bro.org/sphinx/scripts/base/protocols/ssl/main.bro.html#type-S
 
 The script will also keep a count of which destination ports that SSL
 have been detected on. Something that might help with threat hunting
-since you might find traffic on a port you definitely wasn\'t expecting
+since you might find traffic on a port you definitely wasn't expecting
 to be there.
 
 **Example Output:** Run this example script on your Bro ssl.log\...

@@ -1,16 +1,27 @@
-Contents:
-=========
+# BAT Documentation
+**Welcome to the Bro Analysis Tools Documentation**
 
-::: {.toctree maxdepth="2"}
-examples contributing authors
-:::
+The BAT Python package supports the processing and analysis of Bro data
+with Pandas, scikit-learn, and Spark
 
-Feedback
-========
+### Getting Started
+- [Examples of Using BAT](examples.md)
 
-If you have any suggestions or questions about **Bro Analysis Tools**
-feel free to email me at <briford@supercowpowers.com>.
+### Videos
+- [BroCon 2017 Presentation](https://www.youtube.com/watch?v=pG5lU9CLnIU)
 
-If you encounter any errors or problems with **Bro Analysis Tools**,
-please let me know! Open an Issue at the GitHub
-<https://github.com/supercowpowers/bat> main repository.
+### Analysis Notebooks
+
+- [Bro to Scikit-Learn] (https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Scikit_Learn.ipynb)
+- [Bro to Matplotlib] (https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Plot.ipynb)
+- [Bro to Parquet to Spark] (https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Parquet_to_Spark.ipynb)
+- [Bro to Kafka to Spark] (https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Kafka_to_Spark.ipynb)
+- [Clustering: Picking K (or not)] (https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Clustering_Picking_K.ipynb)
+- [Anomaly Detection Exploration] (https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Anomaly_Detection.ipynb)
+- [Risky Domains Stats and Deployment](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Risky_Domains.ipynb)
+
+
+### Developer Stuff
+- [Large Dataframe Support](large_dataframes.md)
+- [Contributing to BAT](contributing.md)
+- [Authors](author.md)
