@@ -21,4 +21,5 @@
 ### Developer Stuff
 - [Large Dataframe Support](large_dataframes.md)
 - [Contributing to BAT](contributing.md)
-- [Authors](author.md)
+- [Authors](authors.md)
+- [Admin Notes](admin_notes.md)
