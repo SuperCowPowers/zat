@@ -1,4 +1,4 @@
-## Bro Analysis Tools (BAT) [![travis](https://travis-ci.org/SuperCowPowers/bat.svg?branch=master)](https://travis-ci.org/SuperCowPowers/bat) [![codecov.io](http://codecov.io/github/SuperCowPowers/bat/coverage.svg?branch=master)](http://codecov.io/github/mirumee/saleor?branch=master) [![supported-versions](https://img.shields.io/pypi/pyversions/bat.svg)](https://pypi.python.org/pypi/bat) [![license](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://choosealicense.com/licenses/apache-2.0) 
+## Bro Analysis Tools (BAT) [![travis](https://travis-ci.org/SuperCowPowers/bat.svg?branch=master)](https://travis-ci.org/SuperCowPowers/bat) [![codecov.io](http://codecov.io/github/SuperCowPowers/bat/coverage.svg?branch=master)](http://codecov.io/github/SuperCowPowers/bat?branch=master) [![supported-versions](https://img.shields.io/pypi/pyversions/bat.svg)](https://pypi.python.org/pypi/bat) [![license](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://choosealicense.com/licenses/apache-2.0) 
 
 The BAT Python package supports the processing and analysis of Bro data
 with Pandas, scikit-learn, and Spark
