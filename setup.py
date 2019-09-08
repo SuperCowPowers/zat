@@ -26,6 +26,7 @@ setup(
     version=version,
     description='Bro Analysis Tools',
     long_description=readme,
+    long_description_content_type='text/markdown',
     author=author,
     author_email=email,
     url='https://github.com/SuperCowPowers/bat',
@@ -52,8 +53,8 @@ setup(
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy'
     ],
