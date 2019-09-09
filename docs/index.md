@@ -20,6 +20,7 @@
 
 ### Developer Stuff
 - [Large Dataframe Support](large_dataframes.md)
+- [Dataframe to Matrix](dataframe_to_matrix.md)
 - [Contributing to BAT](contributing.md)
 - [Authors](authors.md)
 - [Admin Notes](admin_notes.md)

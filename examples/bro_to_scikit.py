@@ -43,18 +43,18 @@ if __name__ == '__main__':
         args.bro_log = os.path.expanduser(args.bro_log)
 
         # Create a Pandas dataframe from the Bro log
-        bro_df = log_to_dataframe.LogToDataFrame(args.bro_log)
+        log_to_df = log_to_dataframe.LogToDataFrame()
+        bro_df = log_to_df.create_dataframe(args.bro_log)
 
         # Add query length
         bro_df['query_length'] = bro_df['query'].str.len()
 
         # Normalize this field
-        ql = bro_df['query_length']
-        bro_df['query_length_norm'] = (ql - ql.min()) / (ql.max()-ql.min())
+        #ql = bro_df['query_length']
+        #bro_df['query_length_norm'] = (ql - ql.min()) / (ql.max()-ql.min())
 
         # These are the features we want (note some of these are categorical!)
-        features = ['AA', 'RA', 'RD', 'TC', 'Z', 'rejected', 'proto', 'query',
-                    'qclass_name', 'qtype_name', 'rcode_name', 'query_length_norm']
+        features = ['AA', 'RA', 'RD', 'TC', 'Z', 'rejected', 'proto', 'qtype_name', 'rcode_name', 'query_length']
         feature_df = bro_df[features]
 
         # Use the super awesome DataframeToMatrix class (handles categorical data!)
