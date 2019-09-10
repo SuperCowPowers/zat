@@ -50,9 +50,9 @@ if __name__ == '__main__':
             sys.exit(1)
 
         # Create a Pandas dataframe from a Bro log
-        #bro_df = log_to_dataframe.LogToDataFrame(args.bro_log)
         try:
-            bro_df = log_to_dataframe.LogToDataFrame(args.bro_log)
+            log_to_df = log_to_dataframe.LogToDataFrame()
+            bro_df = log_to_df.create_dataframe(args.bro_log)
         except IOError:
             print('Could not open or parse the specified logfile: %s' % args.bro_log)
             sys.exit(1)

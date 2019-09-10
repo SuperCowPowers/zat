@@ -13,7 +13,11 @@ import pandas as pd
 from sklearn.ensemble import IsolationForest
 from sklearn.cluster import KMeans
 from sklearn.cluster import MiniBatchKMeans
-import hdbscan
+try:
+    import hdbscan
+except ImportError:
+    print('This example needs hdbscan \'$ pip install hdbscan\'')
+    exit(1)
 
 # Local imports
 from bat import bro_log_reader, live_simulator
@@ -39,15 +43,11 @@ if __name__ == '__main__':
         args.bro_log = os.path.expanduser(args.bro_log)
 
 
-        # Sanity check for either http or dns log
-        if 'http' in args.bro_log:
-            log_type = 'http'
-            features = ['id.resp_p', 'method', 'resp_mime_types', 'request_body_len']
-        elif 'dns' in args.bro_log:
+        # Sanity check dns log
+        if 'dns' in args.bro_log:
             log_type = 'dns'
-            features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name', 'rcode_name', 'query_length']
         else:
-            print('This example only works with Bro with http.log or dns.log files..')
+            print('This example only works with Bro with dns.log files..')
             sys.exit(1)
 
         # Create a Bro log reader
@@ -63,10 +63,8 @@ if __name__ == '__main__':
 
         # Streaming Clustering Class
         batch_kmeans = MiniBatchKMeans(n_clusters=4, verbose=True)
-        # num_clusters = min(len(odd_df), 4) # 4 clusters unless we have less than 4 observations
 
         # Use the BroThon DataframeToMatrix class
-        features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name', 'rcode_name', 'query_length', 'id.resp_p']
         to_matrix = dataframe_to_matrix.DataFrameToMatrix()
 
         # Add each new row into the cache
