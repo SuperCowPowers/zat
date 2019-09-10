@@ -17,6 +17,7 @@ class LogToDataFrame(object):
               - Should be faster
               - Produce smaller memory footprint dataframes
             If you have any issues/problems with this class please submit a GitHub issue.
+        More Info: https://supercowpowers.github.io/bat/large_dataframes.html
     """
     def __init__(self):
         """Initialize the LogToDataFrame class"""
@@ -99,20 +100,6 @@ class LogToDataFrame(object):
         """Processing some of the columns that can't be directly read in/parsed by read_csv"""
         # WIP: Put in processing for bool, datetime, and timedelta
         return self._df
-
-    def chunk_processing(self, df_chunk):
-        """This method processes each chunk of the dataframe
-           - Convert the type to the best/most compact type
-           - Determine if object types can be converted to categorical
-           - Process 'odd' types into proper Pandas types
-               - 'bool' with 'T'/'F' into proper boolean with True/False
-               - 'time' from timestamp to datetime
-               - 'interval' to timedelta
-           - Process 'dashes':
-               The bro output will often have a '-' in the field, this means
-               different things depending on the column, so we have logic that
-               changes '-' to the 'right thing'.
-        """
 
 
 # Simple test of the functionality

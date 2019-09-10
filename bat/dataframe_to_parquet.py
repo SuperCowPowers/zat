@@ -7,6 +7,7 @@ from __future__ import print_function
 
 # Third Party
 import pandas as pd
+import numpy as np
 import pyarrow as pa
 import pyarrow.parquet as pq
 
@@ -20,11 +21,11 @@ def df_to_parquet(df, filename, compression='SNAPPY'):
 
     # Nullable integer arrays are currently not handled by Arrow
     # See: https://issues.apache.org/jira/browse/ARROW-5379
-    """Cast Nullable integer arrays to object before 'serializing'"""
+    # Cast Nullable integer arrays to float32 before serializing
     null_int_types = [pd.UInt16Dtype, pd.UInt32Dtype, pd.UInt64Dtype, pd.Int64Dtype]
     for col in df:
         if type(df[col].dtype) in null_int_types:
-            df[col] = df[col].astype('object')
+            df[col] = df[col].astype(np.float32)
 
     arrow_table = pa.Table.from_pandas(df)
     if compression == 'UNCOMPRESSED':
