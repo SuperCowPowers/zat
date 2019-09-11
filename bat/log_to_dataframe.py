@@ -66,7 +66,7 @@ class LogToDataFrame(object):
             self._df.set_index('ts', inplace=True)
         return self._df
 
-    def pd_column_types(self, column_names, column_types, aggressive_category):
+    def pd_column_types(self, column_names, column_types, aggressive_category=True, verbose=False):
         """Given a set of names and types, construct a dictionary to be used
            as the Pandas read_csv dtypes argument"""
 
@@ -87,7 +87,8 @@ class LogToDataFrame(object):
                 if name == 'uid':
                     item_type = 'object'
                 else:
-                    print('Could not find type for {:s} using {:s}...'.format(bro_type, unknown_type))
+                    if verbose:
+                        print('Could not find type for {:s} using {:s}...'.format(bro_type, unknown_type))
                     item_type = unknown_type
 
             # Set the pandas type
