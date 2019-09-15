@@ -32,7 +32,7 @@ class LogToDataFrame(object):
                          'count': 'UInt64',
                          'int': 'Int32',
                          'double': 'float',
-                         'time': 'float',   # Secondary Processing into datetime
+                         'time': 'float',      # Secondary Processing into datetime
                          'interval': 'float',  # Secondary processing into timedelta
                          'port': 'UInt16'
                          }
@@ -42,6 +42,7 @@ class LogToDataFrame(object):
             Args:
                log_fllename (string): The full path to the Bro log
                ts_index (bool): Set the index to the 'ts' field (default = True)
+               aggressive_category (bool): convert unknown columns to category (default = True)
         """
 
         # Create a Bro log reader just to read in the header for names and types
@@ -66,7 +67,7 @@ class LogToDataFrame(object):
             self._df.set_index('ts', inplace=True)
         return self._df
 
-    def pd_column_types(self, column_names, column_types, aggressive_category):
+    def pd_column_types(self, column_names, column_types, aggressive_category=True, verbose=False):
         """Given a set of names and types, construct a dictionary to be used
            as the Pandas read_csv dtypes argument"""
 
@@ -83,11 +84,12 @@ class LogToDataFrame(object):
 
             # Sanity Check
             if not item_type:
-                # UID always get mapped to object
+                # UID always gets mapped to object
                 if name == 'uid':
                     item_type = 'object'
                 else:
-                    print('Could not find type for {:s} using {:s}...'.format(bro_type, unknown_type))
+                    if verbose:
+                        print('Could not find type for {:s} using {:s}...'.format(bro_type, unknown_type))
                     item_type = unknown_type
 
             # Set the pandas type
@@ -95,11 +97,6 @@ class LogToDataFrame(object):
 
         # Return the dictionary of name: type
         return pandas_types
-
-    def secondary_processing(self):
-        """Processing some of the columns that can't be directly read in/parsed by read_csv"""
-        # WIP: Put in processing for bool, datetime, and timedelta
-        return self._df
 
 
 # Simple test of the functionality
