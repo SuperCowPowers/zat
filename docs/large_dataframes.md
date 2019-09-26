@@ -1,4 +1,13 @@
 ## Performance on large dataframes
+
+**TLDR:**
+We've recently completed some enhancements to our Zeek log to Pandas dataframe class. The new class provides a smaller memory footprint and less time to read in a large log file. Also you can now specify exactly which columns you want with the 'usecols' option, like so:
+
+```
+df = log_to_df.create_dataframe(conn, usecols=['id.orig_h', 'id.orig_p', 'id.resp_h', 'id.resp_p', 'proto'])
+```
+
+## Details on recent testing and changes
 We have several outstanding issues for needed improvements to support the ingestion and processing of large Bro/Zeek log files.
 
 - <https://github.com/SuperCowPowers/bat/issues/23>
@@ -37,8 +46,10 @@ A new PR focused specifically on memory/time improvements for large data frames.
 |--------------|---------------|-------------------|--------------|------------------|
 | Baseline     | ~34.6 GB      | 13.8 GB           | 8m 19s       |                  |
 | bhklimk PR   | ~19 GB        | 18.62 -> 7.0 GB** | 5m 12s       |                  |
-| PR 76        | ~5.6 GB       | 3.8 GB            | 2m 57s       |                  |
+| PR 76+       | ~5.6 GB       | 3.8 GB            | 2m 57s       |                  |
 | PR 76 (chunk)***| ~12 GB        | 11.8 GB           | 3m 51s       |                  |
+
+\+ With 'usecols' the time and memory will be even less
 
 \* Computing the 'deep memory' use of the large data frames added about 1 minute of time to all of the tests.
 
