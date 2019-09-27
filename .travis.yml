@@ -16,6 +16,8 @@ before_install:
   - python --version
   - virtualenv --version
   - pip --version
+  - java -version
+  - javac -version
   - uname -a
   - lsb_release -a
 
