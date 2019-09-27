@@ -1,6 +1,6 @@
 # Config file for automatic testing at travis-ci.org
-dist: trusty
-language: python
+dist: bionicj
+language: java
 jdk:
   - openjdk8
 matrix:
