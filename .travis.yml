@@ -1,6 +1,8 @@
 # Config file for automatic testing at travis-ci.org
 dist: bionic
 language: python
+jdk:
+  - oraclejdk8
 matrix:
   include:
     - python: "2.7"
