@@ -1,8 +1,7 @@
 # Config file for automatic testing at travis-ci.org
+dist: xenial
 language: python
 matrix:
-  global:
-    LD_PRELOAD=/lib/x86_64-linux-gnu/libSegFault.so
   include:
     - python: "2.7"
       env: TOXENV=py27
@@ -12,10 +11,15 @@ matrix:
       env: TOXENV=py37, codecov, style
 
 before_install:
-  - sudo apt-get update -qq
   - python --version
   - virtualenv --version
   - pip --version
+  - java -version
+  - source .travis/jdk_switcher.sh
+  - jdk_switcher use openjdk8
+  - source .travis/custom_path.sh
+  - export PATH=$(get_filtered_path /usr/local/lib/jvm/openjdk11/bin)
+  - java -version
   - uname -a
   - lsb_release -a
 

@@ -93,8 +93,8 @@ class LogToDataFrame(object):
 
             # Sanity Check
             if not item_type:
-                # UID always gets mapped to object
-                if name == 'uid':
+                # UID/FUID/GUID always gets mapped to object
+                if 'uid' in name:
                     item_type = 'object'
                 else:
                     if verbose:

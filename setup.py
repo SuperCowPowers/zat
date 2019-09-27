@@ -40,7 +40,7 @@ setup(
         'scipy',
         'pandas',
         'scikit-learn',
-        'pyarrow'
+        'pyspark'
     ],
     extras_require={
         'all':  ['yara-python', 'tldextract']
