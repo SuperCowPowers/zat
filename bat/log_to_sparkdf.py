@@ -65,7 +65,7 @@ class LogToSparkDF(object):
         # Return the spark dataframe
         return _df
 
-    def build_spark_schema(self, column_names, column_types, verbose=True):
+    def build_spark_schema(self, column_names, column_types, verbose=False):
         """Given a set of names and types, construct a dictionary to be used
            as the Spark read_csv dtypes argument"""
 
