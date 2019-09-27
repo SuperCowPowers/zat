@@ -1,8 +1,6 @@
 # Config file for automatic testing at travis-ci.org
 dist: bionic
-language: java
-jdk:
-  - openjdk8
+language: python
 matrix:
   include:
     - python: "2.7"
@@ -17,7 +15,11 @@ before_install:
   - virtualenv --version
   - pip --version
   - java -version
-  - javac -version
+  - source .travis/jdk_switcher.sh
+  - jdk_switcher use openjdk8
+  - source .travis/custom_path.sh
+  - export PATH=$(get_filtered_path /usr/local/lib/jvm/openjdk11/bin)
+  - java -version
   - uname -a
   - lsb_release -a
 
