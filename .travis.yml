@@ -2,7 +2,7 @@
 dist: bionic
 language: python
 jdk:
-  - oraclejdk8
+  - openjdk8
 matrix:
   include:
     - python: "2.7"
