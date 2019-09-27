@@ -1,5 +1,5 @@
 # Config file for automatic testing at travis-ci.org
-dist: bionic
+dist: xenial
 language: python
 matrix:
   include:
