@@ -5,7 +5,11 @@ with Pandas, scikit-learn, and Spark
 
 ### Recent Improvements (Fall 2019):
 - Better Docs (<https://supercowpowers.github.io/bat/>)
-- Faster/Smaller Pandas dataframes for large log files: [Large Dataframes](https://supercowpowers.github.io/bat/large_dataframes.html)
+- Faster/Smaller Pandas Dataframes for large log files: [Large Dataframes](https://supercowpowers.github.io/bat/large_dataframes.html)
+- Better Panda Dataframe to Matrix (ndarray) support: [Dataframe To Matrix](https://supercowpowers.github.io/bat/dataframe_to_matrix.html)
+- Vastly improved Spark Dataframe Class:
+  - [Bro to Spark](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Spark.ipynb)
+  - [Bro to Parquet](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Spark.ipynb)
 
 ## BroCon 2017 Presentation
 
