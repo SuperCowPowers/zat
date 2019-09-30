@@ -10,12 +10,12 @@ with Pandas, scikit-learn, and Spark
 - Vastly improved Spark Dataframe Class: [Bro to Spark (and Parquet)](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Spark.ipynb)
 
 
-## BroCon 2017 Presentation
+### BroCon 2017 Presentation
 
 Data Analysis, Machine Learning, Bro, and You!
 ([Video](https://www.youtube.com/watch?v=pG5lU9CLnIU))
 
-## Why BAT?
+### Why BAT?
 
 Bro already has a flexible, powerful scripting language why should I use
 BAT?
@@ -30,7 +30,7 @@ Spark. We also have example notebooks that show step-by-step how to get
 from here to there.
 
 
-### Getting Started
+## Getting Started
 - [Examples of Using BAT](https://supercowpowers.github.io/bat/examples.html)
 
 ### How-To Analysis Notebooks
@@ -43,19 +43,18 @@ from here to there.
 - [Anomaly Detection Exploration](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Anomaly_Detection.ipynb)
 - [Risky Domains Stats and Deployment](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Risky_Domains.ipynb)
 
-Install
--------
+### Install
 
     $ pip install bat
 
-Documentation
--------------
+### Documentation
 
 <https://supercowpowers.github.io/bat/>
 
-Thanks
-------
 
--   The DummyEncoder is inspired by Tom Augspurger's great PyData Chicago
-    2016 [Talk](https://youtu.be/KLPtEBokqQ0)
+
+<img align="right" style="padding:15px" src="notebooks/images/SCP_med.png" width="80">
+  
+### About SuperCowPowers
+The company was formed so that its developers could follow their passion for Python, streaming data pipelines and having fun with data analysis. We also think cows are cool and should be superheros or at least carry around rayguns and burner phones. <a href="https://www.supercowpowers.com" target="_blank">Visit SuperCowPowers</a>
 
