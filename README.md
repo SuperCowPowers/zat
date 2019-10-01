@@ -44,18 +44,17 @@ from here to there.
 - [Anomaly Detection Exploration](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Anomaly_Detection.ipynb)
 - [Risky Domains Stats and Deployment](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Risky_Domains.ipynb)
 
+
+<img align="right" style="padding:25px" src="notebooks/images/SCP_med.png" width="160">
+
 ### Install
 
     $ pip install bat
 
 ### Documentation
-
 <https://supercowpowers.github.io/bat/>
 
 
-
-<img align="right" style="padding:15px" src="notebooks/images/SCP_med.png" width="80">
-  
 ### About SuperCowPowers
 The company was formed so that its developers could follow their passion for Python, streaming data pipelines and having fun with data analysis. We also think cows are cool and should be superheros or at least carry around rayguns and burner phones. <a href="https://www.supercowpowers.com" target="_blank">Visit SuperCowPowers</a>
 
