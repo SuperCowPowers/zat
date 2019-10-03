@@ -7,7 +7,7 @@ with Pandas, scikit-learn, and Spark
 - Better Docs (<https://supercowpowers.github.io/bat/>)
 - Faster/Smaller Pandas Dataframes for large log files: [Large Dataframes](https://supercowpowers.github.io/bat/large_dataframes.html)
 - Better Panda Dataframe to Matrix (ndarray) support: [Dataframe To Matrix](https://supercowpowers.github.io/bat/dataframe_to_matrix.html)
-- Vastly improved Spark Dataframe Class: [Bro to Spark (and Parquet)](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Spark.ipynb)
+- Vastly improved Spark Dataframe Class: [Bro to Spark (and Parquet)](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Zeek_to_Spark.ipynb)
 - Updated/improved Notebooks: [Analysis Notebooks](#analysis-notebooks)
 
 
@@ -36,12 +36,12 @@ from here to there.
 
 ### Analysis Notebooks
 
-- [Bro to Scikit-Learn](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Scikit_Learn.ipynb)
-- [Bro to Matplotlib](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Plot.ipynb)
-- [Bro to Spark (and Parquet)](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Spark.ipynb)
+- [Bro to Scikit-Learn](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Zeek_to_Scikit_Learn.ipynb)
+- [Bro to Matplotlib](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Zeek_to_Plot.ipynb)
+- [Bro to Spark (and Parquet)](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Zeek_to_Spark.ipynb)
 - [Spark Clustering](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Spark_Clustering.ipynb)
 - [Zeek to Kafka](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Zeek_to_Kafka.ipynb)
-- [Bro to Kafka to Spark (need updating)](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Bro_to_Kafka_to_Spark.ipynb)
+- [Bro to Kafka to Spark (need updating)](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Zeek_to_Kafka_to_Spark.ipynb)
 - [Clustering: Picking K (or not)](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Clustering_Picking_K.ipynb)
 - [Anomaly Detection Exploration](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Anomaly_Detection.ipynb)
 - [Risky Domains Stats and Deployment](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Risky_Domains.ipynb)
