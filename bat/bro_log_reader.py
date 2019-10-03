@@ -41,7 +41,7 @@ class BroLogReader(file_tailer.FileTailer):
         self._tail = tail
         self._strict = strict
 
-        # Setup the Bro to Python Type mapper
+        # Setup the Zeek to Python Type mapper
         self.field_names = []
         self.field_types = []
         self.type_converters = []

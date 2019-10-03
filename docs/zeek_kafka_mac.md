@@ -14,7 +14,7 @@ In general the process of getting the Kafka Plugin working on my Mac laptop was 
 ### Bro Install
 
 - When building Bro I had issue with the configuration finding my 'venv python' (I used pyenv) and then python tools for Zeek were really unhappy later.
-- I had to ```brew instal python@2``` to get Bro to be happy with the python it found and properly build things like 'zeekctl' and the other Python utilities.
+- I had to ```brew instal python@2``` to get Zeek to be happy with the python it found and properly build things like 'zeekctl' and the other Python utilities.
 - With Python 'fixed', the instructions to build from source worked fine (<https://docs.zeek.org/en/stable/install/install.html>)
 
 ### Kafka Plugin Install
