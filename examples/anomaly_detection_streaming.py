@@ -4,8 +4,6 @@ import os
 import sys
 import argparse
 import time
-import math
-from collections import Counter
 import json
 
 # Third Party Imports

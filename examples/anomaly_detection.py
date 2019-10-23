@@ -15,10 +15,12 @@ from sklearn.cluster import KMeans
 from bat import log_to_dataframe
 from bat import dataframe_to_matrix
 
+
 def entropy(string):
     """Compute entropy on the string"""
     p, lns = Counter(string), float(len(string))
     return -sum(count/lns * math.log(count/lns, 2) for count in p.values())
+
 
 if __name__ == '__main__':
     # Example to show the dataframe cache functionality on streaming data
@@ -44,7 +46,8 @@ if __name__ == '__main__':
             features = ['id.resp_p', 'method', 'resp_mime_types', 'request_body_len']
         elif 'dns' in args.bro_log:
             log_type = 'dns'
-            features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name', 'rcode_name', 'query_length', 'answer_length', 'entropy']
+            features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name',
+                        'rcode_name', 'query_length', 'answer_length', 'entropy']
         else:
             print('This example only works with Bro with http.log or dns.log files..')
             sys.exit(1)
@@ -72,7 +75,7 @@ if __name__ == '__main__':
         print(bro_matrix.shape)
 
         # Train/fit and Predict anomalous instances using the Isolation Forest model
-        odd_clf = IsolationForest(contamination=0.2) # Marking 20% as odd
+        odd_clf = IsolationForest(contamination=0.2)  # Marking 20% as odd
         odd_clf.fit(bro_matrix)
 
         # Now we create a new dataframe using the prediction from our classifier
@@ -80,7 +83,7 @@ if __name__ == '__main__':
 
         # Now we're going to explore our odd observations with help from KMeans
         odd_matrix = to_matrix.fit_transform(odd_df)
-        num_clusters = min(len(odd_df), 4) # 4 clusters unless we have less than 4 observations
+        num_clusters = min(len(odd_df), 4)  # 4 clusters unless we have less than 4 observations
         odd_df['cluster'] = KMeans(n_clusters=num_clusters).fit_predict(odd_matrix)
         print(odd_matrix.shape)
 
@@ -92,4 +95,3 @@ if __name__ == '__main__':
         for key, group in cluster_groups:
             print('\nCluster {:d}: {:d} observations'.format(key, len(group)))
             print(group.head())
-
