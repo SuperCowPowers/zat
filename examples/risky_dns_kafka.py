@@ -16,7 +16,6 @@ except ImportError:
     sys.exit(1)
 
 # Local imports
-from bat import bro_log_reader
 from bat.utils import vt_query, signal_utils
 
 
@@ -79,32 +78,13 @@ if __name__ == '__main__':
 
             # Check if the TLD is in the risky group
             if tld in risky_tlds:
-                print(query)
-                # Make the query with the full query
-                results = vtq.query_url(query)
-                if results.get('positives'):
-                    print('\nOMG the Network is on Fire!!!')
-                    pprint(results)
-
-        # Run the bro reader on the dns.log file looking for risky TLDs
-        reader = bro_log_reader.BroLogReader(args.bro_log)
-        for row in reader.readrows():
-
-            # Pull out the TLD
-            query = row['query']
-            tld = tldextract.extract(query).suffix
-
-            # Check if the TLD is in the risky group
-            if tld in risky_tlds:
+                print('\n'+query)
                 # Make the query with the full query
                 results = vtq.query_url(query)
                 if results.get('positives', 0) > 3:  # At least four hits
-                    print('\nRisky Domain DNS Query Found')
-                    print('From: {:s} To: {:s} QType: {:s} RCode: {:s}'.format(row['id.orig_h'],
-                                                                               row['id.resp_h'],
-                                                                               row['qtype_name'],
-                                                                               row['rcode_name']))
+                    print('Risky Domain DNS Query Found')
+                    print('From: {:s} To: {:s} QType: {:s} RCode: {:s}'.format(dns_message['id.orig_h'],
+                                                                               dns_message['id.resp_h'],
+                                                                               dns_message['qtype_name'],
+                                                                               dns_message['rcode_name']))
                     pprint(results)
-
-    # Save the Virus Total Query
-    save_vtq()
