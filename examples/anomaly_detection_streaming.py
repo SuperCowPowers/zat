@@ -4,22 +4,23 @@ import os
 import sys
 import argparse
 import time
-import json
+import math
+from collections import Counter
 
 # Third Party Imports
 import pandas as pd
 from sklearn.ensemble import IsolationForest
-from sklearn.cluster import KMeans
 from sklearn.cluster import MiniBatchKMeans
-try:
-    import hdbscan
-except ImportError:
-    print('This example needs hdbscan \'$ pip install hdbscan\'')
-    exit(1)
 
 # Local imports
 from bat import bro_log_reader, live_simulator
 from bat import dataframe_to_matrix, dataframe_cache
+
+
+def entropy(string):
+    """Compute entropy on the string"""
+    p, lns = Counter(string), float(len(string))
+    return -sum(count/lns * math.log(count/lns, 2) for count in p.values())
 
 
 if __name__ == '__main__':
@@ -40,7 +41,6 @@ if __name__ == '__main__':
     if args.bro_log:
         args.bro_log = os.path.expanduser(args.bro_log)
 
-
         # Sanity check dns log
         if 'dns' in args.bro_log:
             log_type = 'dns'
@@ -54,13 +54,13 @@ if __name__ == '__main__':
 
         # Create a Bro IDS log live simulator
         print('Opening Data File: {:s}'.format(args.bro_log))
-        reader = live_simulator.LiveSimulator(args.bro_log, eps=10) # 10 events per second
+        reader = live_simulator.LiveSimulator(args.bro_log, eps=10)  # 10 events per second
 
         # Create a Dataframe Cache
         df_cache = dataframe_cache.DataFrameCache(max_cache_time=600)  # 10 minute cache
 
         # Streaming Clustering Class
-        batch_kmeans = MiniBatchKMeans(n_clusters=4, verbose=True)
+        batch_kmeans = MiniBatchKMeans(n_clusters=5, verbose=True)
 
         # Use the BroThon DataframeToMatrix class
         to_matrix = dataframe_to_matrix.DataFrameToMatrix()
@@ -79,11 +79,13 @@ if __name__ == '__main__':
                 # Get the windowed dataframe (10 minute window)
                 bro_df = df_cache.dataframe()
 
-                # Add query length
+                # Compute some addition data
                 bro_df['query_length'] = bro_df['query'].str.len()
+                bro_df['answer_length'] = bro_df['answers'].str.len()
+                bro_df['entropy'] = bro_df['query'].map(lambda x: entropy(x))
 
                 # Use the bat DataframeToMatrix class
-                features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name', 'rcode_name', 'query_length', 'id.resp_p']
+                features = ['Z', 'proto', 'qtype_name', 'query_length', 'answer_length', 'entropy', 'id.resp_p']
                 to_matrix = dataframe_to_matrix.DataFrameToMatrix()
                 bro_matrix = to_matrix.fit_transform(bro_df[features])
                 print(bro_matrix.shape)
@@ -92,36 +94,22 @@ if __name__ == '__main__':
                 print('DataFrame TimeRange: {:s} --> {:s}'.format(str(bro_df['ts'].min()), str(bro_df['ts'].max())))
 
                 # Train/fit and Predict anomalous instances using the Isolation Forest model
-                odd_clf = IsolationForest(contamination=0.2) # Marking 20% as odd
-                odd_clf.fit(bro_matrix)
-                bro_df['anomalous'] = [predict==-1 for predict in odd_clf.predict(bro_matrix)]
-
-                # Now we create a new dataframe using the prediction from our classifier
-                odd_df = bro_df[bro_df['anomalous']]
+                odd_clf = IsolationForest(contamination=0.2)  # Marking 20% as odd
+                predictions = odd_clf.fit_predict(bro_matrix)
+                odd_df = bro_df[predictions == -1]
 
                 # Now we're going to explore our odd observations with help from KMeans
                 odd_matrix = to_matrix.transform(odd_df[features])
-                #clusters = KMeans(n_clusters=num_clusters).fit_predict(odd_matrix).tolist()
                 batch_kmeans.partial_fit(odd_matrix)
                 clusters = batch_kmeans.predict(odd_matrix).tolist()
-
-                # Set the cluster number for all the entries in the original dataframe
-                bro_df['cluster'] = [-1 if not anom else clusters.pop(0) for anom in bro_df['anomalous'] ]
+                odd_df['cluster'] = clusters
 
                 # Now group the dataframe by cluster
-                cluster_groups = bro_df.groupby('cluster')
+                cluster_groups = odd_df.groupby('cluster')
 
                 # Now print out the details for each cluster
-                show_fields = ['id.orig_h', 'id.resp_h'] + features
+                show_fields = ['id.orig_h', 'id.resp_h', 'query'] + features
                 print('<<< Outliers Detected! >>>')
                 for key, group in cluster_groups:
                     print('\nCluster {:d}: {:d} observations'.format(key, len(group)))
                     print(group[show_fields].head())
-
-                # Output to file
-                with open('streaming_output.json', 'w') as fp:
-                    for row in bro_df.to_dict('records'):
-                        row['ts'] = str(row['ts'])
-                        #print(row)
-                        json.dump(row, fp)
-                        fp.write('\n')

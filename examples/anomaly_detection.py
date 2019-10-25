@@ -46,8 +46,7 @@ if __name__ == '__main__':
             features = ['id.resp_p', 'method', 'resp_mime_types', 'request_body_len']
         elif 'dns' in args.bro_log:
             log_type = 'dns'
-            features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name',
-                        'rcode_name', 'query_length', 'answer_length', 'entropy']
+            features = ['Z', 'proto', 'qtype_name', 'query_length', 'answer_length', 'entropy']
         else:
             print('This example only works with Bro with http.log or dns.log files..')
             sys.exit(1)
@@ -56,6 +55,7 @@ if __name__ == '__main__':
         try:
             log_to_df = log_to_dataframe.LogToDataFrame()
             bro_df = log_to_df.create_dataframe(args.bro_log)
+            print(bro_df.head())
         except IOError:
             print('Could not open or parse the specified logfile: %s' % args.bro_log)
             sys.exit(1)
@@ -79,16 +79,22 @@ if __name__ == '__main__':
         odd_clf.fit(bro_matrix)
 
         # Now we create a new dataframe using the prediction from our classifier
-        odd_df = bro_df[features][odd_clf.predict(bro_matrix) == -1]
+        predictions = odd_clf.predict(bro_matrix)
+        odd_df = bro_df[features][predictions == -1]
+        display_df = bro_df[predictions == -1]
 
         # Now we're going to explore our odd observations with help from KMeans
         odd_matrix = to_matrix.fit_transform(odd_df)
         num_clusters = min(len(odd_df), 4)  # 4 clusters unless we have less than 4 observations
-        odd_df['cluster'] = KMeans(n_clusters=num_clusters).fit_predict(odd_matrix)
+        display_df['cluster'] = KMeans(n_clusters=num_clusters).fit_predict(odd_matrix)
         print(odd_matrix.shape)
 
         # Now group the dataframe by cluster
-        cluster_groups = odd_df[features+['cluster']].groupby('cluster')
+        if log_type == 'dns':
+            features += ['query']
+        else:
+            features += ['host']
+        cluster_groups = display_df[features+['cluster']].groupby('cluster')
 
         # Now print out the details for each cluster
         print('<<< Outliers Detected! >>>')

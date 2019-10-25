@@ -1,6 +1,5 @@
 """Risky DNS bat Example"""
 from __future__ import print_function
-import os
 import sys
 import argparse
 from pprint import pprint
@@ -20,6 +19,7 @@ except ImportError:
 from bat import bro_log_reader
 from bat.utils import vt_query, signal_utils
 
+
 def save_vtq():
     """Exit on Signal"""
     global vtq
@@ -28,8 +28,9 @@ def save_vtq():
     pickle.dump(vtq, open('vtq.pkl', 'wb'), protocol=pickle.HIGHEST_PROTOCOL)
     sys.exit()
 
+
 if __name__ == '__main__':
-    # Risky DNS/VT Query application  
+    # Risky DNS/VT Query application
     global vtq
 
     # Collect args from the command line
@@ -58,7 +59,7 @@ if __name__ == '__main__':
         vtq = pickle.load(open('vtq.pkl', 'rb'))
         print('Opening VirusTotal Query Cache (cache_size={:d})...'.format(vtq.size))
     except IOError:
-        vtq = vt_query.VTQuery(max_cache_time=60*24*7) # One week cache
+        vtq = vt_query.VTQuery(max_cache_time=60*24*7)  # One week cache
 
     # See our 'Risky Domains' Notebook for the analysis and
     # statistical methods used to compute this risky set of TLDs
@@ -71,20 +72,19 @@ if __name__ == '__main__':
         # Now lets process our Kafka 'dns' Messages
         for message in consumer:
             dns_message = message.value
-        
+
             # Pull out the TLD
-            query = dns_message['query']
-            tld = tldextract.extract(query).suffix
-        
+            query = dns_message.get('query')
+            tld = tldextract.extract(query).suffix if query else None
+
             # Check if the TLD is in the risky group
             if tld in risky_tlds:
+                print(query)
                 # Make the query with the full query
                 results = vtq.query_url(query)
                 if results.get('positives'):
                     print('\nOMG the Network is on Fire!!!')
                     pprint(results)
-
-
 
         # Run the bro reader on the dns.log file looking for risky TLDs
         reader = bro_log_reader.BroLogReader(args.bro_log)
@@ -98,10 +98,12 @@ if __name__ == '__main__':
             if tld in risky_tlds:
                 # Make the query with the full query
                 results = vtq.query_url(query)
-                if results.get('positives', 0) > 3: # At least four hits
+                if results.get('positives', 0) > 3:  # At least four hits
                     print('\nRisky Domain DNS Query Found')
                     print('From: {:s} To: {:s} QType: {:s} RCode: {:s}'.format(row['id.orig_h'],
-                           row['id.resp_h'], row['qtype_name'], row['rcode_name']))
+                                                                               row['id.resp_h'],
+                                                                               row['qtype_name'],
+                                                                               row['rcode_name']))
                     pprint(results)
 
     # Save the Virus Total Query
