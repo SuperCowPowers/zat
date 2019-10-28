@@ -36,10 +36,11 @@ class LogToSparkDF(object):
                          'string': StringType()
                          }
 
-    def create_dataframe(self, log_filename):
+    def create_dataframe(self, log_filename, fillna=True):
         """ Create a Spark dataframe from a Bro/Zeek log file
             Args:
                log_fllename (string): The full path to the Bro log
+               fillna (bool): Fill in NA/NaN values (default=True)
         """
 
         # Create a Bro log reader just to read in the header for names and types
@@ -52,10 +53,29 @@ class LogToSparkDF(object):
         # Now actually read the Bro Log using Spark read CSV
         _df = self.spark.read.csv(log_filename, schema=spark_schema, sep='\t', comment="#", nullValue='-')
 
-        # Secondary processing
+        ''' Secondary processing (cleanup)
+            - Fix column names with '.' in them
+            - Fill in Nulls (optional)
+            - timestamp convert
+            - boolean convert
+        '''
+
+        # Fix column names
+        ''' Note: Yes column names with '.' in them can be escaped with backticks when selecting them BUT
+                  many pipeline operations will FAIL internally if the column names have a '.' in them.
+        '''
+        fixed_columns = list(map(lambda x: x.replace('.', '_'), _df.columns))
+        _df = _df.toDF(*fixed_columns)
+
+        # Fill in NULL values
+        if fillna:
+            _df = _df.na.fill(0)   # For numeric columns
+            _df = _df.na.fill('-') # For string columns
+
+        # Convert timestamp and boolean columns
         for name, f_type in zip(field_names, field_types):
             # Some field names may have '.' in them, so we have to backtick those fields
-            ref_name = '`' + name + '`'
+            ref_name = name.replace('.', '_')
             if f_type == 'time':
                 _df = _df.withColumn(name, _df[ref_name].cast('timestamp'))
             if f_type == 'bool':
