@@ -37,14 +37,15 @@ from here to there.
 ### Analysis Notebooks
 
 - [Zeek to Scikit-Learn](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Zeek_to_Scikit_Learn.ipynb)
-- [Zeek to Matplotlib](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Zeek_to_Plot.ipynb)
-- [Zeek to Spark (and Parquet)](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Zeek_to_Spark.ipynb)
+- [Zeek to Parquet](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Zeek_to_Parquet.ipynb)
+- [Zeek to Spark](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Zeek_to_Spark.ipynb)
 - [Spark Clustering](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Spark_Clustering.ipynb)
 - [Zeek to Kafka](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Zeek_to_Kafka.ipynb)
 - [Zeek to Kafka to Spark (need updating)](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Zeek_to_Kafka_to_Spark.ipynb)
 - [Clustering: Picking K (or not)](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Clustering_Picking_K.ipynb)
 - [Anomaly Detection Exploration](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Anomaly_Detection.ipynb)
 - [Risky Domains Stats and Deployment](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Risky_Domains.ipynb)
+- [Zeek to Matplotlib](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Zeek_to_Plot.ipynb)
 
 
 <img align="right" style="padding:25px" src="notebooks/images/SCP_med.png" width="160">
