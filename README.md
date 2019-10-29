@@ -7,7 +7,8 @@ with Pandas, scikit-learn, and Spark
 - Better Docs (<https://supercowpowers.github.io/bat/>)
 - Faster/Smaller Pandas Dataframes for large log files: [Large Dataframes](https://supercowpowers.github.io/bat/large_dataframes.html)
 - Better Panda Dataframe to Matrix (ndarray) support: [Dataframe To Matrix](https://supercowpowers.github.io/bat/dataframe_to_matrix.html)
-- Vastly improved Spark Dataframe Class: [Zeek to Spark (and Parquet)](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Zeek_to_Spark.ipynb)
+- Scalable conversion from Zeek logs to Parquet: [Zeek to Parquet](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Zeek_to_Parquet.ipynb)
+- Vastly improved Spark Dataframe Class: [Zeek to Spark](https://nbviewer.jupyter.org/github/SuperCowPowers/bat/blob/master/notebooks/Zeek_to_Spark.ipynb)
 - Updated/improved Notebooks: [Analysis Notebooks](#analysis-notebooks)
 
 
