@@ -74,7 +74,7 @@ class LogToSparkDF(object):
 
         # Convert timestamp and boolean columns
         for name, f_type in zip(field_names, field_types):
-            # Some field names may have '.' in them, so we have to backtick those fields
+            # Some field names may have '.' in them, so we create a reference name to those fields
             ref_name = name.replace('.', '_')
             if f_type == 'time':
                 _df = _df.withColumn(name, _df[ref_name].cast('timestamp'))
