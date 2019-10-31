@@ -1,5 +1,6 @@
 """Read Kafka Streams into Spark, perform simple filtering/aggregation"""
 
+import sys
 import pyspark
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StringType, BooleanType, IntegerType
@@ -48,7 +49,9 @@ if __name__ == '__main__':
     kserver = args.server
 
     # Spin up a local Spark Session (with 4 executors)
-    spark = SparkSession.builder.master('local[4]').appName('my_awesome')        .config('spark.jars.packages', 'org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.4')        .getOrCreate()
+    spark = SparkSession.builder.master('local[4]').appName('my_awesome') \
+            .config('spark.jars.packages', 'org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.4') \
+            .getOrCreate()
     spark.sparkContext.setLogLevel('ERROR')
 
     # Optimize the conversion to Spark
@@ -90,10 +93,17 @@ if __name__ == '__main__':
     # Take the end of our pipeline and pull it into memory
     dns_count_memory_table = group_data.writeStream.format('memory').queryName('dns_counts').outputMode('complete').start()
 
+    # Let the pipeline pull some data
+    print('Pulling pipline...Please wait...')
+
     # Create a Pandas Dataframe by querying the in memory table and converting
     # Loop around every 5 seconds to update output
     for _ in range(10):
+        sleep(5)
         dns_counts_df = spark.sql("select * from dns_counts").toPandas()
         print('\nDNS Query Total Counts = {:d}'.format(dns_counts_df['count'].sum()))
         print(dns_counts_df.sort_values(ascending=False, by='count'))
-        sleep(5)
+
+    # Stop the stream
+    dns_count_memory_table.stop()
+    sleep(1)
