@@ -1,17 +1,17 @@
 # Examples of Using BAT
 
-This documents shows a wide variety of ways to use the BAT toolkit to process Bro/Zeek output.
+This documents shows a wide variety of ways to use the BAT toolkit to process Zeek output.
 
--   Any Bro Log into Python (dynamic tailing and log
+-   Any Zeek Log into Python (dynamic tailing and log
     rotations are handled)
--   Bro Logs to Pandas Dataframes and Scikit-Learn
+-   Zeek Logs to Pandas Dataframes and Scikit-Learn
 -   Dynamically monitor files.log and make VirusTotal Queries
 -   Dynamically monitor http.log and show 'uncommon' User Agents
 -   Running Yara Signatures on Extracted Files
 -   Checking x509 Certificates
 -   Anomaly Detection
 
-### Pull in Bro/Zeek Logs as Python Dictionaries
+### Pull in Zeek Logs as Python Dictionaries
 
 ```python
 from bat import bro_log_reader
@@ -37,7 +37,7 @@ types properly converted.
     'uid': 'CJsdG95nCNF1RXuN5'}
     ...
 
-### Bro/Zeek log to Pandas DataFrame
+### Zeek log to Pandas DataFrame
 
 ```python
 from bat.log_to_dataframe import LogToDataFrame
@@ -50,7 +50,7 @@ from bat.log_to_dataframe import LogToDataFrame
     print(bro_df.head())
 ```
 
-**Output:** All the Bro log data is in a Pandas DataFrame with proper
+**Output:** All the Zeek log data is in a Pandas DataFrame with proper
 types and timestamp as the index
 
 ```
@@ -63,16 +63,15 @@ ts
 2013-09-15 17:44:28.422704                crl.entrust.net  192.168.33.10       1030   4.2.2.3
 ```
 
-### Bro Log to Scikit-Learn
-See bat/examples/bro\_to\_scikit.py for full code listing, we've
-shortened the code listing here to demonstrate that it's literally just a few lines of code to get to Scikit-Learn.
+### Zeek Log to Scikit-Learn
+See bat/examples/zeek\_to\_scikit.py for full code listing, we've shortened the code listing here to demonstrate that it's literally just a few lines of code to get to Scikit-Learn.
 
 ``` {.python}
-# Create a Pandas dataframe from a Bro log
+# Create a Pandas dataframe from a Zeek log
 log_to_df = LogToDataFrame()
-bro_df = log_to_df.create_dataframe('/path/to/bro.log')
+bro_df = log_to_df.create_dataframe('/path/to/dns.log')
 
-# Use the Brothon DataframeToMatrix class (handles categorical data!)
+# Use the DataframeToMatrix class (handles categorical data!)
 to_matrix = dataframe_to_matrix.DataFrameToMatrix()
 bro_matrix = to_matrix.fit_transform(bro_df)
 
@@ -149,7 +148,7 @@ VirusTotal Service.
             (u'Exploit:Java/CVE-2012-1723', 1),
             (u'UnclassifiedMalware', 1)]}
 
-### Bro HTTP Log User Agents
+### Zeek HTTP Log User Agents
 
 See bat/examples/http\_user\_agents.py for full code listing (code
 simplified below)
@@ -191,7 +190,7 @@ from bat import bro_log_reader
      ...
      ('Mozilla/5.0 (compatible; Nmap Scripting Engine; http://nmap.org/book/nse.html)', 6166),
 
-### Yara rules on Bro extracted files
+### Yara rules on Zeek extracted files
 
 The example will dymancially monitor the extract\_files directory and
 when a file is dropped by Bro the code will run a set of Yara rules against that file. See bat/examples/yara\_matches.py for full code
@@ -285,7 +284,7 @@ OMG the Network is on Fire!!!
 ### Cert Checker
 
 There's been discussion about Let's Encrypt issuing certificates to possible phishing/malicious site owners. This example will quickly check
-and dynamically monitor your Bro x509 logs for certificates that may be from malicious sites.
+and dynamically monitor your Zeek x509 logs for certificates that may be from malicious sites.
 
 See bat/examples/cert\_checker.py for full code listing (code simplified
 below)
@@ -320,7 +319,7 @@ from bat.utils import vt_query
                     pprint(results)
 ```
 
-**Example Output:** Simply run this example script on your Bro x509.log.
+**Example Output:** Simply run this example script on your Zeek x509.log.
 
     $ python cert_checker.py -f ../data/x509.log
       Successfully monitoring ../data/x509.log...
@@ -390,7 +389,7 @@ for key, group in cluster_groups:
     print(group.head())
 ```
 
-**Example Output:** Run this example script on your Bro dns.log\...
+**Example Output:** Run this example script on your Zeek dns.log\...
 
     <<< Outliers Detected! >>>
 
