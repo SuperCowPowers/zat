@@ -1,4 +1,4 @@
-"""Read Kafka Streams and Print out the messages example"""
+"""Read Kafka Streams and Print out the messages"""
 from __future__ import print_function
 import sys
 import argparse
@@ -18,13 +18,13 @@ def exit_program():
 
 
 if __name__ == '__main__':
-    """Read Kafka Streams and Print out the messages example"""
+    """Read Kafka Streams and Print out the messages"""
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
     parser.add_argument('--server', type=str, default='localhost:9092',
                         help='Specify the Kafka Server (default: localhost:9092)')
-    parser.add_argument('--topics', type=lambda s: [str(topic) for topic in s.split(',')], default='all',
+    parser.add_argument('--topics', type=lambda s: s.split(','), default='all',
                         help='Specify the Kafka Topics (e.g. dns   or   dns, http, blah   (defaults to all)')
     args, commands = parser.parse_known_args()
 
