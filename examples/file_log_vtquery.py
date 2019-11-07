@@ -6,8 +6,8 @@ import argparse
 from pprint import pprint
 
 # Local imports
-from bat import bro_log_reader
-from bat.utils import vt_query
+from zat import bro_log_reader
+from zat.utils import vt_query
 
 if __name__ == '__main__':
     """Run a VirusTotal Query on Extracted File Hashes"""
@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
     # Sanity check that this is a file log
     if 'files' not in args.bro_log:
-        print('This example only works with Bro files.log files..')
+        print('This example only works with Zeek files.log files..')
         sys.exit(1)
 
     # File may have a tilde in it
@@ -37,9 +37,9 @@ if __name__ == '__main__':
         # Run the bro reader on a given log file
         reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)
         for row in reader.readrows():
-            file_sha = row.get('sha256', '-') # Bro uses - for empty field
+            file_sha = row.get('sha256', '-') # Zeek uses - for empty field
             if file_sha == '-':
-                file_sha = row.get('sha1', '-') # Bro uses - for empthy field
+                file_sha = row.get('sha1', '-') # Zeek uses - for empthy field
                 if file_sha == '-':
                     print('Should not find a sha256 or a sha1 key! Skipping...')
                     continue

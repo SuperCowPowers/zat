@@ -1,4 +1,4 @@
-"""LogToSparkDF: Converts a Bro log to a Spark DataFrame"""
+"""LogToSparkDF: Converts a Zeek log to a Spark DataFrame"""
 from __future__ import print_function
 
 # Third Party
@@ -6,11 +6,11 @@ from pyspark.sql.types import StructType, StringType, IntegerType, FloatType, Lo
 from pyspark.sql.functions import col, when
 
 # Local
-from bat import bro_log_reader
+from zat import bro_log_reader
 
 
 class LogToSparkDF(object):
-    """LogToSparkDF: Converts a Bro log to a Spark DataFrame"""
+    """LogToSparkDF: Converts a Zeek log to a Spark DataFrame"""
 
     def __init__(self, spark):
         """Initialize the LogToSparkDF class"""
@@ -19,7 +19,7 @@ class LogToSparkDF(object):
         self.spark = spark
 
         # First Level Type Mapping
-        #    This map defines the types used when first reading in the Bro log into a 'chunk' dataframes.
+        #    This map defines the types used when first reading in the Zeek log into a 'chunk' dataframes.
         #    Types (like time and interval) will be defined as one type at first but then
         #    will undergo further processing to produce correct types with correct values.
         # See: https://spark.apache.org/docs/latest/sql-reference.html
@@ -39,18 +39,18 @@ class LogToSparkDF(object):
     def create_dataframe(self, log_filename, fillna=True):
         """ Create a Spark dataframe from a Bro/Zeek log file
             Args:
-               log_fllename (string): The full path to the Bro log
+               log_fllename (string): The full path to the Zeek log
                fillna (bool): Fill in NA/NaN values (default=True)
         """
 
-        # Create a Bro log reader just to read in the header for names and types
+        # Create a Zeek log reader just to read in the header for names and types
         _bro_reader = bro_log_reader.BroLogReader(log_filename)
         _, field_names, field_types, _ = _bro_reader._parse_bro_header(log_filename)
 
         # Get the appropriate types for the Spark Dataframe
         spark_schema = self.build_spark_schema(field_names, field_types)
 
-        # Now actually read the Bro Log using Spark read CSV
+        # Now actually read the Zeek Log using Spark read CSV
         _df = self.spark.read.csv(log_filename, schema=spark_schema, sep='\t', comment="#", nullValue='-')
 
         ''' Secondary processing (cleanup)
@@ -115,7 +115,7 @@ class LogToSparkDF(object):
 def test():
     """Test for LogToSparkDF Class"""
     import os
-    from bat.utils import file_utils
+    from zat.utils import file_utils
     from pyspark.sql import SparkSession
 
     # Spin up a local Spark Session (with 4 executors)

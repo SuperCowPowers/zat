@@ -5,7 +5,7 @@ import socket
 import binascii
 
 # Local imports
-from bat.utils import compat
+from zat.utils import compat
 
 
 def mac_to_str(address):

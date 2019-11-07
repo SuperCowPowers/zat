@@ -1,4 +1,4 @@
-"""LiveSimulator: This class reads in various Bro logs. The class utilizes
+"""LiveSimulator: This class reads in various Zeek logs. The class utilizes
                  the BroLogReader and simply loops over the static bro log
                  file, replaying rows and changing any time stamps
         Args:
@@ -15,12 +15,12 @@ import itertools
 import numpy as np
 
 # Local Imports
-from bat import bro_log_reader
-from bat.utils import file_utils
+from zat import bro_log_reader
+from zat.utils import file_utils
 
 
 class LiveSimulator(object):
-    """LiveSimulator: This class reads in various Bro logs. The class utilizes the
+    """LiveSimulator: This class reads in various Zeek logs. The class utilizes the
                       BroLogReader and simply loops over the static bro log file
                       replaying rows at the specified EPS and changing timestamps to 'now()'
     """
@@ -39,7 +39,7 @@ class LiveSimulator(object):
         #     - Precompute 1000 deltas and then just cycle around
         self.eps_timer = itertools.cycle([max(0, delta) for delta in np.random.normal(1.0/float(eps), .5/float(eps), size=1000)])
 
-        # Initialize the Bro log reader
+        # Initialize the Zeek log reader
         self.log_reader = bro_log_reader.BroLogReader(filepath, tail=False)
 
         # Store max_rows

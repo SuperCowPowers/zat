@@ -1,6 +1,6 @@
-# Examples of Using BAT
+# Examples of Using ZAT
 
-This documents shows a wide variety of ways to use the BAT toolkit to process Zeek output.
+This documents shows a wide variety of ways to use the ZAT toolkit to process Zeek output.
 
 -   Any Zeek Log into Python (dynamic tailing and log
     rotations are handled)
@@ -14,7 +14,7 @@ This documents shows a wide variety of ways to use the BAT toolkit to process Ze
 ### Pull in Zeek Logs as Python Dictionaries
 
 ```python
-from bat import bro_log_reader
+from zat import bro_log_reader
 ...
     # Run the bro reader on a given log file
     reader = bro_log_reader.BroLogReader('dhcp.log')
@@ -40,9 +40,9 @@ types properly converted.
 ### Zeek log to Pandas DataFrame
 
 ```python
-from bat.log_to_dataframe import LogToDataFrame
+from zat.log_to_dataframe import LogToDataFrame
 ...
-    # Create a Pandas dataframe from a Bro log
+    # Create a Pandas dataframe from a Zeek log
     log_to_df = LogToDataFrame()
     bro_df = log_to_df.create_dataframe('/path/to/dns.log')
 
@@ -64,7 +64,7 @@ ts
 ```
 
 ### Zeek Log to Scikit-Learn
-See bat/examples/zeek\_to\_scikit.py for full code listing, we've shortened the code listing here to demonstrate that it's literally just a few lines of code to get to Scikit-Learn.
+See zat/examples/zeek\_to\_scikit.py for full code listing, we've shortened the code listing here to demonstrate that it's literally just a few lines of code to get to Scikit-Learn.
 
 ``` {.python}
 # Create a Pandas dataframe from a Zeek log
@@ -106,17 +106,17 @@ pca = PCA(n_components=2).fit_transform(bro_matrix)
     55  abcsuperlongcrazydnsqueryforanomalydetectionj....  0   udp          A -0.622886 -0.222030        4
     56  qrssuperlongcrazydnsqueryforanomalydetectionj....  0   udp          A -0.571959 -0.236560        4
 
-### Bro Files Log to VirusTotal Query
+### Zeek Files Log to VirusTotal Query
 
-See bat/examples/file\_log\_vtquery.py for full code listing (code
+See zat/examples/file\_log\_vtquery.py for full code listing (code
 simplified below)
 
 ``` {.python}
-from bat import bro_log_reader
-from bat.utils import vt_query
+from zat import bro_log_reader
+from zat.utils import vt_query
 ...
     # Run the bro reader on on the files.log output
-    reader = bro_log_reader.BroLogReader('files.log', tail=True) # This will dynamically monitor this Bro log
+    reader = bro_log_reader.BroLogReader('files.log', tail=True) # This will dynamically monitor this Zeek log
     for row in reader.readrows():
 
         # Make the query with the file sha
@@ -150,12 +150,12 @@ VirusTotal Service.
 
 ### Zeek HTTP Log User Agents
 
-See bat/examples/http\_user\_agents.py for full code listing (code
+See zat/examples/http\_user\_agents.py for full code listing (code
 simplified below)
 
 ``` {.python}
 from collections import Counter
-from bat import bro_log_reader
+from zat import bro_log_reader
 ...
     # Run the bro reader on a given log file counting up user agents
     http_agents = Counter()
@@ -193,12 +193,12 @@ from bat import bro_log_reader
 ### Yara rules on Zeek extracted files
 
 The example will dymancially monitor the extract\_files directory and
-when a file is dropped by Bro the code will run a set of Yara rules against that file. See bat/examples/yara\_matches.py for full code
+when a file is dropped by Zeek the code will run a set of Yara rules against that file. See zat/examples/yara\_matches.py for full code
 listing (code simplified below)
 
 ``` {.python}
 import yara
-from bat import dir_watcher
+from zat import dir_watcher
 ...
 
 def yara_match(file_path, rules):
@@ -211,14 +211,14 @@ def yara_match(file_path, rules):
     # Load/compile the yara rules
     my_rules = yara.compile(args.rule_index)
 
-    # Create DirWatcher and start watching the Bro extract_files directory
+    # Create DirWatcher and start watching the Zeek extract_files directory
     print('Watching Extract Files Directory: {:s}'.format(args.extract_dir))
     dir_watcher.DirWatcher(args.extract_dir, callback=yara_match, rules=my_rules)
 ```
 
 **Example Output:**
 
-    Loading Yara Rules from ../bat/utils/yara_test/index.yar
+    Loading Yara Rules from ../zat/utils/yara_test/index.yar
     Watching Extract Files Directory: /home/ubuntu/software/bro/extract_files
     New Extracted File: /home/ubuntu/software/bro/extract_files/test.tmp
     Mathes:
@@ -227,12 +227,12 @@ def yara_match(file_path, rules):
 ### Risky Domains
 
 The example will use the analysis in our [Risky
-Domains](https://github.com/SuperCowPowers/bat/blob/master/notebooks/Risky_Domains.ipynb) notebook to flag domains that are 'at risk' and conduct a Virus Total query on those domains. See bat/examples/risky\_dns.py for full code
+Domains](https://github.com/SuperCowPowers/zat/blob/master/notebooks/Risky_Domains.ipynb) notebook to flag domains that are 'at risk' and conduct a Virus Total query on those domains. See zat/examples/risky\_dns.py for full code
 listing (code simplified below)
 
 ``` {.python}
-from bat import bro_log_reader
-from bat.utils import vt_query
+from zat import bro_log_reader
+from zat.utils import vt_query
 ...
 
     # Create a VirusTotal Query Class
@@ -286,12 +286,12 @@ OMG the Network is on Fire!!!
 There's been discussion about Let's Encrypt issuing certificates to possible phishing/malicious site owners. This example will quickly check
 and dynamically monitor your Zeek x509 logs for certificates that may be from malicious sites.
 
-See bat/examples/cert\_checker.py for full code listing (code simplified
+See zat/examples/cert\_checker.py for full code listing (code simplified
 below)
 
 ``` {.python}
-from bat import bro_log_reader
-from bat.utils import vt_query
+from zat import bro_log_reader
+from zat.utils import vt_query
 ...
 
     # These domains may be spoofed with a certificate issued by 'Let's Encrypt'
@@ -353,18 +353,18 @@ Here we're demonstrating anomaly detection using the Isolated Forest
 algorithm. Once anomalies are identified we then use clustering to group
 our anomalies into organized segments that allow an analyst to 'skim' the output groups instead of looking at each row.
 
-See bat/examples/anomaly\_detection.py for full code listing (code
+See zat/examples/anomaly\_detection.py for full code listing (code
 simplified below)
 
 ``` {.python}
-# Create a Pandas dataframe from a Bro log
+# Create a Pandas dataframe from a Zeek log
 log_to_df = LogToDataFrame()
 bro_df = log_to_df.create_dataframe('/path/to/dns.log')
 
 # Using Pandas we can easily and efficiently compute additional data metrics
 bro_df['query_length'] = bro_df['query'].str.len()
 
-# Use the bat DataframeToMatrix class
+# Use the zat DataframeToMatrix class
 features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name', 'rcode_name', 'query_length']
 to_matrix = dataframe_to_matrix.DataFrameToMatrix()
 bro_matrix = to_matrix.fit_transform(bro_df[features])
@@ -425,12 +425,12 @@ for key, group in cluster_groups:
 
 ### Tor detection and port number count
 
-See bat/examples/tor\_and\_port\_count.py for the code.
+See zat/examples/tor\_and\_port\_count.py for the code.
 
-This example will go through ssl.log files and try to identify possible Tor traffic. This is done by using the well known pattern of the Issuer and Subject ID in the certificates. Please note that your Bro installation will have to be configured to log these fields for this to work. Further info about how to do that can be found here: [SSL Log
+This example will go through ssl.log files and try to identify possible Tor traffic. This is done by using the well known pattern of the Issuer and Subject ID in the certificates. Please note that your Zeek installation will have to be configured to log these fields for this to work. Further info about how to do that can be found here: [SSL Log
 Info](https://www.bro.org/sphinx/scripts/base/protocols/ssl/main.bro.html#type-SSL::Info)
 
-**Example Output:** Run this example script on your Bro ssl.log\...
+**Example Output:** Run this example script on your Zeek ssl.log\...
 
     Possible Tor connection found
     From: 10.0.0.126 To: 82.96.35.7 Port: 443
@@ -440,7 +440,7 @@ have been detected on. Something that might help with threat hunting
 since you might find traffic on a port you definitely wasn't expecting
 to be there.
 
-**Example Output:** Run this example script on your Bro ssl.log\...
+**Example Output:** Run this example script on your Zeek ssl.log\...
 
     Port statistics
     443     513

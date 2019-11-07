@@ -13,8 +13,8 @@ from sklearn.ensemble import IsolationForest
 from sklearn.cluster import MiniBatchKMeans
 
 # Local imports
-from bat import bro_log_reader, live_simulator
-from bat import dataframe_to_matrix, dataframe_cache
+from zat import bro_log_reader, live_simulator
+from zat import dataframe_to_matrix, dataframe_cache
 
 
 def entropy(string):
@@ -45,14 +45,14 @@ if __name__ == '__main__':
         if 'dns' in args.bro_log:
             log_type = 'dns'
         else:
-            print('This example only works with Bro with dns.log files..')
+            print('This example only works with Zeek with dns.log files..')
             sys.exit(1)
 
-        # Create a Bro log reader
+        # Create a Zeek log reader
         print('Opening Data File: {:s}'.format(args.bro_log))
         reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)
 
-        # Create a Bro IDS log live simulator
+        # Create a Zeek IDS log live simulator
         print('Opening Data File: {:s}'.format(args.bro_log))
         reader = live_simulator.LiveSimulator(args.bro_log, eps=10)  # 10 events per second
 
@@ -84,7 +84,7 @@ if __name__ == '__main__':
                 bro_df['answer_length'] = bro_df['answers'].str.len()
                 bro_df['entropy'] = bro_df['query'].map(lambda x: entropy(x))
 
-                # Use the bat DataframeToMatrix class
+                # Use the zat DataframeToMatrix class
                 features = ['Z', 'proto', 'qtype_name', 'query_length', 'answer_length', 'entropy', 'id.resp_p']
                 to_matrix = dataframe_to_matrix.DataFrameToMatrix()
                 bro_matrix = to_matrix.fit_transform(bro_df[features])

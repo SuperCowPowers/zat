@@ -7,11 +7,11 @@ import re
 from collections import Counter
 
 # Local imports
-from bat import bro_log_reader
+from zat import bro_log_reader
 
 if __name__ == '__main__':
     # Example to check for potential Tor connections and give a summary of different ports
-    # used for SSL connections. Please note that your Bro installation must stamp the
+    # used for SSL connections. Please note that your Zeek installation must stamp the
     # ssl.log file with the 'issuer' field. More info can be found here:
     # https://www.bro.org/sphinx/scripts/base/protocols/ssl/main.bro.html#type-SSL::Info
 
@@ -24,7 +24,7 @@ if __name__ == '__main__':
     # Collect args from the command line
     parser = argparse.ArgumentParser()
     parser.add_argument('bro_log', type=str, help='Specify a bro log to run BroLogReader test on')
-    parser.add_argument('-t', action='store_true', default=False, help='Sets the program to tail a live Bro log')
+    parser.add_argument('-t', action='store_true', default=False, help='Sets the program to tail a live Zeek log')
     args, commands = parser.parse_known_args()
 
     # Check for unknown args
@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     # Sanity check that this is a ssl log
     if 'ssl' not in args.bro_log:
-        print('This example only works with Bro ssl.log files..')
+        print('This example only works with Zeek ssl.log files..')
         sys.exit(1)
 
     # File may have a tilde in it

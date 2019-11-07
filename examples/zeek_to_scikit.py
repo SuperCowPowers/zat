@@ -1,4 +1,4 @@
-# Example that demonstrates going from Bro data to scikit-learn models
+# Example that demonstrates going from Zeek data to scikit-learn models
 from __future__ import print_function
 import os
 import sys
@@ -12,8 +12,8 @@ from sklearn.cluster import KMeans
 import numpy as np
 
 # Local imports
-from bat import log_to_dataframe
-from bat import dataframe_to_matrix
+from zat import log_to_dataframe
+from zat import dataframe_to_matrix
 
 # Helper method for scatter/beeswarm plot
 def jitter(arr):
@@ -21,7 +21,7 @@ def jitter(arr):
     return arr + np.random.randn(len(arr)) * stdev
 
 if __name__ == '__main__':
-    # Example that demonstrates going from Bro data to scikit-learn models
+    # Example that demonstrates going from Zeek data to scikit-learn models
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
@@ -35,14 +35,14 @@ if __name__ == '__main__':
 
     # Sanity check that this is a dns log
     if 'dns' not in args.bro_log:
-        print('This example only works with Bro dns.log files..')
+        print('This example only works with Zeek dns.log files..')
         sys.exit(1)
 
     # File may have a tilde in it
     if args.bro_log:
         args.bro_log = os.path.expanduser(args.bro_log)
 
-        # Create a Pandas dataframe from the Bro log
+        # Create a Pandas dataframe from the Zeek log
         log_to_df = log_to_dataframe.LogToDataFrame()
         bro_df = log_to_df.create_dataframe(args.bro_log)
 

@@ -3,7 +3,7 @@ from __future__ import print_function
 import socket
 
 # Local imports
-from bat.utils import net_utils, cache
+from zat.utils import net_utils, cache
 
 
 class ReverseDNS(object):

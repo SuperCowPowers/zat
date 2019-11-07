@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Setup.py for bat"""
+"""Setup.py for zat"""
 
 import os
 
@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 readme = open('README.md').read()
 
 # Pull in the package info
-package_name = 'bat'
+package_name = 'zat'
 package = __import__(package_name)
 version = package.__version__
 author = package.__author__
@@ -24,12 +24,12 @@ def get_files(dir_name):
 setup(
     name=package_name,
     version=version,
-    description='Bro Analysis Tools',
+    description='Zeek Analysis Tools',
     long_description=readme,
     long_description_content_type='text/markdown',
     author=author,
     author_email=email,
-    url='https://github.com/SuperCowPowers/bat',
+    url='https://github.com/SuperCowPowers/zat',
     packages=find_packages(),
     include_package_data=True,
     data_files=get_files('data') + get_files('examples'),

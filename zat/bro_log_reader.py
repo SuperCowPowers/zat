@@ -1,10 +1,10 @@
-"""BroLogReader: This class reads in various Bro logs. The class inherits from
+"""BroLogReader: This class reads in various Zeek logs. The class inherits from
                  the FileTailer class so it supports the following use cases:
-                   - Read contents of a Bro log file        (tail=False)
-                   - Read contents + 'tail -f' Bro log file (tail=True)
+                   - Read contents of a Zeek log file        (tail=False)
+                   - Read contents + 'tail -f' Zeek log file (tail=True)
        Args:
             filepath (str): The full path the file (/full/path/to/the/file.txt)
-            delimiter (str): The delimiter in the Bro logs (default='\t')
+            delimiter (str): The delimiter in the Zeek logs (default='\t')
             tail (bool): Do a dynamic tail on the file (i.e. tail -f) (default=False)
 """
 from __future__ import print_function
@@ -13,17 +13,17 @@ import time
 import datetime
 
 # Local Imports
-from bat.utils import file_tailer, file_utils
+from zat.utils import file_tailer, file_utils
 
 
 class BroLogReader(file_tailer.FileTailer):
-    """BroLogReader: This class reads in various Bro logs. The class inherits from
+    """BroLogReader: This class reads in various Zeek logs. The class inherits from
                      the FileTailer class so it supports the following use cases:
-                       - Read contents of a Bro log file        (tail=False)
-                       - Read contents + 'tail -f' Bro log file (tail=True)
+                       - Read contents of a Zeek log file        (tail=False)
+                       - Read contents + 'tail -f' Zeek log file (tail=True)
            Args:
                 filepath (str): The full path the file (/full/path/to/the/file.txt)
-                delimiter (str): The delimiter in the Bro logs (default='\t')
+                delimiter (str): The delimiter in the Zeek logs (default='\t')
                 tail (bool): Do a dynamic tail on the file (i.e. tail -f) (default=False)
                 strict (bool): Raise an exception on conversions errors (default=False)
     """
@@ -63,9 +63,9 @@ class BroLogReader(file_tailer.FileTailer):
         super(BroLogReader, self).__init__(self._filepath, full_read=True, tail=self._tail)
 
     def readrows(self):
-        """The readrows method reads in the header of the Bro log and
+        """The readrows method reads in the header of the Zeek log and
             then uses the parent class to yield each row of the log file
-            as a dictionary of {key:value, ...} based on Bro header.
+            as a dictionary of {key:value, ...} based on Zeek header.
         """
         # Calling the internal _readrows so we can catch issues/log rotations
         reconnecting = True
@@ -99,7 +99,7 @@ class BroLogReader(file_tailer.FileTailer):
     def _readrows(self):
         """Internal method _readrows, see readrows() for description"""
 
-        # Read in the Bro Headers
+        # Read in the Zeek Headers
         offset, self.field_names, self.field_types, self.type_converters = self._parse_bro_header(self._filepath)
 
         # Use parent class to yield each row as a dictionary
@@ -113,7 +113,7 @@ class BroLogReader(file_tailer.FileTailer):
             yield self.make_dict(line.strip().split(self._delimiter))
 
     def _parse_bro_header(self, bro_log):
-        """Parse the Bro log header section.
+        """Parse the Zeek log header section.
 
             Format example:
                 #separator \x09
@@ -125,7 +125,7 @@ class BroLogReader(file_tailer.FileTailer):
                 #types	time	string	string	string
         """
 
-        # Open the Bro logfile
+        # Open the Zeek logfile
         with open(bro_log, 'r') as bro_file:
 
             # Skip until you find the #fields line

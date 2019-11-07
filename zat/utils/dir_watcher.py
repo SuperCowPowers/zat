@@ -8,7 +8,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 # Local Imports
-from bat.utils import file_utils
+from zat.utils import file_utils
 
 
 class DirWatcher(FileSystemEventHandler):

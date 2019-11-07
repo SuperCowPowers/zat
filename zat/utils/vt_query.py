@@ -9,7 +9,7 @@ import pprint
 import requests
 
 # Local imports
-from bat.utils import cache
+from zat.utils import cache
 
 
 class VTQuery(object):

@@ -11,7 +11,7 @@ class DataFrameToMatrix(object):
         Notes:
             fit_transform: Does a fit and a transform and returns the transformed matrix
             transform: Based on previous fit parameters returns the transformed matrix
-        More Info: https://supercowpowers.github.io/bat/dataframe_to_matrix.html
+        More Info: https://supercowpowers.github.io/zat/dataframe_to_matrix.html
 
         # Nullable integer arrays are currently not handled by Numpy
         # Cast Nullable integer arrays to float32

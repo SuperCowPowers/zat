@@ -10,12 +10,12 @@ df = log_to_df.create_dataframe(conn, usecols=['id.orig_h', 'id.orig_p', 'id.res
 ## Details on recent testing and changes
 We have several outstanding issues for needed improvements to support the ingestion and processing of large Bro/Zeek log files.
 
-- <https://github.com/SuperCowPowers/bat/issues/23>
-- <https://github.com/SuperCowPowers/bat/issues/71>
+- <https://github.com/SuperCowPowers/zat/issues/23>
+- <https://github.com/SuperCowPowers/zat/issues/71>
 
 There's also a PR from <https://github.com/bhklimk> with some good suggestions.
 
-Big thanks to Benjamin Klimkowski <https://github.com/bhklimk>. The ideas/suggestions that Ben gave in [PR 75](https://github.com/SuperCowPowers/bat/pull/75) were well received. The PR itself had some issues with 'cruft' and other details but the core concepts were solid, so we borrowed those and made a new PR that is more aligned with the existing implementation. Thanks again to Ben for helping us improve the performance on large Bro/Zeek files.
+Big thanks to Benjamin Klimkowski <https://github.com/bhklimk>. The ideas/suggestions that Ben gave in [PR 75](https://github.com/SuperCowPowers/zat/pull/75) were well received. The PR itself had some issues with 'cruft' and other details but the core concepts were solid, so we borrowed those and made a new PR that is more aligned with the existing implementation. Thanks again to Ben for helping us improve the performance on large Bro/Zeek files.
 
 **Test Data:**
 Since conn.log is typically the most voluminous, we're going to use this 2.5 Gig conn.long file for our performance testing.
@@ -23,7 +23,7 @@ Since conn.log is typically the most voluminous, we're going to use this 2.5 Gig
 - <https://data.kitware.com/#item/58ebde398d777f16d095fd0e>
 
 **Test Script:**
-We're simply going to use the [bro\_to\_pandas.py](https://github.com/SuperCowPowers/bat/blob/master/examples/bro_to_pandas.py) in the examples directory for testing. We'll be using Python 3.7.
+We're simply going to use the [bro\_to\_pandas.py](https://github.com/SuperCowPowers/zat/blob/master/examples/bro_to_pandas.py) in the examples directory for testing. We'll be using Python 3.7.
 
 ```
 $ time python bro_to_pandas.py ~/data/bro/conn.log 
@@ -33,11 +33,11 @@ $ time python bro_to_pandas.py ~/data/bro/conn.log
 Our baseline for this testing will obviously be the existing repository functionality as it is.
 
 **bhklimk PR:**
-The PR from <https://github.com/bhklimk> shown here: [PR 75](https://github.com/SuperCowPowers/bat/pull/75)
+The PR from <https://github.com/bhklimk> shown here: [PR 75](https://github.com/SuperCowPowers/zat/pull/75)
 
 **PR 76:**
 A new PR focused specifically on memory/time improvements for large data frames.
-[PR 76](https://github.com/SuperCowPowers/bat/pull/76)
+[PR 76](https://github.com/SuperCowPowers/zat/pull/76)
 
 
 ## Performance Results
@@ -59,7 +59,7 @@ A new PR focused specifically on memory/time improvements for large data frames.
 
 ## Observations
 **Time:**
-As noted in this issue <https://github.com/SuperCowPowers/bat/issues/23> the baseline construction of a data frame is inefficient, for large data frames this inefficiency plus the time wasted on memory paging/swapping starts to dominate the load time.
+As noted in this issue <https://github.com/SuperCowPowers/zat/issues/23> the baseline construction of a data frame is inefficient, for large data frames this inefficiency plus the time wasted on memory paging/swapping starts to dominate the load time.
 
 **Memory:**
 As we've demonstrated in some of our notebooks examples, properly encoding categorical data will provide a significant memory reduction [Categorical Notebook](https://nbviewer.jupyter.org/github/SuperCowPowers/scp-labs/blob/master/notebooks/Categorical_Data_Guide.ipynb).
@@ -77,7 +77,7 @@ So every Stack Overflow answer about reading in large dataframes uses a chunking
 **Note:** I'm happy to be wrong about any of these points, please replicate the test above and smack me with some science, I'll gladly eat some crow if it means we get better/faster dataframe construction :)
 
 ## Final Decision:
-After Benjamin Klimkowski <https://github.com/bhklimk> and I both did some testing and discussion we've decided to use [PR 76](https://github.com/SuperCowPowers/bat/pull/76) (without 'chunking').
+After Benjamin Klimkowski <https://github.com/bhklimk> and I both did some testing and discussion we've decided to use [PR 76](https://github.com/SuperCowPowers/zat/pull/76) (without 'chunking').
  
 ## Detailed Test Output
 **Baseline**

@@ -10,7 +10,7 @@ import argparse
 from time import sleep
 
 # Local imports
-from bat.utils import signal_utils
+from zat.utils import signal_utils
 
 # Third Party Imports
 try:

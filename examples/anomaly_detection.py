@@ -12,8 +12,8 @@ from sklearn.ensemble import IsolationForest
 from sklearn.cluster import KMeans
 
 # Local imports
-from bat import log_to_dataframe
-from bat import dataframe_to_matrix
+from zat import log_to_dataframe
+from zat import dataframe_to_matrix
 
 
 def entropy(string):
@@ -48,10 +48,10 @@ if __name__ == '__main__':
             log_type = 'dns'
             features = ['Z', 'proto', 'qtype_name', 'query_length', 'answer_length', 'entropy']
         else:
-            print('This example only works with Bro with http.log or dns.log files..')
+            print('This example only works with Zeek with http.log or dns.log files..')
             sys.exit(1)
 
-        # Create a Pandas dataframe from a Bro log
+        # Create a Pandas dataframe from a Zeek log
         try:
             log_to_df = log_to_dataframe.LogToDataFrame()
             bro_df = log_to_df.create_dataframe(args.bro_log)
@@ -69,7 +69,7 @@ if __name__ == '__main__':
             bro_df['answer_length'] = bro_df['answers'].str.len()
             bro_df['entropy'] = bro_df['query'].map(lambda x: entropy(x))
 
-        # Use the bat DataframeToMatrix class
+        # Use the zat DataframeToMatrix class
         to_matrix = dataframe_to_matrix.DataFrameToMatrix()
         bro_matrix = to_matrix.fit_transform(bro_df[features])
         print(bro_matrix.shape)

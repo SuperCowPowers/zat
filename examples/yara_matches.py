@@ -18,7 +18,7 @@ except ImportError:
     sys.exit(1)
 
 # Local imports
-from bat.utils import dir_watcher, signal_utils
+from zat.utils import dir_watcher, signal_utils
 
 def yara_match(file_path, rules):
     """Callback for a newly extracted file"""
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     # Collect args from the command line
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--rule-index', type=str, required=True, help='Specify the yara rule index file (e.g. /full/path/to/yara/rules/index.yar)')
-    parser.add_argument('-e', '--extract-dir', type=str, required=True, help='Specify the Bro extract_files directory (e.g. /full/path/to/bro/extract_files)')
+    parser.add_argument('-e', '--extract-dir', type=str, required=True, help='Specify the Zeek extract_files directory (e.g. /full/path/to/bro/extract_files)')
     args, commands = parser.parse_known_args()
 
     # Check for unknown args
@@ -64,11 +64,11 @@ if __name__ == '__main__':
     # Load/compile the yara rules
     my_rules = yara.compile(args.rule_index)
 
-    # Create DirWatcher and start watching the Bro extract_files directory
+    # Create DirWatcher and start watching the Zeek extract_files directory
     print('Watching Extract Files Directory: {:s}'.format(args.extract_dir))
     dir_watcher.DirWatcher(args.extract_dir, callback=yara_match, rules=my_rules)
 
-    # Okay so just wait around for files to be dropped by Bro or someone hits Ctrl-C
+    # Okay so just wait around for files to be dropped by Zeek or someone hits Ctrl-C
     with signal_utils.signal_catcher(my_exit):
         while True:
             time.sleep(.5)

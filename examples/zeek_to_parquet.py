@@ -1,4 +1,4 @@
-"""Bro log to Parquet Dataframe Example"""
+"""Zeek log to Parquet Dataframe Example"""
 from __future__ import print_function
 import os
 import sys
@@ -6,7 +6,7 @@ import argparse
 from pyspark.sql import SparkSession
 
 # Local imports
-from bat import log_to_sparkdf
+from zat import log_to_sparkdf
 
 
 # Helper method
@@ -14,7 +14,7 @@ def log_to_parquet(log_in, parquet_out):
     # Spin up a local Spark Session (with 4 executors)
     spark = SparkSession.builder.master('local[4]').appName('my_awesome').getOrCreate()
 
-    # Use the BAT class to load our log file into a Spark dataframe (2 lines of code!)
+    # Use the ZAT class to load our log file into a Spark dataframe (2 lines of code!)
     spark_it = log_to_sparkdf.LogToSparkDF(spark)
     spark_df = spark_it.create_dataframe(log_in)
 

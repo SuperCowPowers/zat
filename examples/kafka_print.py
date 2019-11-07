@@ -8,7 +8,7 @@ from kafka import KafkaConsumer
 from kafka.errors import NoBrokersAvailable
 
 # Local imports
-from bat.utils import signal_utils
+from zat.utils import signal_utils
 
 
 def exit_program():

@@ -1,11 +1,11 @@
-"""Bro log to Pandas Dataframe Example"""
+"""Zeek log to Pandas Dataframe Example"""
 from __future__ import print_function
 import os
 import sys
 import argparse
 
 # Local imports
-from bat.log_to_dataframe import LogToDataFrame
+from zat.log_to_dataframe import LogToDataFrame
 
 if __name__ == '__main__':
     # Example to populate a Pandas dataframe from a bro log reader
@@ -24,7 +24,7 @@ if __name__ == '__main__':
     if args.bro_log:
         args.bro_log = os.path.expanduser(args.bro_log)
 
-        # Create a Pandas dataframe from a Bro log
+        # Create a Pandas dataframe from a Zeek log
         log_to_df = LogToDataFrame()
         bro_df = log_to_df.create_dataframe(args.bro_log)
 

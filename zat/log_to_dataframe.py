@@ -1,15 +1,15 @@
-"""LogToDataFrame: Converts a Bro log to a Pandas DataFrame"""
+"""LogToDataFrame: Converts a Zeek log to a Pandas DataFrame"""
 from __future__ import print_function
 
 # Third Party
 import pandas as pd
 
 # Local
-from bat import bro_log_reader
+from zat import bro_log_reader
 
 
 class LogToDataFrame(object):
-    """LogToDataFrame: Converts a Bro log to a Pandas DataFrame
+    """LogToDataFrame: Converts a Zeek log to a Pandas DataFrame
         Notes:
             This class has recently been overhauled from a simple loader to a more
             complex class that should in theory:
@@ -17,13 +17,13 @@ class LogToDataFrame(object):
               - Should be faster
               - Produce smaller memory footprint dataframes
             If you have any issues/problems with this class please submit a GitHub issue.
-        More Info: https://supercowpowers.github.io/bat/large_dataframes.html
+        More Info: https://supercowpowers.github.io/zat/large_dataframes.html
     """
     def __init__(self):
         """Initialize the LogToDataFrame class"""
 
         # First Level Type Mapping
-        #    This map defines the types used when first reading in the Bro log into a 'chunk' dataframes.
+        #    This map defines the types used when first reading in the Zeek log into a 'chunk' dataframes.
         #    Types (like time and interval) will be defined as one type at first but then
         #    will undergo further processing to produce correct types with correct values.
         # See: https://stackoverflow.com/questions/29245848/what-are-all-the-dtypes-that-pandas-recognizes
@@ -40,12 +40,12 @@ class LogToDataFrame(object):
     def create_dataframe(self, log_filename, ts_index=True, aggressive_category=True, usecols=None):
         """ Create a Pandas dataframe from a Bro/Zeek log file
             Args:
-               log_fllename (string): The full path to the Bro log
+               log_fllename (string): The full path to the Zeek log
                ts_index (bool): Set the index to the 'ts' field (default = True)
                aggressive_category (bool): convert unknown columns to category (default = True)
         """
 
-        # Create a Bro log reader just to read in the header for names and types
+        # Create a Zeek log reader just to read in the header for names and types
         _bro_reader = bro_log_reader.BroLogReader(log_filename)
         _, field_names, field_types, _ = _bro_reader._parse_bro_header(log_filename)
         header_names = field_names
@@ -61,7 +61,7 @@ class LogToDataFrame(object):
         # Get the appropriate types for the Pandas Dataframe
         pandas_types = self.pd_column_types(field_names, field_types, aggressive_category)
 
-        # Now actually read the Bro Log using Pandas read CSV
+        # Now actually read the Zeek Log using Pandas read CSV
         self._df = pd.read_csv(log_filename, sep='\t', names=header_names, usecols=usecols, dtype=pandas_types, comment="#", na_values='-')
 
         # Now we convert 'time' and 'interval' fields to datetime and timedelta respectively
@@ -113,7 +113,7 @@ def test():
     """Test for LogToDataFrame Class"""
     import os
     pd.set_option('display.width', 1000)
-    from bat.utils import file_utils
+    from zat.utils import file_utils
 
     # Grab a test file
     data_path = file_utils.relative_dir(__file__, '../data')

@@ -11,7 +11,7 @@ Types of Contributions
 
 ### Report Bugs
 
-Report bugs at <https://github.com/supercowpowers/bat/issues>.
+Report bugs at <https://github.com/supercowpowers/zat/issues>.
 
 If you are reporting a bug, please include:
 
@@ -32,14 +32,14 @@ Look through the GitHub issues for features. Anything tagged with
 
 ### Write Documentation
 
-Bro Python Utilities could always use more documentation, whether as
-part of the official Bro Python Utilities docs, in docstrings, or even
+Zeek Python Utilities could always use more documentation, whether as
+part of the official Zeek Python Utilities docs, in docstrings, or even
 on the web in blog posts, articles, and such.
 
 ### Submit Feedback
 
 The best way to send feedback is to file an issue at
-<https://github.com/supercowpowers/bat/issues>.
+<https://github.com/supercowpowers/zat/issues>.
 
 If you are proposing a feature:
 
@@ -52,14 +52,14 @@ If you are proposing a feature:
 Get Started!
 ------------
 
-Ready to contribute? Here\'s how to set up [bat]{.title-ref} for local
+Ready to contribute? Here\'s how to set up [zat]{.title-ref} for local
 development.
 
-1.  [Fork]() the [bat]{.title-ref} repo on GitHub.
+1.  [Fork]() the [zat]{.title-ref} repo on GitHub.
 
 2.  Clone your fork locally:
 
-        $ git clone git@github.com:your_name_here/bat.git
+        $ git clone git@github.com:your_name_here/zat.git
 
 3.  Create a branch for local development:
 
@@ -92,7 +92,7 @@ Before you submit a pull request, check that it meets these guidelines:
     Put your new functionality into a function with a docstring, and add
     the feature to the list in README.rst.
 3.  The pull request should work for Python 2.7, 3.5, 3.6, and PyPy.
-    Check <https://travis-ci.org/supercowpowers/bat> under pull requests
+    Check <https://travis-ci.org/supercowpowers/zat> under pull requests
     for active pull requests or run the `tox` command and make sure that
     the tests pass for all supported Python versions.
 
@@ -101,4 +101,4 @@ Tips
 
 To run a subset of tests:
 
-    $ py.test bat
+    $ pytest zat

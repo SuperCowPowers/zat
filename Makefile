@@ -30,7 +30,7 @@ clean-pyc:
 	find . -name '*~' -exec rm -rf {} +
 
 lint:
-	flake8 bat test
+	flake8 zat test
 
 test:
 	py.test
@@ -39,15 +39,15 @@ test-all:
 	tox
 
 coverage:
-	coverage run --source bat setup.py test
+	coverage run --source zat setup.py test
 	coverage report -m
 	coverage html
 	open htmlcov/index.html
 
 docs:
-	rm -f docs/bat.rst
+	rm -f docs/zat.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ bat
+	sphinx-apidoc -o docs/ zat
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	open docs/_build/html/index.html

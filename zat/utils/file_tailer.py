@@ -4,7 +4,7 @@ import os
 import time
 
 # Local imports
-from bat.utils import file_utils
+from zat.utils import file_utils
 
 
 class FileTailer(object):

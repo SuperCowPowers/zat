@@ -1,4 +1,4 @@
-"""BroMultiLogReader: This class reads in multiple Bro logs.
+"""BroMultiLogReader: This class reads in multiple Zeek logs.
            Args:
                 filepath (str): The full path the file (/full/path/to/the/file.txt) can be a
                                 glob (e.g dns*.log) or a gzip file (e.g. dns.log.gz)
@@ -11,11 +11,11 @@ import tempfile
 import shutil
 
 # Local Imports
-from bat import bro_log_reader
+from zat import bro_log_reader
 
 
 class BroMultiLogReader(object):
-    """BroMultiLogReader: This class reads in multiple Bro logs.
+    """BroMultiLogReader: This class reads in multiple Zeek logs.
            Args:
                 filepath (str): The full path the file (/full/path/to/the/file.txt) can be a
                                 glob (e.g dns*.log) or a gzip file (e.g. dns.log.gz)
@@ -61,7 +61,7 @@ class BroMultiLogReader(object):
 
 def test():
     """Test for BroMultiLogReader Python Class"""
-    from bat.utils import file_utils
+    from zat.utils import file_utils
 
     # Grab a test file
     data_path = file_utils.relative_dir(__file__, '../data')

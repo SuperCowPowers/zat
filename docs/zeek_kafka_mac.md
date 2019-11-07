@@ -1,8 +1,8 @@
-## Bro with Kafka Plugin Notes
+## Zeek with Kafka Plugin Notes
 **Disclaimer:** These are simply my notes that I've captured after getting Bro/Kafka Plugin setup on my Mac. Your mileage may vary.
 
 **Context:**
-In general the process of getting the Kafka Plugin working on my Mac laptop was a bit tricky. One could certainly argue that setting up Bro on your Mac Laptop is a bad idea to begin with, which might be true, but I like to use my laptop as a 'workbench' to experiment with stuff.
+In general the process of getting the Kafka Plugin working on my Mac laptop was a bit tricky. One could certainly argue that setting up Zeek on your Mac Laptop is a bad idea to begin with, which might be true, but I like to use my laptop as a 'workbench' to experiment with stuff.
 
 **Useful Links:**
 
@@ -11,9 +11,9 @@ In general the process of getting the Kafka Plugin working on my Mac laptop was 
 - Kafka: <https://kafka.apache.org>
 - Spark: <https://spark.apache.org>
 
-### Bro Install
+### Zeek Install
 
-- When building Bro I had issue with the configuration finding my 'venv python' (I used pyenv) and then python tools for Zeek were really unhappy later.
+- When building Zeek I had issue with the configuration finding my 'venv python' (I used pyenv) and then python tools for Zeek were really unhappy later.
 - I had to ```brew instal python@2``` to get Zeek to be happy with the python it found and properly build things like 'zeekctl' and the other Python utilities.
 - With Python 'fixed', the instructions to build from source worked fine (<https://docs.zeek.org/en/stable/install/install.html>)
 

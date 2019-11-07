@@ -1,4 +1,4 @@
-"""Risky DNS bat Example"""
+"""Risky DNS zat Example"""
 from __future__ import print_function
 import os
 import sys
@@ -14,8 +14,8 @@ except ImportError:
     sys.exit(1)
 
 # Local imports
-from bat import bro_log_reader
-from bat.utils import vt_query, signal_utils
+from zat import bro_log_reader
+from zat.utils import vt_query, signal_utils
 
 def save_vtq():
     """Exit on Signal"""
@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     # Sanity check that this is a dns log
     if 'dns' not in args.bro_log:
-        print('This example only works with Bro dns.log files..')
+        print('This example only works with Zeek dns.log files..')
         sys.exit(1)
 
     # File may have a tilde in it
