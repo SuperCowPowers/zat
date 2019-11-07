@@ -4,6 +4,7 @@ The ZAT Python package supports the processing and analysis of Zeek data
 with Pandas, scikit-learn, and Spark
 
 ### Recent Improvements (Fall 2019):
+- Renamed to **Zeek** Analysis Tools \:)
 - Better Docs (<https://supercowpowers.github.io/zat/>)
 - Faster/Smaller Pandas Dataframes for large log files: [Large Dataframes](https://supercowpowers.github.io/zat/large_dataframes.html)
 - Better Panda Dataframe to Matrix (ndarray) support: [Dataframe To Matrix](https://supercowpowers.github.io/zat/dataframe_to_matrix.html)
