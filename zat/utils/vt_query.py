@@ -13,8 +13,7 @@ from zat.utils import cache
 
 
 class VTQuery(object):
-    """VTQuery: Will query VirusTotal for a sha, the class contains a Cache to avoid
-                slamming duplicate queries.
+    """VTQuery: Will query VirusTotal for a sha, the class contains a Cache to minimize queries.
 
         Args:
             apikey (str): The API key to use for VirusTotal queries (default=None)
