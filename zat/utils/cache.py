@@ -25,6 +25,7 @@ class Cache(object):
         """Cache Initialization"""
         self.disk_storage = file_storage.FileStorage()
         self.load = load
+        storage_bytes = None
         if load:
             storage_bytes = self.disk_storage.get(load)  # This can fail, returning None
         self.store = pickle.loads(storage_bytes) if storage_bytes else OrderedDict()
