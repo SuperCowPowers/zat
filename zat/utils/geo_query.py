@@ -19,10 +19,10 @@ class GeoQuery(object):
             apikey (str): The API key to use for IPStack queries (default=None)
             summary (bool): Just return summary information for GeoQuery (default=True)
             max_cache_size (int): Maximum size of query cache (default=10000)
-            max_cache_time (int): Time to keep query results in cache (default=1440 minutes/24 hours)
+            max_cache_time (int): Time to keep query results in cache (default=30 days)
     """
 
-    def __init__(self, apikey=None, summary=True, max_cache_size=10000, max_cache_time=1440, throttle=True):
+    def __init__(self, apikey=None, summary=True, max_cache_size=10000, max_cache_time=30, throttle=True):
         """GeoQuery Init"""
 
         # Public API Key
@@ -36,7 +36,8 @@ class GeoQuery(object):
         self.throttle = throttle
 
         # Create query cache
-        self.query_cache = cache.Cache(max_size=max_cache_size, timeout=max_cache_time*60)  # Convert to Seconds
+        seconds = max_cache_time*24*60*60  # Convert from days
+        self.query_cache = cache.Cache(max_size=max_cache_size, timeout=seconds, load='zat_geo_cache')  # Convert to Seconds
 
     @property
     def size(self):
