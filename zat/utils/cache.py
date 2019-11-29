@@ -2,6 +2,11 @@
 from __future__ import print_function
 import time
 from collections import OrderedDict
+import pickle
+import atexit
+
+# Local imports
+from zat.utils import file_storage
 
 
 class Cache(object):
@@ -16,13 +21,20 @@ class Cache(object):
             >>> None
             cache.clear()
     """
-    def __init__(self, max_size=1000, timeout=None):
+    def __init__(self, max_size=1000, timeout=None, load=None):
         """Cache Initialization"""
-        self._store = OrderedDict()
-        self._max_size = max_size
-        self._timeout = timeout
+        self.disk_storage = file_storage.FileStorage()
+        self.load = load
+        if load:
+            storage_bytes = self.disk_storage.get(load)  # This can fail, returning None
+        self.store = pickle.loads(storage_bytes) if storage_bytes else OrderedDict()
+        self.max_size = max_size
+        self.timeout = timeout
         self._compression_timer = 60
         self._last_compression = time.time()
+
+        # Try to do cleanup/serialization at exit
+        atexit.register(self.cleanup)
 
     def set(self, key, value):
         """Add an item to the cache
@@ -31,8 +43,8 @@ class Cache(object):
                value: the value associated with this key
         """
         self._check_limit()
-        _expire = time.time() + self._timeout if self._timeout else None
-        self._store[key] = (value, _expire)
+        _expire = time.time() + self.timeout if self.timeout else None
+        self.store[key] = (value, _expire)
 
     def get(self, key):
         """Get an item from the cache
@@ -41,27 +53,37 @@ class Cache(object):
            Returns:
                the value of the item or None if the item isn't in the cache
         """
-        data = self._store.get(key)
+        data = self.store.get(key)
         if not data:
             return None
         value, expire = data
         if expire and time.time() > expire:
-            del self._store[key]
+            del self.store[key]
             return None
         return value
 
     def clear(self):
         """Clear the cache"""
-        self._store = OrderedDict()
+        self.store = OrderedDict()
 
     def dump(self):
         """Dump the cache (for debugging)"""
-        for key in self._store.keys():
+        for key in self.store.keys():
             print(key, ':', self.get(key))
 
     @property
     def size(self):
-        return len(self._store)
+        return len(self.store)
+
+    def cleanup(self):
+        print('Calling cleanup...')
+        self.persist()
+
+    def persist(self):
+        """Serialize the cache to disk"""
+        if self.load:
+            store_bytes = pickle.dumps(self.store)
+            self.disk_storage.store(self.load, store_bytes)
 
     def _check_limit(self):
         """Intenal method: check if current cache size exceeds maximum cache
@@ -71,8 +93,8 @@ class Cache(object):
         self._compress()
 
         # Then check the max size
-        if len(self._store) >= self._max_size:
-            self._store.popitem(last=False)  # FIFO
+        if len(self.store) >= self.max_size:
+            self.store.popitem(last=False)  # FIFO
 
     def _compress(self):
         """Internal method to compress the cache. This method will
@@ -82,7 +104,7 @@ class Cache(object):
         now = time.time()
         if self._last_compression + self._compression_timer < now:
             self._last_compression = now
-            for key in list(self._store.keys()):
+            for key in list(self.store.keys()):
                 self.get(key)
 
 
@@ -138,6 +160,19 @@ def test():
 
     # Also make sure compression call is throttled
     my_cache._compress()  # Should not output a compression message
+
+    # Test persistance functionality
+    my_cache = Cache(load='my_test_cache')
+    for i in range(5):
+        my_cache.set(str(i), i)
+    assert my_cache.size == 5
+
+    my_cache.persist()
+    del my_cache
+
+    load_cache = Cache(load='my_test_cache')
+    assert load_cache.size == 5
+    load_cache.dump()
 
 
 if __name__ == '__main__':
