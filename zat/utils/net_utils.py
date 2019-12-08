@@ -4,9 +4,6 @@ from __future__ import print_function
 import socket
 import binascii
 
-# Local imports
-from zat.utils import compat
-
 
 def mac_to_str(address):
     """Convert a MAC address to a readable/printable string
@@ -16,7 +13,7 @@ def mac_to_str(address):
        Returns:
            str: Printable/readable MAC address
     """
-    return ':'.join('%02x' % compat.ord(b) for b in address)
+    return ':'.join('%02x' % b for b in address)
 
 
 def str_to_mac(mac_string):
