@@ -1,4 +1,4 @@
-"""GeoQuery Class"""
+"""GeoLookup Class"""
 
 from __future__ import print_function
 import time
@@ -11,19 +11,19 @@ import requests
 from zat.utils import cache
 
 
-class GeoQuery(object):
-    """GeoQuery: Query IPStack API (https://ipstack.com/) for Geographic information,
+class GeoLookup(object):
+    """GeoLookup: Query IPStack API (https://ipstack.com/) for Geographic information,
                  the class contains a Cache to minimize queries.
 
         Args:
             apikey (str): The API key to use for IPStack queries (default=None)
-            summary (bool): Just return summary information for GeoQuery (default=True)
+            summary (bool): Just return summary information for GeoLookup (default=True)
             max_cache_size (int): Maximum size of query cache (default=10000)
             max_cache_time (int): Time to keep query results in cache (default=30 days)
     """
 
     def __init__(self, apikey=None, summary=True, max_cache_size=10000, max_cache_time=30, throttle=True):
-        """GeoQuery Init"""
+        """GeoLookup Init"""
 
         # Public API Key
         # Note: The key below is a low-volume public key. Please call this method with your own API key :)
@@ -96,32 +96,32 @@ class GeoQuery(object):
 
 # Unit test: Create the class and test it
 def test():
-    """geo_query.py test"""
+    """geo_lookup.py test"""
 
     # Execute the worker (unit test)
-    geo_query = GeoQuery(summary=False)
-    output = geo_query.query_ip('73.26.145.66')
+    geo_lookup = GeoLookup(summary=False)
+    output = geo_lookup.query_ip('73.26.145.66')
     print('\n<<< Unit Test FULL>>>')
     pprint.pprint(output)
 
-    geo_query = GeoQuery()
-    output = geo_query.query_ip('73.26.145.66')
+    geo_lookup = GeoLookup()
+    output = geo_lookup.query_ip('73.26.145.66')
     print('\n<<< Unit Test Summary>>>')
     pprint.pprint(output)
-    output = geo_query.query_ip('123.4.5.6')
+    output = geo_lookup.query_ip('123.4.5.6')
     print('\n<<< Unit Test Summary>>>')
     pprint.pprint(output)
 
     # Test Cache
-    output = geo_query.query_ip('73.26.145.66')
+    output = geo_lookup.query_ip('73.26.145.66')
     print('\n<<< Unit Test Cache>>>')
     pprint.pprint(output)
 
     # Test Size
-    assert geo_query.size == 2
+    assert geo_lookup.size == 2
 
     # Test some error conditions
-    output = geo_query.query_ip('123')
+    output = geo_lookup.query_ip('123')
     print('\n<<< Unit Test Malformed IP Query>>>')
     pprint.pprint(output)
 
