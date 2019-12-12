@@ -29,14 +29,17 @@ class DataFrameCache(object):
         for row in list_of_rows:
             self.row_deque.append(row)
             self.time_deque.append(time.time())
-        # Update the data structure
-        self.update()
 
     def dataframe(self):
         """Return a DataFrame with the current window of data
            Note: Only call this when you want the dataframe to be reconstructed"""
         self.update()
         return pd.DataFrame(list(self.row_deque))
+
+    def get_deque(self):
+        """Access the Deque directly (with ensured update before)"""
+        self.update()
+        return self.row_deque
 
     def update(self):
         """Update the deque, removing rows based on time"""
