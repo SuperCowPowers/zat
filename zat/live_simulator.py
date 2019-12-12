@@ -25,7 +25,7 @@ class LiveSimulator(object):
                       replaying rows at the specified EPS and changing timestamps to 'now()'
     """
 
-    def __init__(self, filepath, eps=10, max_rows=None):
+    def __init__(self, filepath, eps=10, max_rows=None, only_once=False):
         """Initialization for the LiveSimulator Class
            Args:
                eps (int): Events Per Second that the simulator will emit events (default = 10)
@@ -42,8 +42,9 @@ class LiveSimulator(object):
         # Initialize the Zeek log reader
         self.log_reader = bro_log_reader.BroLogReader(filepath, tail=False)
 
-        # Store max_rows
+        # Store max_rows and only_once flag
         self.max_rows = max_rows
+        self.only_once = only_once
 
     def rows(self):
         """Using the BroLogReader this method generates (yields) each row of the log file
@@ -65,6 +66,10 @@ class LiveSimulator(object):
                 # Check for max_rows
                 if self.max_rows and (num_rows >= self.max_rows):
                     return
+
+            # Check for only_once
+            if self.only_once:
+                return
 
     @staticmethod
     def replace_timestamp(row):
