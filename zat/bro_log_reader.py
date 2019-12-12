@@ -33,7 +33,7 @@ class BroLogReader(file_tailer.FileTailer):
 
         # First check if the file exists and is readable
         if not os.access(filepath, os.R_OK):
-            raise IOError('Could not read/access bro log file: {:s}'.format(filepath))
+            raise IOError('Could not read/access zeek log file: {:s}'.format(filepath))
 
         # Setup some class instance vars
         self._filepath = filepath
