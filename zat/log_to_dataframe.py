@@ -37,32 +37,42 @@ class LogToDataFrame(object):
                          'port': 'UInt16'
                          }
 
+    def _get_field_info(self, log_filename):
+        """Internal Method: Use ZAT log reader to read header for names and types"""
+        _bro_reader = bro_log_reader.BroLogReader(log_filename)
+        _, field_names, field_types, _ = _bro_reader._parse_bro_header(log_filename)
+        return field_names, field_types
+
+    def _create_initial_df(self, log_filename, all_fields, usecols, dtypes):
+        """Internal Method: Create the initial dataframes by using Pandas read CSV (primary types correct)"""
+        return pd.read_csv(log_filename, sep='\t', names=all_fields, usecols=usecols, dtype=dtypes, comment="#", na_values='-')
+
     def create_dataframe(self, log_filename, ts_index=True, aggressive_category=True, usecols=None):
         """ Create a Pandas dataframe from a Bro/Zeek log file
             Args:
                log_fllename (string): The full path to the Zeek log
                ts_index (bool): Set the index to the 'ts' field (default = True)
                aggressive_category (bool): convert unknown columns to category (default = True)
+               usecol (list): A subset of columns to read in (minimizes memory usage) (default = None)
         """
 
-        # Create a Zeek log reader just to read in the header for names and types
-        _bro_reader = bro_log_reader.BroLogReader(log_filename)
-        _, field_names, field_types, _ = _bro_reader._parse_bro_header(log_filename)
-        header_names = field_names
+        # Grab the field information
+        field_names, field_types = self._get_field_info(log_filename)
+        all_fields = field_names  # We need ALL the fields for later
 
         # If usecols is set then we'll subset the fields and types
         if usecols:
             # Usecols needs to include ts
             if 'ts' not in usecols:
                 usecols.append('ts')
-            field_types = [t for t,field in zip(field_types, field_names) if field in usecols]
+            field_types = [t for t, field in zip(field_types, field_names) if field in usecols]
             field_names = [field for field in field_names if field in usecols]
 
         # Get the appropriate types for the Pandas Dataframe
         pandas_types = self.pd_column_types(field_names, field_types, aggressive_category)
 
-        # Now actually read the Zeek Log using Pandas read CSV
-        self._df = pd.read_csv(log_filename, sep='\t', names=header_names, usecols=usecols, dtype=pandas_types, comment="#", na_values='-')
+        # Now actually read in the initial dataframe
+        self._df = self._create_initial_df(log_filename, all_fields, usecols, pandas_types)
 
         # Now we convert 'time' and 'interval' fields to datetime and timedelta respectively
         for name, bro_type in zip(field_names, field_types):
@@ -141,8 +151,9 @@ def test():
 
     # Test out usecols arg
     conn_path = os.path.join(data_path, 'conn.log')
-    my_df = log_to_df.create_dataframe(conn_path, usecols=['id.orig_h', 'id.orig_p', 'id.resp_h', 'id.resp_p', 'proto', 'orig_bytes', 'resp_bytes'])
-    
+    my_df = log_to_df.create_dataframe(conn_path, usecols=['id.orig_h', 'id.orig_p', 'id.resp_h', 'id.resp_p',
+                                                           'proto', 'orig_bytes', 'resp_bytes'])
+
     # Test an empty log (a log with header/close but no data rows)
     log_path = os.path.join(data_path, 'http_empty.log')
     my_df = log_to_df.create_dataframe(log_path)
