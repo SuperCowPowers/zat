@@ -87,8 +87,9 @@ class GeoLookup(object):
         if self.summary:
             del output['location']
 
-        # Pull results in Cache
+        # Put results in Cache
         self.query_cache.set(ip_address, output)
+        self.query_cache.persist()
 
         # Return results
         return output
