@@ -45,8 +45,8 @@ class LiveSimulator(object):
         # Store max_rows
         self.max_rows = max_rows
 
-    def readrows(self):
-        """Using the BroLogReader this method yields each row of the log file
+    def rows(self):
+        """Using the BroLogReader this method generates (yields) each row of the log file
            replacing timestamps, looping and emitting rows based on EPS rate
         """
 
@@ -83,8 +83,8 @@ def test():
     print('Opening Data File: {:s}'.format(test_path))
 
     # Create a LiveSimulator reader
-    reader = LiveSimulator(test_path, max_rows=10)
-    for line in reader.readrows():
+    data_stream = LiveSimulator(test_path, max_rows=10)
+    for line in data_stream.rows():
         print(line)
     print('Read with max_rows Test successful!')
 
