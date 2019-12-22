@@ -60,6 +60,8 @@ class DataFrameToMatrix(object):
             _internal_df[column].fillna(self.nan_replace, inplace=True)
 
         # Drop any columns that aren't numeric or categorical
+        for column in list(_internal_df.select_dtypes(exclude=['number', 'category']).columns):
+            print('Dropping {:s} column...'.format(column))
         _internal_df = _internal_df.select_dtypes(include=['number', 'category'])
 
         # Capture all the column/dtype information from the dataframe
@@ -128,7 +130,7 @@ class DataFrameToMatrix(object):
         for column in df.select_dtypes(include='object').columns:
 
             # If we don't have too many unique values convert the column
-            if df[column].nunique() < 20:
+            if df[column].nunique() < 100:
                 print('Changing column {:s} to category...'.format(column))
                 df[column] = pd.Categorical(df[column])
 
@@ -155,7 +157,7 @@ class DataFrameToMatrix(object):
             # Give warning on category types will LOTs of values
             num_unique = df[column].nunique()
             if num_unique > 20:
-                print('WARNING: {:s} will expand into {:d} dimensions! Should not include in feature set!'.format(column, num_unique))
+                print('WARNING: {:s} will expand into {:d} dimensions...'.format(column, num_unique))
 
     def normalize_numeric(self, df):
         """Normalize (mean normalize) the numeric columns in the dataframe
