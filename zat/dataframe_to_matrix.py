@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 
 
-class DataFrameToMatrix(object):
+class DataFrameToMatrix():
     """DataFrameToMatrix: Class that converts a DataFrame to a Numpy Matrix (ndarray)
         Notes:
             fit_transform: Does a fit and a transform and returns the transformed matrix
@@ -143,7 +143,7 @@ class DataFrameToMatrix(object):
             None but note that the dataframe is modified to 'lock' the categorical columns
         """
         for column in df.select_dtypes(include='category').columns:
-            df[column] = pd.Categorical(df[column], categories=df[column].unique())
+            df[column] = pd.Categorical(df[column], categories=sorted(df[column].unique().tolist()))
 
     @staticmethod
     def sanity_check_categorical(df):
@@ -302,7 +302,7 @@ def test():
     cluster_groups = test_df.groupby('cluster')
 
     # Now print out the details for each cluster
-    for key, group in cluster_groups:
+    for _key, group in cluster_groups:
         print('Rows in Cluster: {:d}'.format(len(group)))
         print(group.head(), '\n')
     del test_df['cluster']
@@ -318,9 +318,27 @@ def test():
     cluster_groups = test_df2.groupby('cluster')
 
     # Now print out the details for each cluster
-    for key, group in cluster_groups:
+    for _key, group in cluster_groups:
         print('Rows in Cluster: {:d}'.format(len(group)))
         print(group.head(), '\n')
+
+    # Test a corner case (submitted via GitHub)
+    cat_df = pd.DataFrame({'a': ['a', 'b', 'c'], 'b': ['v', 'c', 'a']})
+    cat_df = cat_df.astype('category')
+    copy_cat_df = cat_df.copy()
+    print('FIT-TRANSFORM')
+    to_matrix = DataFrameToMatrix()
+    matrix = to_matrix.fit_transform(cat_df)
+    print(matrix)
+    print('TRANSFORM')
+    matrix_test = to_matrix.transform(cat_df)
+    print(matrix_test)
+
+    # These two matrices should be the same
+    np_test_utils.assert_equal(matrix, matrix_test)
+
+    # Assert that the dataframe we passed in didn't change
+    copy_cat_df.equals(cat_df)
 
 
 if __name__ == "__main__":
