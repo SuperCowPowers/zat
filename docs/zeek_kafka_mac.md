@@ -1,5 +1,5 @@
 ## Zeek with Kafka Plugin Notes
-**Disclaimer:** These are simply my notes that I've captured after getting Bro/Kafka Plugin setup on my Mac. Your mileage may vary.
+**Disclaimer:** These are simply my notes that I've captured after getting Zeek/Kafka Plugin setup on my Mac. Your mileage may vary.
 
 **Context:**
 In general the process of getting the Kafka Plugin working on my Mac laptop was a bit tricky. One could certainly argue that setting up Zeek on your Mac Laptop is a bad idea to begin with, which might be true, but I like to use my laptop as a 'workbench' to experiment with stuff.
@@ -7,7 +7,7 @@ In general the process of getting the Kafka Plugin working on my Mac laptop was 
 **Useful Links:**
 
 - Zeek Network Monitor: <https://www.zeek.org>
-- Kafka Zeek Plugin: <https://github.com/apache/metron-bro-plugin-kafka>
+- Kafka Zeek Plugin: <https://github.com/apache/metron-zeek-plugin-kafka>
 - Kafka: <https://kafka.apache.org>
 - Spark: <https://spark.apache.org>
 
@@ -19,8 +19,8 @@ In general the process of getting the Kafka Plugin working on my Mac laptop was 
 
 ### Kafka Plugin Install
 
-- Using ```zkg``` to install and download the Kafka package never worked for me (see <https://github.com/apache/metron-bro-plugin-kafka>). The tests would fail (without any information) and the plugin would never install.
-- So I installed the Kafka Plugin from source (instructions here: <https://github.com/apache/metron-bro-plugin-kafka>)
+- Using ```zkg``` to install and download the Kafka package never worked for me (see <https://github.com/apache/metron-zeek-plugin-kafka>). The tests would fail (without any information) and the plugin would never install.
+- So I installed the Kafka Plugin from source (instructions here: <https://github.com/apache/metron-zeek-plugin-kafka>)
 - The from source installation went fine but I needed to change how the package was referenced when doing the ```@load``` command from my ```local.zeek``` file (see below).
 
 ### Slightly different @load command
@@ -31,7 +31,7 @@ I needed to put a different load command when 'activating' the Kafka plugin in m
 redef Kafka::topic_name = "";
 redef Kafka::send_all_active_logs = T;
 redef Kafka::kafka_conf = table(
-    ["metadata.broker.list"] = "localhost:9092"
+    ["metadata.zeekker.list"] = "localhost:9092"
 );
 ```
 - The first line took me a while to figure out
@@ -39,7 +39,7 @@ redef Kafka::kafka_conf = table(
 
   By putting in a blank topic name, all output topics are labeled with the name of their log file. For instance, stuff that goes to dns.log is mapped to the 'dns' Kafka topic, http.log to the 'http' topic, and so on. This was exactly what I wanted.
 
-There's a much deeper explanation of all the options here (<https://github.com/apache/metron-bro-plugin-kafka>)
+There's a much deeper explanation of all the options here (<https://github.com/apache/metron-zeek-plugin-kafka>)
 
 ### Kafka Install
 Thankfully installing Kafka on my Mac was super easy.

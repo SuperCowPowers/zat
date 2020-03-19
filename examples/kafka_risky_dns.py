@@ -6,7 +6,7 @@ from pprint import pprint
 import pickle
 import json
 from kafka import KafkaConsumer
-from kafka.errors import NoBrokersAvailable
+from kafka.errors import NoZeekkersAvailable
 
 # Third Party Imports
 try:
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     try:
         consumer = KafkaConsumer('dns', bootstrap_servers=[kserver],
                                  value_deserializer=lambda x: json.loads(x.decode('utf-8')))
-    except NoBrokersAvailable:
+    except NoZeekkersAvailable:
         print('Could not connect to Kafka server: {:s}'.format(args.server))
         sys.exit(-1)
 

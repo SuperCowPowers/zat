@@ -2,7 +2,7 @@
 
 import sys
 from kafka import KafkaProducer, KafkaConsumer
-from kafka.errors import NoBrokersAvailable
+from kafka.errors import NoZeekkersAvailable
 from collections import defaultdict
 import json
 from pprint import pprint
@@ -27,13 +27,13 @@ class KafkaRouter(object):
         try:
             self.input_pipe = KafkaConsumer(bootstrap_servers=input_servers, auto_offset_reset=offset,
                                            value_deserializer=lambda x: json.loads(x.decode('utf8')))
-        except NoBrokersAvailable:
+        except NoZeekkersAvailable:
             print('Could not connect to Kafka bootstrap servers: {:s}'.format(input_servers))
             sys.exit(-1)
         try:
             self.output_pipe = KafkaProducer(bootstrap_servers=output_servers,
                                              value_serializer=lambda x: json.dumps(x).encode('utf8'))            
-        except NoBrokersAvailable:
+        except NoZeekkersAvailable:
             print('Could not connect to Kafka bootstrap servers: {:s}'.format(output_servers))
             sys.exit(-1)
 
@@ -104,7 +104,7 @@ def disabled_test():
 
     def outgoing_info(message):
         ip = message['id.resp_h']
-        # Skip broad-cast, multi-cast
+        # Skip zeekad-cast, multi-cast
         if ip[:3] in ['255', '239', '224']:
             return None
 

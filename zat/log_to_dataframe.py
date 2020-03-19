@@ -5,7 +5,7 @@ from __future__ import print_function
 import pandas as pd
 
 # Local
-from zat import bro_log_reader
+from zat import zeek_log_reader
 
 
 class LogToDataFrame(object):
@@ -39,8 +39,8 @@ class LogToDataFrame(object):
 
     def _get_field_info(self, log_filename):
         """Internal Method: Use ZAT log reader to read header for names and types"""
-        _bro_reader = bro_log_reader.BroLogReader(log_filename)
-        _, field_names, field_types, _ = _bro_reader._parse_bro_header(log_filename)
+        _zeek_reader = zeek_log_reader.ZeekLogReader(log_filename)
+        _, field_names, field_types, _ = _zeek_reader._parse_zeek_header(log_filename)
         return field_names, field_types
 
     def _create_initial_df(self, log_filename, all_fields, usecols, dtypes):
@@ -48,7 +48,7 @@ class LogToDataFrame(object):
         return pd.read_csv(log_filename, sep='\t', names=all_fields, usecols=usecols, dtype=dtypes, comment="#", na_values='-')
 
     def create_dataframe(self, log_filename, ts_index=True, aggressive_category=True, usecols=None):
-        """ Create a Pandas dataframe from a Bro/Zeek log file
+        """ Create a Pandas dataframe from a Zeek/Zeek log file
             Args:
                log_fllename (string): The full path to the Zeek log
                ts_index (bool): Set the index to the 'ts' field (default = True)
@@ -75,10 +75,10 @@ class LogToDataFrame(object):
         self._df = self._create_initial_df(log_filename, all_fields, usecols, pandas_types)
 
         # Now we convert 'time' and 'interval' fields to datetime and timedelta respectively
-        for name, bro_type in zip(field_names, field_types):
-            if bro_type == 'time':
+        for name, zeek_type in zip(field_names, field_types):
+            if zeek_type == 'time':
                 self._df[name] = pd.to_datetime(self._df[name], unit='s')
-            if bro_type == 'interval':
+            if zeek_type == 'interval':
                 self._df[name] = pd.to_timedelta(self._df[name], unit='s')
 
         # Set the index
@@ -96,10 +96,10 @@ class LogToDataFrame(object):
         unknown_type = 'category' if aggressive_category else 'object'
 
         pandas_types = {}
-        for name, bro_type in zip(column_names, column_types):
+        for name, zeek_type in zip(column_names, column_types):
 
             # Grab the type
-            item_type = self.type_map.get(bro_type)
+            item_type = self.type_map.get(zeek_type)
 
             # Sanity Check
             if not item_type:
@@ -108,7 +108,7 @@ class LogToDataFrame(object):
                     item_type = 'object'
                 else:
                     if verbose:
-                        print('Could not find type for {:s} using {:s}...'.format(bro_type, unknown_type))
+                        print('Could not find type for {:s} using {:s}...'.format(zeek_type, unknown_type))
                     item_type = unknown_type
 
             # Set the pandas type

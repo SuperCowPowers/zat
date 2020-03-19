@@ -7,13 +7,13 @@ import re
 from collections import Counter
 
 # Local imports
-from zat import bro_log_reader
+from zat import zeek_log_reader
 
 if __name__ == '__main__':
     # Example to check for potential Tor connections and give a summary of different ports
     # used for SSL connections. Please note that your Zeek installation must stamp the
     # ssl.log file with the 'issuer' field. More info can be found here:
-    # https://www.bro.org/sphinx/scripts/base/protocols/ssl/main.bro.html#type-SSL::Info
+    # https://www.zeek.org/sphinx/scripts/base/protocols/ssl/main.zeek.html#type-SSL::Info
 
     # Set up the regex search that is used against the issuer field
     issuer_regex = re.compile('CN=www.\w+.com')
@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('bro_log', type=str, help='Specify a bro log to run BroLogReader test on')
+    parser.add_argument('zeek_log', type=str, help='Specify a zeek log to run ZeekLogReader test on')
     parser.add_argument('-t', action='store_true', default=False, help='Sets the program to tail a live Zeek log')
     args, commands = parser.parse_known_args()
 
@@ -33,16 +33,16 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # Sanity check that this is a ssl log
-    if 'ssl' not in args.bro_log:
+    if 'ssl' not in args.zeek_log:
         print('This example only works with Zeek ssl.log files..')
         sys.exit(1)
 
     # File may have a tilde in it
-    if args.bro_log:
-        args.bro_log = os.path.expanduser(args.bro_log)
+    if args.zeek_log:
+        args.zeek_log = os.path.expanduser(args.zeek_log)
 
-        # Run the bro reader on the ssl.log file looking for potential Tor connections
-        reader = bro_log_reader.BroLogReader(args.bro_log, tail=args.t)
+        # Run the zeek reader on the ssl.log file looking for potential Tor connections
+        reader = zeek_log_reader.ZeekLogReader(args.zeek_log, tail=args.t)
         # Just a counter to keep an eye on how many possible Tor connections we identify
         number = 0
         # A empty list to use for the port statistics

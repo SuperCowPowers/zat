@@ -390,13 +390,13 @@ rule SWORD_APT1 {
 }
 
 
-rule thequickbrow_APT1 {
+rule thequickzeekw_APT1 {
     meta:
         author = "AlienVault Labs"
         info = "CommentCrew-threat-apt1"
 
         strings:
-                $s1 = "thequickbrownfxjmpsvalzydg" wide ascii
+                $s1 = "thequickzeekwnfxjmpsvalzydg" wide ascii
 
 
         condition:
@@ -709,7 +709,7 @@ rule APT1_LIGHTBOLT
     strings:
         $str1 = "bits.exe" wide ascii
         $str2 = "PDFBROW" wide ascii
-        $str3 = "Browser.exe" wide ascii
+        $str3 = "Zeekwser.exe" wide ascii
         $str4 = "Protect!" wide ascii
     condition:
         2 of them

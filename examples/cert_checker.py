@@ -6,7 +6,7 @@ import argparse
 from pprint import pprint
 
 # Local imports
-from zat import bro_log_reader
+from zat import zat_log_reader
 from zat.utils import vt_query
 
 if __name__ == '__main__':
@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('bro_log', type=str, help='Specify a bro log to run BroLogReader test on')
+    parser.add_argument('zat_log', type=str, help='Specify a Zeek log to run ZeekLogReader test on')
     args, commands = parser.parse_known_args()
 
     # Check for unknown args
@@ -23,13 +23,13 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # Sanity check that this is a dns log
-    if 'x509' not in args.bro_log:
+    if 'x509' not in args.zeek_log:
         print('This example only works with Zeek x509.log files..')
         sys.exit(1)
 
     # File may have a tilde in it
-    if args.bro_log:
-        args.bro_log = os.path.expanduser(args.bro_log)
+    if args.zeek_log:
+        args.zeek_log = os.path.expanduser(args.zeek_log)
 
         # Create a VirusTotal Query Class
         vtq = vt_query.VTQuery()
@@ -37,8 +37,8 @@ if __name__ == '__main__':
         # These domains may be spoofed with a certificate issued by 'Let's Encrypt'
         spoofed_domains = set(['paypal', 'gmail', 'google', 'apple','ebay', 'amazon'])
 
-        # Run the bro reader on the x509.log file looking for spoofed domains
-        reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)
+        # Run the Zeek reader on the x509.log file looking for spoofed domains
+        reader = zeek_log_reader.ZeekLogReader(args.zeek_log, tail=True)
         for row in reader.readrows():
 
             # Pull out the Certificate Issuer

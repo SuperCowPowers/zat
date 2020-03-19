@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('bro_log', type=str, help='Specify a bro log to run BroLogReader test on')
+    parser.add_argument('zeek_log', type=str, help='Specify a zeek log to run ZeekLogReader test on')
     args, commands = parser.parse_known_args()
 
     # Check for unknown args
@@ -37,14 +37,14 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # File may have a tilde in it
-    if args.bro_log:
-        args.bro_log = os.path.expanduser(args.bro_log)
+    if args.zeek_log:
+        args.zeek_log = os.path.expanduser(args.zeek_log)
 
         # Sanity check either http or dns log
-        if 'http' in args.bro_log:
+        if 'http' in args.zeek_log:
             log_type = 'http'
             features = ['id.resp_p', 'method', 'resp_mime_types', 'request_body_len']
-        elif 'dns' in args.bro_log:
+        elif 'dns' in args.zeek_log:
             log_type = 'dns'
             features = ['Z', 'proto', 'qtype_name', 'query_length', 'answer_length', 'entropy']
         else:
@@ -54,34 +54,34 @@ if __name__ == '__main__':
         # Create a Pandas dataframe from a Zeek log
         try:
             log_to_df = log_to_dataframe.LogToDataFrame()
-            bro_df = log_to_df.create_dataframe(args.bro_log)
-            print(bro_df.head())
+            zeek_df = log_to_df.create_dataframe(args.zeek_log)
+            print(zeek_df.head())
         except IOError:
-            print('Could not open or parse the specified logfile: %s' % args.bro_log)
+            print('Could not open or parse the specified logfile: %s' % args.zeek_log)
             sys.exit(1)
-        print('Read in {:d} Rows...'.format(len(bro_df)))
+        print('Read in {:d} Rows...'.format(len(zeek_df)))
 
         # Using Pandas we can easily and efficiently compute additional data metrics
         # Here we use the vectorized operations of Pandas/Numpy to compute query length
         # We'll also compute entropy of the query
         if log_type == 'dns':
-            bro_df['query_length'] = bro_df['query'].str.len()
-            bro_df['answer_length'] = bro_df['answers'].str.len()
-            bro_df['entropy'] = bro_df['query'].map(lambda x: entropy(x))
+            zeek_df['query_length'] = zeek_df['query'].str.len()
+            zeek_df['answer_length'] = zeek_df['answers'].str.len()
+            zeek_df['entropy'] = zeek_df['query'].map(lambda x: entropy(x))
 
         # Use the zat DataframeToMatrix class
         to_matrix = dataframe_to_matrix.DataFrameToMatrix()
-        bro_matrix = to_matrix.fit_transform(bro_df[features])
-        print(bro_matrix.shape)
+        zeek_matrix = to_matrix.fit_transform(zeek_df[features])
+        print(zeek_matrix.shape)
 
         # Train/fit and Predict anomalous instances using the Isolation Forest model
         odd_clf = IsolationForest(contamination=0.2)  # Marking 20% as odd
-        odd_clf.fit(bro_matrix)
+        odd_clf.fit(zeek_matrix)
 
         # Now we create a new dataframe using the prediction from our classifier
-        predictions = odd_clf.predict(bro_matrix)
-        odd_df = bro_df[features][predictions == -1]
-        display_df = bro_df[predictions == -1]
+        predictions = odd_clf.predict(zeek_matrix)
+        odd_df = zeek_df[features][predictions == -1]
+        display_df = zeek_df[predictions == -1]
 
         # Now we're going to explore our odd observations with help from KMeans
         odd_matrix = to_matrix.fit_transform(odd_df)

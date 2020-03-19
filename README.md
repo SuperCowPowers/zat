@@ -13,9 +13,9 @@ with Pandas, scikit-learn, and Spark
 - Updated/improved Notebooks: [Analysis Notebooks](#analysis-notebooks)
 
 
-### BroCon 2017 Presentation
+### ZeekCon 2017 Presentation
 
-Data Analysis, Machine Learning, Bro, and You!
+Data Analysis, Machine Learning, Zeek, and You!
 ([Video](https://www.youtube.com/watch?v=pG5lU9CLnIU))
 
 ### Why ZAT?

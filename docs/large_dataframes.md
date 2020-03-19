@@ -8,14 +8,14 @@ df = log_to_df.create_dataframe(conn, usecols=['id.orig_h', 'id.orig_p', 'id.res
 ```
 
 ## Details on recent testing and changes
-We have several outstanding issues for needed improvements to support the ingestion and processing of large Bro/Zeek log files.
+We have several outstanding issues for needed improvements to support the ingestion and processing of large Zeek/Zeek log files.
 
 - <https://github.com/SuperCowPowers/zat/issues/23>
 - <https://github.com/SuperCowPowers/zat/issues/71>
 
 There's also a PR from <https://github.com/bhklimk> with some good suggestions.
 
-Big thanks to Benjamin Klimkowski <https://github.com/bhklimk>. The ideas/suggestions that Ben gave in [PR 75](https://github.com/SuperCowPowers/zat/pull/75) were well received. The PR itself had some issues with 'cruft' and other details but the core concepts were solid, so we borrowed those and made a new PR that is more aligned with the existing implementation. Thanks again to Ben for helping us improve the performance on large Bro/Zeek files.
+Big thanks to Benjamin Klimkowski <https://github.com/bhklimk>. The ideas/suggestions that Ben gave in [PR 75](https://github.com/SuperCowPowers/zat/pull/75) were well received. The PR itself had some issues with 'cruft' and other details but the core concepts were solid, so we borrowed those and made a new PR that is more aligned with the existing implementation. Thanks again to Ben for helping us improve the performance on large Zeek/Zeek files.
 
 **Test Data:**
 Since conn.log is typically the most voluminous, we're going to use this 2.5 Gig conn.long file for our performance testing.
@@ -23,10 +23,10 @@ Since conn.log is typically the most voluminous, we're going to use this 2.5 Gig
 - <https://data.kitware.com/#item/58ebde398d777f16d095fd0e>
 
 **Test Script:**
-We're simply going to use the [bro\_to\_pandas.py](https://github.com/SuperCowPowers/zat/blob/master/examples/bro_to_pandas.py) in the examples directory for testing. We'll be using Python 3.7.
+We're simply going to use the [zeek\_to\_pandas.py](https://github.com/SuperCowPowers/zat/blob/master/examples/zeek_to_pandas.py) in the examples directory for testing. We'll be using Python 3.7.
 
 ```
-$ time python bro_to_pandas.py ~/data/bro/conn.log 
+$ time python zeek_to_pandas.py ~/data/zeek/conn.log 
 ```
 
 **Baseline:**
@@ -83,8 +83,8 @@ After Benjamin Klimkowski <https://github.com/bhklimk> and I both did some testi
 **Baseline**
 
 ```
-(py37)$ time python bro_to_pandas.py ~/data/bro/conn.log 
-Successfully monitoring /Users/briford/data/bro/conn.log...
+(py37)$ time python zeek_to_pandas.py ~/data/zeek/conn.log 
+Successfully monitoring /Users/briford/data/zeek/conn.log...
 
 [5 rows x 19 columns]
 uid                        object
@@ -139,7 +139,7 @@ sys	    1m10.313s
 **bhklimk PR**
 
 ```
-(bhklimk-fix_for_issue_71)$ time python bro_to_pandas.py ~/data/bro/conn.log 
+(bhklimk-fix_for_issue_71)$ time python zeek_to_pandas.py ~/data/zeek/conn.log 
 DF Shape: (22694356, 20)
 DF Memory:
 	 Index:           0.00 MB
@@ -269,7 +269,7 @@ sys	   0m6.031s
 **PR 76 (with chunking)**
 
 ```
-$ time python bro_to_pandas.py /Users/briford/data/bro/conn.log 
+$ time python zeek_to_pandas.py /Users/briford/data/zeek/conn.log 
 
 uid                        object
 id.orig_h                  object

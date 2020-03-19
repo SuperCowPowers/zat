@@ -1,5 +1,5 @@
 """LiveSimulator: This class reads in various Zeek logs. The class utilizes
-                 the BroLogReader and simply loops over the static bro log
+                 the ZeekLogReader and simply loops over the static zeek log
                  file, replaying rows and changing any time stamps
         Args:
             eps (int): Events Per Second that the simulator will emit events (default = 10)
@@ -15,13 +15,13 @@ import itertools
 import numpy as np
 
 # Local Imports
-from zat import bro_log_reader
+from zat import zeek_log_reader
 from zat.utils import file_utils
 
 
 class LiveSimulator(object):
     """LiveSimulator: This class reads in various Zeek logs. The class utilizes the
-                      BroLogReader and simply loops over the static bro log file
+                      ZeekLogReader and simply loops over the static zeek log file
                       replaying rows at the specified EPS and changing timestamps to 'now()'
     """
 
@@ -40,14 +40,14 @@ class LiveSimulator(object):
         self.eps_timer = itertools.cycle([max(0, delta) for delta in np.random.normal(1.0/float(eps), .5/float(eps), size=1000)])
 
         # Initialize the Zeek log reader
-        self.log_reader = bro_log_reader.BroLogReader(filepath, tail=False)
+        self.log_reader = zeek_log_reader.ZeekLogReader(filepath, tail=False)
 
         # Store max_rows and only_once flag
         self.max_rows = max_rows
         self.only_once = only_once
 
     def rows(self):
-        """Using the BroLogReader this method generates (yields) each row of the log file
+        """Using the ZeekLogReader this method generates (yields) each row of the log file
            replacing timestamps, looping and emitting rows based on EPS rate
         """
 
