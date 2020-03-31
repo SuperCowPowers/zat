@@ -47,8 +47,8 @@ if __name__ == '__main__':
 
                 # Check if the certificate subject has any spoofed domains
                 subject = row['certificate.subject']
-                domain = subject[3:] # Just chopping off the 'CN=' part
-                if any([domain in subject for domain in spoofed_domains]):
+                domains = subject[3:] # Just chopping off the 'CN=' part
+                if any([domain in domains for domain in spoofed_domains]):
                     print('\n<<< Suspicious Certificate Found >>>')
                     pprint(row)
 
