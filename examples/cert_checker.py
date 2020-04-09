@@ -6,7 +6,7 @@ import argparse
 from pprint import pprint
 
 # Local imports
-from zat import zat_log_reader
+from zat import zeek_log_reader
 from zat.utils import vt_query
 
 if __name__ == '__main__':
@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('zat_log', type=str, help='Specify a Zeek log to run ZeekLogReader test on')
+    parser.add_argument('zeek_log', type=str, help='Specify a Zeek log to run ZeekLogReader test on')
     args, commands = parser.parse_known_args()
 
     # Check for unknown args
