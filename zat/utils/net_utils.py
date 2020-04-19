@@ -3,6 +3,7 @@ from __future__ import print_function
 
 import socket
 import binascii
+import ipaddress
 
 
 def mac_to_str(address):
@@ -60,12 +61,8 @@ def str_to_inet(address):
 
 
 def is_internal(ip_address):
-    """Determine if the address is an internal ip address
-       Note: This is super bad, improve it
-    """
-    # Local networks 10.0.0.0/8, 172.16.0.0/12, '192.168.0.0/16
-    local_nets = '10.', '172.16.', '192.168.', '169.254', 'fd', 'fe80::'
-    return any([ip_address.startswith(local) for local in local_nets])
+    """Determine if the address is an internal ip address"""
+    return ipaddress.ip_address(ip_address).is_private
 
 
 def is_special(ip_address):
@@ -77,15 +74,42 @@ def is_special(ip_address):
     return special[ip_address] if ip_address in special else False
 
 
+def traffic_direction(conn_row):
+    """Determine the direction of the connection traffic (takes a conn.log row)"""
+
+    # First try to use the local orig/resp fields
+    if conn_row.get('local_orig') and conn_row.get('local_resp'):
+        local_orig = conn_row['local_orig']
+        local_resp = conn_row['local_resp']
+    else:
+        # Well we don't have local orig/resp fields so use RFC1918 logic
+        local_orig = ipaddress.ip_address(conn_row['id.orig_h']).is_private
+        local_resp = ipaddress.ip_address(conn_row['id.resp_h']).is_private
+
+    # Determine north/south or internal traffic
+    if (not local_orig) and local_resp:
+        return 'incoming'
+    if local_orig and not local_resp:
+        return 'outgoing'
+
+    # Neither host is in the allocated private ranges
+    if ipaddress.ip_address(conn_row['id.orig_h']).is_multicast or \
+       ipaddress.ip_address(conn_row['id.resp_h']).is_multicast:
+        return 'multicast'
+
+    # Both hosts are internal
+    return 'internal'
+
+
 def test_utils():
     """Test the utility methods"""
 
     print(mac_to_str(b'\x01\x02\x03\x04\x05\x06'))
     assert mac_to_str(b'\x01\x02\x03\x04\x05\x06') == '01:02:03:04:05:06'
     assert str_to_mac('01:02:03:04:05:06') == b'\x01\x02\x03\x04\x05\x06'
-    foo = b'\x01\x02\x03\x04\x05\x06'
-    bar = mac_to_str(foo)
-    assert str_to_mac(bar) == foo
+    my_mac = b'\x01\x02\x03\x04\x05\x06'
+    my_str = mac_to_str(my_mac)
+    assert str_to_mac(my_str) == my_mac
     print(inet_to_str(b'\x91\xfe\xa0\xed'))
     assert inet_to_str(b'\x91\xfe\xa0\xed') == '145.254.160.237'
     assert str_to_inet('145.254.160.237') == b'\x91\xfe\xa0\xed'
