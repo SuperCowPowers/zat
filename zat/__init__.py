@@ -1,3 +1,3 @@
 __author__ = 'Brian Wylie'
 __email__ = 'briford@supercowpowers.com'
-__version__ = '0.3.8'
+__version__ = '0.3.9'
