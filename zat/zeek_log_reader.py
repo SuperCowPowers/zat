@@ -1,4 +1,4 @@
-"""BroLogReader: This class reads in various Zeek logs. The class inherits from
+"""ZeekLogReader: This class reads in various Zeek logs. The class inherits from
                  the FileTailer class so it supports the following use cases:
                    - Read contents of a Zeek log file        (tail=False)
                    - Read contents + 'tail -f' Zeek log file (tail=True)
@@ -16,8 +16,8 @@ import datetime
 from zat.utils import file_tailer, file_utils
 
 
-class BroLogReader(file_tailer.FileTailer):
-    """BroLogReader: This class reads in various Zeek logs. The class inherits from
+class ZeekLogReader(file_tailer.FileTailer):
+    """ZeekLogReader: This class reads in various Zeek logs. The class inherits from
                      the FileTailer class so it supports the following use cases:
                        - Read contents of a Zeek log file        (tail=False)
                        - Read contents + 'tail -f' Zeek log file (tail=True)
@@ -29,7 +29,7 @@ class BroLogReader(file_tailer.FileTailer):
     """
 
     def __init__(self, filepath, delimiter='\t', tail=False, strict=False):
-        """Initialization for the BroLogReader Class"""
+        """Initialization for the ZeekLogReader Class"""
 
         # First check if the file exists and is readable
         if not os.access(filepath, os.R_OK):
@@ -60,7 +60,7 @@ class BroLogReader(file_tailer.FileTailer):
                             'string': '-', 'unknown:': '-'}
 
         # Initialize the Parent Class
-        super(BroLogReader, self).__init__(self._filepath, full_read=True, tail=self._tail)
+        super(ZeekLogReader, self).__init__(self._filepath, full_read=True, tail=self._tail)
 
     def readrows(self):
         """The readrows method reads in the header of the Zeek log and
@@ -100,7 +100,7 @@ class BroLogReader(file_tailer.FileTailer):
         """Internal method _readrows, see readrows() for description"""
 
         # Read in the Zeek Headers
-        offset, self.field_names, self.field_types, self.type_converters = self._parse_bro_header(self._filepath)
+        offset, self.field_names, self.field_types, self.type_converters = self._parse_zeek_header(self._filepath)
 
         # Use parent class to yield each row as a dictionary
         for line in self.readlines(offset=offset):
@@ -112,7 +112,7 @@ class BroLogReader(file_tailer.FileTailer):
             # Yield the line as a dict
             yield self.make_dict(line.strip().split(self._delimiter))
 
-    def _parse_bro_header(self, bro_log):
+    def _parse_zeek_header(self, zeek_log):
         """Parse the Zeek log header section.
 
             Format example:
@@ -126,18 +126,18 @@ class BroLogReader(file_tailer.FileTailer):
         """
 
         # Open the Zeek logfile
-        with open(bro_log, 'r') as bro_file:
+        with open(zeek_log, 'r') as zeek_file:
 
             # Skip until you find the #fields line
-            _line = bro_file.readline()
+            _line = zeek_file.readline()
             while not _line.startswith('#fields'):
-                _line = bro_file.readline()
+                _line = zeek_file.readline()
 
             # Read in the field names
             field_names = _line.strip().split(self._delimiter)[1:]
 
             # Read in the types
-            _line = bro_file.readline()
+            _line = zeek_file.readline()
             field_types = _line.strip().split(self._delimiter)[1:]
 
             # Setup the type converters
@@ -146,7 +146,7 @@ class BroLogReader(file_tailer.FileTailer):
                 type_converters.append(self.type_mapper.get(field_type, self.type_mapper['unknown']))
 
             # Keep the header offset
-            offset = bro_file.tell()
+            offset = zeek_file.tell()
 
         # Return the header info
         return offset, field_names, field_types, type_converters
@@ -170,7 +170,7 @@ class BroLogReader(file_tailer.FileTailer):
 
 
 def test():
-    """Test for BroLogReader Python Class"""
+    """Test for ZeekLogReader Python Class"""
     import pytest
 
     # Grab a test file
@@ -179,17 +179,17 @@ def test():
     # For each file, create the Class and test the reader
     files = ['app_stats.log', 'conn.log', 'dhcp.log', 'dns.log', 'files.log', 'ftp.log',
              'http.log', 'notice.log', 'smtp.log', 'ssl.log', 'weird.log', 'x509.log']
-    for bro_log in files:
-        test_path = os.path.join(data_path, bro_log)
+    for zeek_log in files:
+        test_path = os.path.join(data_path, zeek_log)
         print('Opening Data File: {:s}'.format(test_path))
-        reader = BroLogReader(test_path, tail=False)  # First with no tailing
+        reader = ZeekLogReader(test_path, tail=False)  # First with no tailing
         for line in reader.readrows():
             print(line)
     print('Read with NoTail Test successful!')
 
     # Test an empty log (a log with header/close but no data rows)
     test_path = os.path.join(data_path, 'http_empty.log')
-    reader = BroLogReader(test_path)
+    reader = ZeekLogReader(test_path)
     for line in reader.readrows():
         print(line)
 
@@ -200,14 +200,14 @@ def test():
 
     # Test invalid file path
     with pytest.raises(IOError):
-        BroLogReader('nowhere.log')
+        ZeekLogReader('nowhere.log')
 
     # Now include tailing (note: as an automated test this needs to timeout quickly)
     try:
         from interruptingcow import timeout
 
         # Spin up the class
-        tailer = BroLogReader(test_path, tail=True)
+        tailer = ZeekLogReader(test_path, tail=True)
 
         # Tail the file for 2 seconds and then quit
         try:
