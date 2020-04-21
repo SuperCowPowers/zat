@@ -6,7 +6,7 @@ from pyspark.sql.types import StructType, StringType, IntegerType, FloatType, Lo
 from pyspark.sql.functions import col, when
 
 # Local
-from zat import bro_log_reader
+from zat import zeek_log_reader
 
 
 class LogToSparkDF(object):
@@ -44,8 +44,8 @@ class LogToSparkDF(object):
         """
 
         # Create a Zeek log reader just to read in the header for names and types
-        _bro_reader = bro_log_reader.BroLogReader(log_filename)
-        _, field_names, field_types, _ = _bro_reader._parse_bro_header(log_filename)
+        _zeek_reader = zeek_log_reader.ZeekLogReader(log_filename)
+        _, field_names, field_types, _ = _zeek_reader._parse_zeek_header(log_filename)
 
         # Get the appropriate types for the Spark Dataframe
         spark_schema = self.build_spark_schema(field_names, field_types)
@@ -93,15 +93,15 @@ class LogToSparkDF(object):
         unknown_type = StringType()
 
         schema = StructType()
-        for name, bro_type in zip(column_names, column_types):
+        for name, zeek_type in zip(column_names, column_types):
 
             # Grab the type
-            spark_type = self.type_map.get(bro_type)
+            spark_type = self.type_map.get(zeek_type)
 
             # Sanity Check
             if not spark_type:
                 if verbose:
-                    print('Could not find type for {:s} using StringType...'.format(bro_type))
+                    print('Could not find type for {:s} using StringType...'.format(zeek_type))
                 spark_type = unknown_type
 
             # Add the Spark type for this column
