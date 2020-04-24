@@ -1,7 +1,7 @@
 """Run a set of Yara Rule matches on Extracted Files
            Note: Download yara rules from their repo and give index file as arg
            $ git clone https://github.com/Yara-Rules/rules rules
-           $ python yara_matches -r /path/to/rules/index.yar -e /path/to/bro/extract_files
+           $ python yara_matches -r /path/to/rules/index.yar -e /path/to/zeek/extract_files
 """
 from __future__ import print_function
 import os
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     # Collect args from the command line
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--rule-index', type=str, required=True, help='Specify the yara rule index file (e.g. /full/path/to/yara/rules/index.yar)')
-    parser.add_argument('-e', '--extract-dir', type=str, required=True, help='Specify the Zeek extract_files directory (e.g. /full/path/to/bro/extract_files)')
+    parser.add_argument('-e', '--extract-dir', type=str, required=True, help='Specify the Zeek extract_files directory (e.g. /full/path/to/zeek/extract_files)')
     args, commands = parser.parse_known_args()
 
     # Check for unknown args
@@ -50,7 +50,7 @@ if __name__ == '__main__':
         parser.print_help()
         print('\nNote: Download the yara repo and give the index file as an arg')
         print('$ git clone https://github.com/Yara-Rules/rules')
-        print('$ python yara_matches -r /path/to/rules/index.yar -e /path/to/bro/extract_files')
+        print('$ python yara_matches -r /path/to/rules/index.yar -e /path/to/zeek/extract_files')
         sys.exit(1)
 
     # Sanity check that the args exist and are what we expect
@@ -58,7 +58,7 @@ if __name__ == '__main__':
         print('--rule-index file not found.. should be /full/path/to/yara/rules/index.yar')
         sys.exit(1)
     if not os.path.isdir(args.extract_dir):
-        print('--extract-dir directory not found.. should be /full/path/to/bro/extract_files')
+        print('--extract-dir directory not found.. should be /full/path/to/zeek/extract_files')
         sys.exit(1)
 
     # Load/compile the yara rules

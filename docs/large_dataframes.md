@@ -23,10 +23,10 @@ Since conn.log is typically the most voluminous, we're going to use this 2.5 Gig
 - <https://data.kitware.com/#item/58ebde398d777f16d095fd0e>
 
 **Test Script:**
-We're simply going to use the [bro\_to\_pandas.py](https://github.com/SuperCowPowers/zat/blob/master/examples/bro_to_pandas.py) in the examples directory for testing. We'll be using Python 3.7.
+We're simply going to use the [zeek\_to\_pandas.py](https://github.com/SuperCowPowers/zat/blob/master/examples/zeek_to_pandas.py) in the examples directory for testing. We'll be using Python 3.7.
 
 ```
-$ time python bro_to_pandas.py ~/data/bro/conn.log 
+$ time python zeek_to_pandas.py ~/data/bro/conn.log
 ```
 
 **Baseline:**
@@ -78,12 +78,12 @@ So every Stack Overflow answer about reading in large dataframes uses a chunking
 
 ## Final Decision:
 After Benjamin Klimkowski <https://github.com/bhklimk> and I both did some testing and discussion we've decided to use [PR 76](https://github.com/SuperCowPowers/zat/pull/76) (without 'chunking').
- 
+
 ## Detailed Test Output
 **Baseline**
 
 ```
-(py37)$ time python bro_to_pandas.py ~/data/bro/conn.log 
+(py37)$ time python zeek_to_pandas.py ~/data/bro/conn.log
 Successfully monitoring /Users/briford/data/bro/conn.log...
 
 [5 rows x 19 columns]
@@ -139,7 +139,7 @@ sys	    1m10.313s
 **bhklimk PR**
 
 ```
-(bhklimk-fix_for_issue_71)$ time python bro_to_pandas.py ~/data/bro/conn.log 
+(bhklimk-fix_for_issue_71)$ time python zeek_to_pandas.py ~/data/bro/conn.log
 DF Shape: (22694356, 20)
 DF Memory:
 	 Index:           0.00 MB
@@ -269,7 +269,7 @@ sys	   0m6.031s
 **PR 76 (with chunking)**
 
 ```
-$ time python bro_to_pandas.py /Users/briford/data/bro/conn.log 
+$ time python zeek_to_pandas.py /Users/briford/data/bro/conn.log
 
 uid                        object
 id.orig_h                  object
@@ -320,4 +320,3 @@ user	3m45.320s
 sys	0m6.254s
 
 ```
-
