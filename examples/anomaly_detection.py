@@ -81,7 +81,7 @@ if __name__ == '__main__':
         # Now we create a new dataframe using the prediction from our classifier
         predictions = odd_clf.predict(zeek_matrix)
         odd_df = zeek_df[features][predictions == -1]
-        display_df = zeek_df[predictions == -1]
+        display_df = zeek_df[predictions == -1].copy()
 
         # Now we're going to explore our odd observations with help from KMeans
         odd_matrix = to_matrix.fit_transform(odd_df)
