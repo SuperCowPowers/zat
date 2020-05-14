@@ -69,8 +69,8 @@ class LogToSparkDF(object):
 
         # Fill in NULL values
         if fillna:
-            _df = _df.na.fill(0)   # For numeric columns
-            _df = _df.na.fill('-') # For string columns
+            _df = _df.na.fill(0)    # For numeric columns
+            _df = _df.na.fill('-')  # For string columns
 
         # Convert timestamp and boolean columns
         for name, f_type in zip(field_names, field_types):
