@@ -1,4 +1,4 @@
-## Zeek Analysis Tools (ZAT) [![travis](https://travis-ci.org/SuperCowPowers/zat.svg?branch=master)](https://travis-ci.org/SuperCowPowers/zat) [![codecov.io](http://codecov.io/github/SuperCowPowers/zat/coverage.svg?branch=master)](http://codecov.io/github/SuperCowPowers/zat?branch=master) [![supported-versions](https://img.shields.io/pypi/pyversions/zat.svg)](https://pypi.python.org/pypi/zat) [![license](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://choosealicense.com/licenses/apache-2.0) 
+## Zeek Analysis Tools (ZAT) [![travis](https://travis-ci.org/SuperCowPowers/zat.svg?branch=master)](https://travis-ci.org/SuperCowPowers/zat) [![codecov.io](http://codecov.io/github/SuperCowPowers/zat/coverage.svg?branch=master)](http://codecov.io/github/SuperCowPowers/zat?branch=master) [![supported-versions](https://img.shields.io/pypi/pyversions/zat.svg)](https://pypi.python.org/pypi/zat) [![license](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://choosealicense.com/licenses/apache-2.0)
 
 The ZAT Python package supports the processing and analysis of Zeek data
 with Pandas, scikit-learn, and Spark
@@ -62,4 +62,3 @@ from here to there.
 
 ### About SuperCowPowers
 The company was formed so that its developers could follow their passion for Python, streaming data pipelines and having fun with data analysis. We also think cows are cool and should be superheros or at least carry around rayguns and burner phones. <a href="https://www.supercowpowers.com" target="_blank">Visit SuperCowPowers</a>
-

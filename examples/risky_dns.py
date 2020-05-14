@@ -14,7 +14,7 @@ except ImportError:
     sys.exit(1)
 
 # Local imports
-from zat import bro_log_reader
+from zat import zeek_log_reader
 from zat.utils import vt_query, signal_utils
 
 def save_vtq():
@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('bro_log', type=str, help='Specify a bro log to run BroLogReader test on')
+    parser.add_argument('zeek_log', type=str, help='Specify a zeek log to run ZeekLogReader test on')
     args, commands = parser.parse_known_args()
 
     # Check for unknown args
@@ -40,13 +40,13 @@ if __name__ == '__main__':
         sys.exit(1)
 
     # Sanity check that this is a dns log
-    if 'dns' not in args.bro_log:
+    if 'dns' not in args.zeek_log:
         print('This example only works with Zeek dns.log files..')
         sys.exit(1)
 
     # File may have a tilde in it
-    if args.bro_log:
-        args.bro_log = os.path.expanduser(args.bro_log)
+    if args.zeek_log:
+        args.zeek_log = os.path.expanduser(args.zeek_log)
 
         # See if we have a serialized VirusTotal Query Class.
         # If we do not have one we'll create a new one
@@ -64,8 +64,8 @@ if __name__ == '__main__':
         # Launch long lived process with signal catcher
         with signal_utils.signal_catcher(save_vtq):
 
-            # Run the bro reader on the dns.log file looking for risky TLDs
-            reader = bro_log_reader.BroLogReader(args.bro_log)
+            # Run the zeek reader on the dns.log file looking for risky TLDs
+            reader = zeek_log_reader.ZeekLogReader(args.zeek_log)
             for row in reader.readrows():
 
                 # Pull out the TLD

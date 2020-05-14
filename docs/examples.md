@@ -14,10 +14,10 @@ This documents shows a wide variety of ways to use the ZAT toolkit to process Ze
 ### Pull in Zeek Logs as Python Dictionaries
 
 ```python
-from zat import bro_log_reader
+from zat import zeek_log_reader
 ...
-    # Run the bro reader on a given log file
-    reader = bro_log_reader.BroLogReader('dhcp.log')
+    # Run the zeek reader on a given log file
+    reader = zeek_log_reader.ZeekLogReader('dhcp.log')
     for row in reader.readrows():
         pprint(row)
 ```
@@ -44,10 +44,10 @@ from zat.log_to_dataframe import LogToDataFrame
 ...
     # Create a Pandas dataframe from a Zeek log
     log_to_df = LogToDataFrame()
-    bro_df = log_to_df.create_dataframe('/path/to/dns.log')
+    zeek_df = log_to_df.create_dataframe('/path/to/dns.log')
 
     # Print out the head of the dataframe
-    print(bro_df.head())
+    print(zeek_df.head())
 ```
 
 **Output:** All the Zeek log data is in a Pandas DataFrame with proper
@@ -69,15 +69,15 @@ See zat/examples/zeek\_to\_scikit.py for full code listing, we've shortened the 
 ``` {.python}
 # Create a Pandas dataframe from a Zeek log
 log_to_df = LogToDataFrame()
-bro_df = log_to_df.create_dataframe('/path/to/dns.log')
+zeek_df = log_to_df.create_dataframe('/path/to/dns.log')
 
 # Use the DataframeToMatrix class (handles categorical data!)
 to_matrix = dataframe_to_matrix.DataFrameToMatrix()
-bro_matrix = to_matrix.fit_transform(bro_df)
+zeek_matrix = to_matrix.fit_transform(zeek_df)
 
 # Now we're ready for scikit-learn!
-kmeans = KMeans(n_clusters=5).fit_predict(bro_matrix)
-pca = PCA(n_components=2).fit_transform(bro_matrix)
+kmeans = KMeans(n_clusters=5).fit_predict(zeek_matrix)
+pca = PCA(n_components=2).fit_transform(zeek_matrix)
 ```
 
 **Example Output**
@@ -112,11 +112,11 @@ See zat/examples/file\_log\_vtquery.py for full code listing (code
 simplified below)
 
 ``` {.python}
-from zat import bro_log_reader
+from zat import zeek_log_reader
 from zat.utils import vt_query
 ...
-    # Run the bro reader on on the files.log output
-    reader = bro_log_reader.BroLogReader('files.log', tail=True) # This will dynamically monitor this Zeek log
+    # Run the zeek reader on on the files.log output
+    reader = zeek_log_reader.ZeekLogReader('files.log', tail=True) # This will dynamically monitor this Zeek log
     for row in reader.readrows():
 
         # Make the query with the file sha
@@ -155,11 +155,11 @@ simplified below)
 
 ``` {.python}
 from collections import Counter
-from zat import bro_log_reader
+from zat import zeek_log_reader
 ...
-    # Run the bro reader on a given log file counting up user agents
+    # Run the zeek reader on a given log file counting up user agents
     http_agents = Counter()
-    reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)
+    reader = zeek_log_reader.ZeekLogReader(args.zeek_log, tail=True)
     for count, row in enumerate(reader.readrows()):
         # Track count
         http_agents[row['user_agent']] += 1
@@ -219,8 +219,8 @@ def yara_match(file_path, rules):
 **Example Output:**
 
     Loading Yara Rules from ../zat/utils/yara_test/index.yar
-    Watching Extract Files Directory: /home/ubuntu/software/bro/extract_files
-    New Extracted File: /home/ubuntu/software/bro/extract_files/test.tmp
+    Watching Extract Files Directory: /home/ubuntu/software/zeek/extract_files
+    New Extracted File: /home/ubuntu/software/zeek/extract_files/test.tmp
     Mathes:
     [AURIGA_driver_APT1]
 
@@ -231,7 +231,7 @@ Domains](https://github.com/SuperCowPowers/zat/blob/master/notebooks/Risky_Domai
 listing (code simplified below)
 
 ``` {.python}
-from zat import bro_log_reader
+from zat import zeek_log_reader
 from zat.utils import vt_query
 ...
 
@@ -242,8 +242,8 @@ from zat.utils import vt_query
     # statistical methods used to compute this risky set of TLDs
     risky_tlds = set(['info', 'tk', 'xyz', 'online', 'club', 'ru', 'website', 'in', 'ws', 'top', 'site', 'work', 'biz', 'name', 'tech'])
 
-    # Run the bro reader on the dns.log file looking for risky TLDs
-    reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)
+    # Run the zeek reader on the dns.log file looking for risky TLDs
+    reader = zeek_log_reader.ZeekLogReader(args.zeek_log, tail=True)
     for row in reader.readrows():
 
         # Pull out the TLD
@@ -259,13 +259,13 @@ from zat.utils import vt_query
                 pprint(results)
 ```
 
-**Example Output:** To test this example simply do a \"\$ping uni10.tk\" on a machine being monitored by your Bro.
+**Example Output:** To test this example simply do a \"\$ping uni10.tk\" on a machine being monitored by your Zeek.
 
 Note: You can also ping something like 'isaftaho.tk' which is not on any of the blacklist but will still hit. The script will obviously cast a much wider net than just the blacklists.
 
 ```
-$ python risky_dns.py -f /usr/local/var/spool/bro/dns.log
-Successfully monitoring /usr/local/var/spool/bro/dns.log...
+$ python risky_dns.py -f /usr/local/var/spool/zeek/dns.log
+Successfully monitoring /usr/local/var/spool/zeek/dns.log...
 
 OMG the Network is on Fire!!!
 {'filescan_id': None,
@@ -290,15 +290,15 @@ See zat/examples/cert\_checker.py for full code listing (code simplified
 below)
 
 ``` {.python}
-from zat import bro_log_reader
+from zat import zeek_log_reader
 from zat.utils import vt_query
 ...
 
     # These domains may be spoofed with a certificate issued by 'Let's Encrypt'
     spoofed_domains = set(['paypal', 'gmail', 'google', 'apple','ebay', 'amazon'])
 
-    # Run the bro reader on the x509.log file looking for spoofed domains
-    reader = bro_log_reader.BroLogReader(args.bro_log, tail=True)
+    # Run the zeek reader on the x509.log file looking for spoofed domains
+    reader = zeek_log_reader.ZeekLogReader(args.zeek_log, tail=True)
     for row in reader.readrows():
 
         # Pull out the Certificate Issuer
@@ -359,28 +359,28 @@ simplified below)
 ``` {.python}
 # Create a Pandas dataframe from a Zeek log
 log_to_df = LogToDataFrame()
-bro_df = log_to_df.create_dataframe('/path/to/dns.log')
+zeek_df = log_to_df.create_dataframe('/path/to/dns.log')
 
 # Using Pandas we can easily and efficiently compute additional data metrics
-bro_df['query_length'] = bro_df['query'].str.len()
+zeek_df['query_length'] = zeek_df['query'].str.len()
 
 # Use the zat DataframeToMatrix class
 features = ['Z', 'rejected', 'proto', 'query', 'qclass_name', 'qtype_name', 'rcode_name', 'query_length']
 to_matrix = dataframe_to_matrix.DataFrameToMatrix()
-bro_matrix = to_matrix.fit_transform(bro_df[features])
+zeek_matrix = to_matrix.fit_transform(zeek_df[features])
 
 # Train/fit and Predict anomalous instances using the Isolation Forest model
 odd_clf = IsolationForest(contamination=0.35) # Marking 35% as odd
-odd_clf.fit(bro_matrix)
+odd_clf.fit(zeek_matrix)
 
 # Add clustering to our anomalies
-bro_df['cluster'] = KMeans(n_clusters=4).fit_predict(bro_matrix)
+zeek_df['cluster'] = KMeans(n_clusters=4).fit_predict(zeek_matrix)
 
 # Now we create a new dataframe using the prediction from our classifier
-odd_df = bro_df[features+['cluster']][odd_clf.predict(bro_matrix) == -1]
+odd_df = zeek_df[features+['cluster']][odd_clf.predict(zeek_matrix) == -1]
 
 # Now group the dataframe by cluster
-cluster_groups = bro_df[features+['cluster']].groupby('cluster')
+cluster_groups = zeek_df[features+['cluster']].groupby('cluster')
 
 # Now print out the details for each cluster
 print('<<< Outliers Detected! >>>')

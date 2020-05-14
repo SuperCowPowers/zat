@@ -24,7 +24,7 @@ def log_to_parquet(log_in, parquet_out):
 
 
 if __name__ == '__main__':
-    # Example to write Parquet file from a bro log
+    # Example to write Parquet file from a zeek log
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
