@@ -89,3 +89,6 @@ ENV/
 
 # Mac DS file
 .DS_Store
+
+# PyCharm files
+.idea/
