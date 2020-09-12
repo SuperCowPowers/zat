@@ -19,8 +19,12 @@ def log_to_parquet(log_in, parquet_out):
     spark_df = spark_it.create_dataframe(log_in)
 
     # Write it out as a parquet file
-    spark_df.write.parquet(parquet_out)
+    spark_df.write.parquet(parquet_out, compression='snappy', mode='overwrite')
     print('{:s} --> {:s}'.format(log_in, parquet_out))
+
+    # Read in the Parquet file
+    spark_df = spark.read.parquet('conn.parquet')
+    spark_df.show(5)
 
 
 if __name__ == '__main__':
