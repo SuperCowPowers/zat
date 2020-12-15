@@ -1,4 +1,5 @@
-## Zeek Analysis Tools (ZAT) [![travis](https://travis-ci.org/SuperCowPowers/zat.svg?branch=master)](https://travis-ci.org/SuperCowPowers/zat) [![codecov.io](http://codecov.io/github/SuperCowPowers/zat/coverage.svg?branch=master)](http://codecov.io/github/SuperCowPowers/zat?branch=master) [![supported-versions](https://img.shields.io/pypi/pyversions/zat.svg)](https://pypi.python.org/pypi/zat) [![license](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://choosealicense.com/licenses/apache-2.0)
+## Zeek Analysis Tools (ZAT) 
+![Python package](https://github.com/SuperCowPowers/zat/workflows/Python%20package/badge.svg) [![codecov.io](http://codecov.io/github/SuperCowPowers/zat/coverage.svg?branch=master)](http://codecov.io/github/SuperCowPowers/zat?branch=master) [![supported-versions](https://img.shields.io/pypi/pyversions/zat.svg)](https://pypi.python.org/pypi/zat) [![license](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://choosealicense.com/licenses/apache-2.0)
 
 The ZAT Python package supports the processing and analysis of Zeek data
 with Pandas, scikit-learn, and Spark
