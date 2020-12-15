@@ -1,0 +1,6 @@
+requests
+watchdog
+numpy
+pandas
+scikit-learn
+pyspark
