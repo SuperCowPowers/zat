@@ -113,6 +113,7 @@ def test_utils():
     print(inet_to_str(b'\x91\xfe\xa0\xed'))
     assert inet_to_str(b'\x91\xfe\xa0\xed') == '145.254.160.237'
     assert str_to_inet('145.254.160.237') == b'\x91\xfe\xa0\xed'
+    assert str_to_inet('2001:0db8:85a3::8a2e:0370:7334') == b' \x01\r\xb8\x85\xa3\x00\x00\x00\x00\x8a.\x03ps4'
     assert is_internal('10.0.0.1')
     assert is_internal('222.2.2.2') is False
     assert is_special('224.0.0.251')

@@ -1,0 +1,13 @@
+# Testing requirements
+pytest-cov
+coverage
+interruptingcow
+
+# Package requirements
+requests
+watchdog
+numpy
+pandas
+scikit-learn
+pyspark
+pyarrow
