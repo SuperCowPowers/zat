@@ -4,9 +4,16 @@
 The ZAT Python package supports the processing and analysis of Zeek data
 with Pandas, scikit-learn, and Spark
 
-### Recent Improvements (Fall 2019):
-- Renamed to **Zeek** Analysis Tools \:)
-- Better Docs (<https://supercowpowers.github.io/zat/>)
+### Install
+```
+$ pip install zat
+```
+
+
+### Getting Started
+- [Examples of Using ZAT](https://supercowpowers.github.io/zat/examples.html)
+
+### Recent Improvements
 - Faster/Smaller Pandas Dataframes for large log files: [Large Dataframes](https://supercowpowers.github.io/zat/large_dataframes.html)
 - Better Panda Dataframe to Matrix (ndarray) support: [Dataframe To Matrix](https://supercowpowers.github.io/zat/dataframe_to_matrix.html)
 - Scalable conversion from Zeek logs to Parquet: [Zeek to Parquet](https://nbviewer.jupyter.org/github/SuperCowPowers/zat/blob/master/notebooks/Zeek_to_Parquet.ipynb)
@@ -14,10 +21,8 @@ with Pandas, scikit-learn, and Spark
 - Updated/improved Notebooks: [Analysis Notebooks](#analysis-notebooks)
 
 
-### BroCon 2017 Presentation
-
-Data Analysis, Machine Learning, Bro, and You!
-([Video](https://www.youtube.com/watch?v=pG5lU9CLnIU))
+### Video Presentation
+[Data Analysis and Machine Learning with Zeek](https://www.youtube.com/watch?v=pG5lU9CLnIU)
 
 ### Why ZAT?
 
@@ -32,10 +37,6 @@ focus on the efficient processing of high volume network traffic.
 bridge from raw Zeek data to packages like Pandas, scikit-learn, and
 Spark. We also have example notebooks that show step-by-step how to get
 from here to there.
-
-
-## Getting Started
-- [Examples of Using ZAT](https://supercowpowers.github.io/zat/examples.html)
 
 ### Analysis Notebooks
 
@@ -53,9 +54,6 @@ from here to there.
 
 <img align="right" style="padding:25px" src="notebooks/images/SCP_med.png" width="160">
 
-### Install
-
-    $ pip install zat
 
 ### Documentation
 <https://supercowpowers.github.io/zat/>

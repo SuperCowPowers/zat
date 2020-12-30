@@ -5,7 +5,7 @@
 - [Examples of Using ZAT](examples.md)
 
 ### Videos
-- [BroCon 2017 Presentation](https://www.youtube.com/watch?v=pG5lU9CLnIU)
+- [Data Analysis and Machine Learning with Zeek](https://www.youtube.com/watch?v=pG5lU9CLnIU)
 
 ### Analysis Notebooks
 

@@ -78,18 +78,3 @@ $ git tag v1.8.7 (or whatever)
 $ git push --tags
 $ git push
 ```
-
-### Git Releases (discussion)
-
-Note: This is an opinion, we/I could certainly be convinced otherwise.
-
-You can also do a 'release' on GitHub (the tags above are perfect for that). In general this is discouraged, people should always do a 
-
-```$pip install zat``` 
-
-If people want older releases they can do a
-
-```$pip install zat==<old version>```
-
-Providing tarballs/zip file on GitHub will just
-confuse new users and they'll have a 'bad experience' when trying to deal with a tarball.
