@@ -29,5 +29,5 @@ if __name__ == '__main__':
         # Convert to dataframe and write out the parquet file
         log_to_df = LogToDataFrame()
         zeek_df = log_to_df.create_dataframe(args.zeek_log)
-        zeek_df.to_parquet(args.parquet_file)
+        zeek_df.to_parquet(args.parquet_file, compression='gzip')  # Snappy is better, but often not installed
         print('Complete: {:s} --> {:s}'.format(args.zeek_log, args.parquet_file))
