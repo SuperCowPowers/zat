@@ -17,6 +17,7 @@ except ImportError:
 from zat import zeek_log_reader
 from zat.utils import vt_query, signal_utils
 
+
 def save_vtq():
     """Exit on Signal"""
     global vtq
@@ -24,6 +25,7 @@ def save_vtq():
     print('Saving VirusTotal Query Cache...')
     pickle.dump(vtq, open('vtq.pkl', 'wb'), protocol=pickle.HIGHEST_PROTOCOL)
     sys.exit()
+
 
 if __name__ == '__main__':
     # Risky DNS/VT Query application
@@ -54,7 +56,7 @@ if __name__ == '__main__':
             vtq = pickle.load(open('vtq.pkl', 'rb'))
             print('Opening VirusTotal Query Cache (cache_size={:d})...'.format(vtq.size))
         except IOError:
-            vtq = vt_query.VTQuery(max_cache_time=60*24*7) # One week cache
+            vtq = vt_query.VTQuery(max_cache_time=60*24*7)  # One week cache
 
         # See our 'Risky Domains' Notebook for the analysis and
         # statistical methods used to compute this risky set of TLDs
@@ -74,12 +76,17 @@ if __name__ == '__main__':
 
                 # Check if the TLD is in the risky group
                 if tld in risky_tlds:
-                    # Make the query with the full query
+                    # Show the risky dns
+                    print('Making VT query for {:s}...'.format(query))
+
+                    # Make the VT query
                     results = vtq.query_url(query)
-                    if results.get('positives', 0) > 3: # At least four hits
+                    if results.get('positives', 0) >= 1:  # At least one hit (change this higher if you want)
                         print('\nRisky Domain DNS Query Found')
                         print('From: {:s} To: {:s} QType: {:s} RCode: {:s}'.format(row['id.orig_h'],
-                               row['id.resp_h'], row['qtype_name'], row['rcode_name']))
+                                                                                   row['id.resp_h'],
+                                                                                   row['qtype_name'],
+                                                                                   row['rcode_name']))
                         pprint(results)
 
         # Save the Virus Total Query
