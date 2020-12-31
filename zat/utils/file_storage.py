@@ -6,6 +6,13 @@
 
 import os
 
+try:
+    import pyarrow  # noqa F401
+    _HAVE_PYARROW = True
+except ImportError:
+    print('pyarrow not found, $ pip install pyarrow for more tests...')
+    _HAVE_PYARROW = False
+
 
 class FileStorage(object):
     """FileStorage class for storing/retrieving bytes to/from persistant storage
@@ -104,8 +111,8 @@ def test():
     my_storage.dump()
 
     # Retrieve the stored data
-    r_data1 = json.loads(my_storage.get('data1_key'), encoding='utf-8')
-    r_data2 = json.loads(my_storage.get('data2_key'), encoding='utf-8')
+    r_data1 = json.loads(my_storage.get('data1_key'))
+    r_data2 = json.loads(my_storage.get('data2_key'))
     assert r_data1 == data1
     assert r_data2 == data2
 
@@ -116,51 +123,46 @@ def test():
     # Dump the cache
     my_storage.dump()
 
-    # Now run all the same tests with dataframes
+    # Now run all the same tests with dataframes (only if pyarrow available)
+    if _HAVE_PYARROW:
 
-    # Helper methods
-    def dataframe_to_bytes(df):
-        bytes_buffer = BytesIO()
-        df.to_parquet(bytes_buffer, compression='gzip')
-        return bytes_buffer.getvalue()
+        # Helper methods
+        def dataframe_to_bytes(df):
+            bytes_buffer = BytesIO()
+            df.to_parquet(bytes_buffer)
+            return bytes_buffer.getvalue()
 
-    def dataframe_from_bytes(df_bytes):
-        return pd.read_parquet(BytesIO(df_bytes))
+        def dataframe_from_bytes(df_bytes):
+            return pd.read_parquet(BytesIO(df_bytes))
 
-    # Create the a dataframe and a DataStore class
-    df1 = pd.DataFrame(data={'foo': [1, 2, 1, 1, 2, 3], 'name': ['bob', 'bob', 'sue', 'sue', 'jim', 'jim']})
-    df2 = pd.DataFrame(data={'count': [8, 9, 8, 8, 8, 9], 'name': ['joe', 'sal', 'joe', 'sal', 'joe', 'sal']})
-    my_storage.clear()
+        # Create the a dataframe and a DataStore class
+        df1 = pd.DataFrame(data={'foo': [1, 2, 1, 1, 2, 3], 'name': ['bob', 'bob', 'sue', 'sue', 'jim', 'jim']})
+        df2 = pd.DataFrame(data={'count': [8, 9, 8, 8, 8, 9], 'name': ['joe', 'sal', 'joe', 'sal', 'joe', 'sal']})
+        my_storage.clear()
 
-    # Serialize the dataframes
-    df1_bytes = dataframe_to_bytes(df1)
-    df2_bytes = dataframe_to_bytes(df2)
+        # Serialize the dataframes
+        df1_bytes = dataframe_to_bytes(df1)
+        df2_bytes = dataframe_to_bytes(df2)
 
-    # Test storage
-    my_storage.store('df1_key', df1_bytes)
-    my_storage.store('df2_key', df2_bytes)
+        # Test storage
+        my_storage.store('df1_key', df1_bytes)
+        my_storage.store('df2_key', df2_bytes)
 
-    # Make sure size is working
-    assert my_storage.size == 2
+        # Make sure size is working
+        assert my_storage.size == 2
 
-    # Try grabbing a key that doesn't exist
-    assert my_storage.get('no_key') is None
+        # Dump the cache
+        my_storage.dump()
 
-    # Dump the cache
-    my_storage.dump()
+        # Retrieve the cached dataframes
+        r_df1 = dataframe_from_bytes(my_storage.get('df1_key'))
+        r_df2 = dataframe_from_bytes(my_storage.get('df2_key'))
+        assert r_df1.equals(df1)
+        assert r_df2.equals(df2)
 
-    # Retrieve the cached dataframes
-    r_df1 = dataframe_from_bytes(my_storage.get('df1_key'))
-    r_df2 = dataframe_from_bytes(my_storage.get('df2_key'))
-    assert r_df1.equals(df1)
-    assert r_df2.equals(df2)
-
-    # Delete our key value entries
-    my_storage.clear()
-    assert my_storage.size == 0
-
-    # Dump the cache
-    my_storage.dump()
+        # Delete our key value entries
+        my_storage.clear()
+        assert my_storage.size == 0
 
 
 if __name__ == '__main__':

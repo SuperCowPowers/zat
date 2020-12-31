@@ -40,11 +40,10 @@ setup(
         'scipy',
         'pandas',
         'scikit-learn',
-        'pyspark',
-        'pyarrow'
+        'pyspark'
     ],
     extras_require={
-        'all':  ['yara-python', 'tldextract']
+        'all':  ['pyarrow', 'yara-python', 'tldextract']
     },
     license='Apache',
     keywords='Zeek, Bro, Python, Networking, Security, Scikit-Learn, Spark, Kafka, Parquet',
