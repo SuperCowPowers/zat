@@ -23,7 +23,7 @@ def log_to_parquet(log_in, parquet_out):
     print('{:s} --> {:s}'.format(log_in, parquet_out))
 
     # Read in the Parquet file
-    spark_df = spark.read.parquet('conn.parquet')
+    spark_df = spark.read.parquet(parquet_out)
     spark_df.show(5)
 
 
