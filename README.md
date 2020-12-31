@@ -13,7 +13,7 @@ $ pip install zat
 - [Examples of Using ZAT](https://supercowpowers.github.io/zat/examples.html)
 
 ### Installing on Raspberry Pi!
-- [Raspberry Pi Instructions](<https://supercowpowers.github.io/zat/raspberry_pi.html)
+- [Raspberry Pi Instructions](https://supercowpowers.github.io/zat/raspberry_pi.html)
 
 ### Recent Improvements
 - Faster/Smaller Pandas Dataframes for large log files: [Large Dataframes](https://supercowpowers.github.io/zat/large_dataframes.html)
