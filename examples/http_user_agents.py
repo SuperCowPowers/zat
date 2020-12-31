@@ -1,4 +1,4 @@
-"""FileTailer Python Class"""
+"""HTTP User Agents Example"""
 from __future__ import print_function
 import os
 import sys
@@ -40,12 +40,15 @@ if __name__ == '__main__':
             # Track count
             http_agents[row['user_agent']] += 1
 
-            # Every hundred rows report agent counts (least common)
+            # Every 10000 rows report agent counts (least common)
             if not args.s:
-                if count%100==0:
+                if count % 10000 == 0:
                     print('\n<<<Least Common User Agents>>>')
                     pprint(http_agents.most_common()[:-50:-1])
 
         # Also report at the end (if there is one)
+        print('\nMost Common User Agents:')
+        pprint(http_agents.most_common()[:20])
+
         print('\nLeast Common User Agents:')
         pprint(http_agents.most_common()[:-50:-1])
