@@ -1,7 +1,7 @@
 # Installing ZAT on Raspberry Pi 4
 
 ### Raspberry Pi OS = Buster and Python = 3.7
-These OS/Python version restrictions are based on dependency libraries like Pandas and scikit-learn. For these libraries you must have the 'Buster' version of the Raspberry Pi OS and you must use Python 3.7, this is because <https://www.piwheels.org> has built wheels for that OS/Python version and does not have wheels for other combinations (as of 01/01/2021). For example see: <https://<www.piwheels.org/project/pandas/>
+These OS/Python version restrictions are based on dependency libraries like Pandas and scikit-learn. For these libraries you must have the 'Buster' version of the Raspberry Pi OS and you must use Python 3.7, this is because <https://www.piwheels.org> has built wheels for that OS/Python version and does not have wheels for other combinations (as of 01/01/2021). For example see: <https://www.piwheels.org/project/pandas/>
 
 ### Quick Guide
 
