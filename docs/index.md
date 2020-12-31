@@ -20,6 +20,9 @@
 - [Risky Domains Stats and Deployment](https://nbviewer.jupyter.org/github/SuperCowPowers/zat/blob/master/notebooks/Risky_Domains.ipynb)
 - [Zeek to Matplotlib](https://nbviewer.jupyter.org/github/SuperCowPowers/zat/blob/master/notebooks/Zeek_to_Plot.ipynb)
 
+### Installing on Raspberry Pi!
+- [Raspberry Pi Instructions](raspberry_pi.md)
+
 ### Developer Stuff
 - [Large Dataframe Support](large_dataframes.md)
 - [Dataframe to Matrix](dataframe_to_matrix.md)

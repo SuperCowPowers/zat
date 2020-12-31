@@ -9,9 +9,11 @@ with Pandas, scikit-learn, and Spark
 $ pip install zat
 ```
 
-
 ### Getting Started
 - [Examples of Using ZAT](https://supercowpowers.github.io/zat/examples.html)
+
+### Installing on Raspberry Pi!
+- [Raspberry Pi Instructions](<https://supercowpowers.github.io/zat/raspberry_pi.html)
 
 ### Recent Improvements
 - Faster/Smaller Pandas Dataframes for large log files: [Large Dataframes](https://supercowpowers.github.io/zat/large_dataframes.html)
@@ -20,12 +22,10 @@ $ pip install zat
 - Vastly improved Spark Dataframe Class: [Zeek to Spark](https://nbviewer.jupyter.org/github/SuperCowPowers/zat/blob/master/notebooks/Zeek_to_Spark.ipynb)
 - Updated/improved Notebooks: [Analysis Notebooks](#analysis-notebooks)
 
-
 ### Video Presentation
-[Data Analysis and Machine Learning with Zeek](https://www.youtube.com/watch?v=pG5lU9CLnIU)
+- [Data Analysis and Machine Learning with Zeek](https://www.youtube.com/watch?v=pG5lU9CLnIU)
 
 ### Why ZAT?
-
 Zeek already has a flexible, powerful scripting language why should I use
 ZAT?
 
