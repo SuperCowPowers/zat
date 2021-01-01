@@ -258,7 +258,7 @@ The example will use the analysis in our [Risky
 Domains](https://github.com/SuperCowPowers/zat/blob/master/notebooks/Risky_Domains.ipynb) notebook to flag domains that are 'at risk' and conduct a Virus Total query on those domains. See zat/examples/risky\_dns.py for full code
 listing (code simplified below)
 
-``` {.python}
+```python
 from zat import zeek_log_reader
 from zat.utils import vt_query
 ...
@@ -317,7 +317,7 @@ and dynamically monitor your Zeek x509 logs for certificates that may be from ma
 See zat/examples/cert\_checker.py for full code listing (code simplified
 below)
 
-``` {.python}
+```python
 from zat import zeek_log_reader
 from zat.utils import vt_query
 ...
@@ -384,7 +384,7 @@ our anomalies into organized segments that allow an analyst to 'skim' the output
 See zat/examples/anomaly\_detection.py for full code listing (code
 simplified below)
 
-``` {.python}
+```python
 # Create a Pandas dataframe from a Zeek log
 log_to_df = LogToDataFrame()
 zeek_df = log_to_df.create_dataframe('/path/to/dns.log')
