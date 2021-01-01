@@ -154,8 +154,7 @@ from zat.utils import vt_query
 **Example Output:** Each file sha256/sha1 is queried against the
 VirusTotal Service.
 
-:
-
+```
     {'file_sha': 'bdf941b7be6ba2a7a58b0aef9471342f8677b31c', 'not_found': True}
     {'file_sha': '2283efe050a0a99e9a25ea9a12d6cf67d0efedfd', 'not_found': True}
     {'file_sha': 'c73d93459563c1ade1f1d39fde2efb003a82ca4b',
@@ -175,6 +174,7 @@ VirusTotal Service.
             (u'Trojan-Downloader ( 04c574821 )', 2),
             (u'Exploit:Java/CVE-2012-1723', 1),
             (u'UnclassifiedMalware', 1)]}
+```
 
 ### Zeek HTTP Log User Agents
 
