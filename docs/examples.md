@@ -2,8 +2,7 @@
 
 This documents shows a wide variety of ways to use the ZAT toolkit to process Zeek output.
 
--   Any Zeek Log into Python (dynamic tailing and log
-    rotations are handled)
+-   Any Zeek Log into Python (dynamic tailing and log rotations are handled)
 -   Zeek Logs to Pandas Dataframes and Scikit-Learn
 -   Dynamically monitor files.log and make VirusTotal Queries
 -   Dynamically monitor http.log and show 'uncommon' User Agents
@@ -11,7 +10,7 @@ This documents shows a wide variety of ways to use the ZAT toolkit to process Ze
 -   Checking x509 Certificates
 -   Anomaly Detection
 
-### Pull in Zeek Logs as Python Dictionaries
+### Pull in Zeek Logs as Python Dictionaries (examples/zeek\_pprint.py)
 
 ```python
 from zat import zeek_log_reader
@@ -37,7 +36,7 @@ types properly converted.
     'uid': 'CJsdG95nCNF1RXuN5'}
     ...
 
-### Zeek log to Pandas DataFrame
+### Zeek log to Pandas DataFrame (examples/zeek\_to\_pandas.py)
 
 ```python
 from zat.log_to_dataframe import LogToDataFrame
@@ -62,11 +61,40 @@ ts
 2013-09-15 17:44:28.141795  d31qbv1cthcecs.cloudfront.net  192.168.33.10       1030   4.2.2.3
 2013-09-15 17:44:28.422704                crl.entrust.net  192.168.33.10       1030   4.2.2.3
 ```
+### Filter out DNS Whitelists (examples/pandas\_whitelist.py)
 
-### Zeek Log to Scikit-Learn
-See zat/examples/zeek\_to\_scikit.py for full code listing, we've shortened the code listing here to demonstrate that it's literally just a few lines of code to get to Scikit-Learn.
+```python
+from zat.log_to_dataframe import LogToDataFrame
+...
+   # Create a Pandas dataframe from a Zeek log
+   log_to_df = LogToDataFrame()
+   zeek_df = log_to_df.create_dataframe(args.dns_log)
 
-``` {.python}
+   # Grab the whitelist
+   white_df = pd.read_csv(args.whitelist, names=['rank', 'domain'])
+   whitelist = white_df['domain'].tolist()
+
+   # Filter the dataframe with the whitelist
+   zeek_df = zeek_df[~zeek_df['query'].isin(whitelist)]
+```
+
+**Example usage/output**
+
+```
+$ python pandas_whitelist.py ../data/dns.log ../data/top_domains_1k.csv
+DF Size before whitelist: 54 rows
+Filtering out ['stats.g.doubleclick.net', 'www.googletagservices.com', 
+   'partner.googleadservices.com',  'www.google-analytics.com', 
+   'pubads.g.doubleclick.net', 'pagead2.googlesyndication.com', 
+   'ib.adnxs.com', 'googleads.g.doubleclick.net', 'www.facebook.com',
+   'insight.adsrvr.org', 'ad.doubleclick.net', 'www.google.com', 
+   'ajax.googleapis.com', 's0.2mdn.net', 'www.google.com']
+DF Size after whitelist: 39 rows
+```
+### Zeek Log to Scikit-Learn (examples/zeek\_to\_scikit.py)
+See **zat/examples/zeek\_to\_scikit.py** for full code listing, we've shortened the code listing here to demonstrate that it's literally just a few lines of code to get to Scikit-Learn.
+
+```python
 # Create a Pandas dataframe from a Zeek log
 log_to_df = LogToDataFrame()
 zeek_df = log_to_df.create_dataframe('/path/to/dns.log')
@@ -111,7 +139,7 @@ pca = PCA(n_components=2).fit_transform(zeek_matrix)
 See zat/examples/file\_log\_vtquery.py for full code listing (code
 simplified below)
 
-``` {.python}
+```python
 from zat import zeek_log_reader
 from zat.utils import vt_query
 ...
@@ -153,7 +181,7 @@ VirusTotal Service.
 See zat/examples/http\_user\_agents.py for full code listing (code
 simplified below)
 
-``` {.python}
+```python
 from collections import Counter
 from zat import zeek_log_reader
 ...
@@ -196,7 +224,7 @@ The example will dymancially monitor the extract\_files directory and
 when a file is dropped by Zeek the code will run a set of Yara rules against that file. See zat/examples/yara\_matches.py for full code
 listing (code simplified below)
 
-``` {.python}
+```python
 import yara
 from zat import dir_watcher
 ...
