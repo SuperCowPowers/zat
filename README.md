@@ -1,4 +1,5 @@
 <img align="right" style="padding:35px" src="notebooks/images/SCP_med.png" width="160">
+
 # Zeek Analysis Tools (ZAT) 
 ![Python package](https://github.com/SuperCowPowers/zat/workflows/Python%20package/badge.svg) [![codecov.io](http://codecov.io/github/SuperCowPowers/zat/coverage.svg?branch=master)](http://codecov.io/github/SuperCowPowers/zat?branch=master) [![supported-versions](https://img.shields.io/pypi/pyversions/zat.svg)](https://pypi.python.org/pypi/zat) [![license](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://choosealicense.com/licenses/apache-2.0)
 
@@ -52,9 +53,7 @@ from here to there.
 - [Risky Domains Stats and Deployment](https://nbviewer.jupyter.org/github/SuperCowPowers/zat/blob/master/notebooks/Risky_Domains.ipynb)
 - [Zeek to Matplotlib](https://nbviewer.jupyter.org/github/SuperCowPowers/zat/blob/master/notebooks/Zeek_to_Plot.ipynb)
 
-
-<img align="right" style="margin: -100px 0px 20px 10px" src="notebooks/images/SCP_med.png" width="160">
-
+<img align="right" style="padding: 10px" src="notebooks/images/SCP_med.png" width="120">
 
 ### Documentation
 <https://supercowpowers.github.io/zat/>
