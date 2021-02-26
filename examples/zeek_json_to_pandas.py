@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
     # Collect args from the command line
     parser = argparse.ArgumentParser()
-    parser.add_argument('zeek_log', type=str, help='Specify a zeek JSON log to run ZeekLogReader test on')
+    parser.add_argument('zeek_log', type=str, help='Specify a zeek JSON log to convert to DataFrame')
     args, commands = parser.parse_known_args()
 
     # Check for unknown args
