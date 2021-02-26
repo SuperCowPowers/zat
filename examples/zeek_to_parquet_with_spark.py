@@ -1,5 +1,5 @@
 """Zeek log to Parquet Dataframe Example"""
-from __future__ import print_function
+
 import os
 import sys
 import argparse

@@ -1,5 +1,5 @@
 """LogToSparkDF: Converts a Zeek log to a Spark DataFrame"""
-from __future__ import print_function
+
 
 # Third Party
 from pyspark.sql.types import StructType, StringType, IntegerType, FloatType, LongType

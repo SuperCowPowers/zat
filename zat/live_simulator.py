@@ -5,7 +5,7 @@
             eps (int): Events Per Second that the simulator will emit events (default = 10)
             max_rows (int): The maximum number of rows to generate (default = None (go forever))
 """
-from __future__ import print_function
+
 import os
 import time
 import datetime

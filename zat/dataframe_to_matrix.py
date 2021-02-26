@@ -1,5 +1,5 @@
 """DataFrameToMatrix: Class that converts a DataFrame to a Numpy Matrix (ndarray)"""
-from __future__ import print_function
+
 
 # Third Party
 import pandas as pd

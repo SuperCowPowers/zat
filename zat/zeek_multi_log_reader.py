@@ -3,7 +3,7 @@
                 filepath (str): The full path the file (/full/path/to/the/file.txt) can be a
                                 glob (e.g dns*.log) or a gzip file (e.g. dns.log.gz)
 """
-from __future__ import print_function
+
 import os
 import glob
 import gzip

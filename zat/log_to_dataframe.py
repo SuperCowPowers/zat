@@ -1,5 +1,5 @@
 """LogToDataFrame: Converts a Zeek log to a Pandas DataFrame"""
-from __future__ import print_function
+
 
 # Third Party
 import pandas as pd

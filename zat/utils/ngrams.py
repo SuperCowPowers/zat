@@ -1,5 +1,4 @@
 """NGram utilities that might be useful"""
-from __future__ import print_function
 
 
 def compute_ngrams(word_list, S=3, T=3):
