@@ -23,6 +23,7 @@ $ pip install zat
 - Scalable conversion from Zeek logs to Parquet: [Zeek to Parquet](https://nbviewer.jupyter.org/github/SuperCowPowers/zat/blob/master/notebooks/Zeek_to_Parquet.ipynb)
 - Vastly improved Spark Dataframe Class: [Zeek to Spark](https://nbviewer.jupyter.org/github/SuperCowPowers/zat/blob/master/notebooks/Zeek_to_Spark.ipynb)
 - Updated/improved Notebooks: [Analysis Notebooks](#analysis-notebooks)
+- Zeek JSON to DataFrame class: [Zeek JSON to DataFrame Example](https://github.com/SuperCowPowers/zat/blob/master/examples/zeek_json_to_pandas.py)
 
 ### Video Presentation
 - [Data Analysis and Machine Learning with Zeek](https://www.youtube.com/watch?v=pG5lU9CLnIU)
