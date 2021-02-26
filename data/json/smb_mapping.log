@@ -1,0 +1,7 @@
+{"ts":1575413122.273108,"uid":"C7MM0z462noiBnLdV3","id.orig_h":"10.18.20.97","id.orig_p":49195,"id.resp_h":"10.18.20.8","id.resp_p":445,"path":"\\\\Icemaiden-DC\\IPC$","share_type":"PIPE"}
+{"ts":1575413122.493055,"uid":"C7MM0z462noiBnLdV3","id.orig_h":"10.18.20.97","id.orig_p":49195,"id.resp_h":"10.18.20.8","id.resp_p":445,"path":"\\\\Icemaiden-DC\\Shared","share_type":"DISK"}
+{"ts":1575413122.783269,"uid":"CwqmM6eurK7Dmu7u4","id.orig_h":"10.18.20.97","id.orig_p":49201,"id.resp_h":"10.18.20.8","id.resp_p":445,"path":"\\\\Icemaiden-DC.icemaiden.com\\sysvol","share_type":"DISK"}
+{"ts":1575413173.820847,"uid":"C7MM0z462noiBnLdV3","id.orig_h":"10.18.20.97","id.orig_p":49195,"id.resp_h":"10.18.20.8","id.resp_p":445,"path":"\\\\Icemaiden-DC\\IPC$","share_type":"PIPE"}
+{"ts":1575413985.653135,"uid":"CKsEtP2Ioi00UMJZA2","id.orig_h":"10.18.20.97","id.orig_p":49610,"id.resp_h":"10.18.20.8","id.resp_p":445,"path":"\\\\Icemaiden-DC.icemaiden.com\\IPC$","share_type":"PIPE"}
+{"ts":1575414185.263537,"uid":"CTwsz13CYLe0whpKEe","id.orig_h":"10.18.20.97","id.orig_p":49613,"id.resp_h":"10.18.20.8","id.resp_p":445,"path":"\\\\Icemaiden-DC\\IPC$","share_type":"PIPE"}
+{"ts":1575414185.375135,"uid":"CTwsz13CYLe0whpKEe","id.orig_h":"10.18.20.97","id.orig_p":49613,"id.resp_h":"10.18.20.8","id.resp_p":445,"path":"\\\\Icemaiden-DC\\Shared","share_type":"DISK"}

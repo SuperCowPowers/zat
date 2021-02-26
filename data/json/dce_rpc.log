@@ -1,0 +1,7 @@
+{"ts":1575413122.23146,"uid":"CVaOwV1xoa9IzXbMUg","id.orig_h":"10.18.20.97","id.orig_p":49193,"id.resp_h":"10.18.20.8","id.resp_p":135,"rtt":0.00011682510375976563,"named_pipe":"135","endpoint":"epmapper","operation":"ept_map"}
+{"ts":1575413122.244997,"uid":"C50rwOcow2b59NOmj","id.orig_h":"10.18.20.97","id.orig_p":49173,"id.resp_h":"10.18.20.8","id.resp_p":49155,"rtt":0.00039005279541015625,"endpoint":"drsuapi","operation":"DRSBind"}
+{"ts":1575413122.247853,"uid":"C50rwOcow2b59NOmj","id.orig_h":"10.18.20.97","id.orig_p":49173,"id.resp_h":"10.18.20.8","id.resp_p":49155,"rtt":0.0008909702301025391,"endpoint":"drsuapi","operation":"DRSCrackNames"}
+{"ts":1575413122.249629,"uid":"C50rwOcow2b59NOmj","id.orig_h":"10.18.20.97","id.orig_p":49173,"id.resp_h":"10.18.20.8","id.resp_p":49155,"rtt":0.0005230903625488281,"endpoint":"drsuapi","operation":"DRSCrackNames"}
+{"ts":1575413122.250377,"uid":"C50rwOcow2b59NOmj","id.orig_h":"10.18.20.97","id.orig_p":49173,"id.resp_h":"10.18.20.8","id.resp_p":49155,"rtt":0.00024509429931640625,"endpoint":"drsuapi","operation":"DRSUnbind"}
+{"ts":1575413186.257679,"uid":"Ctg96D3fWGsTCs9NKl","id.orig_h":"10.18.20.97","id.orig_p":49259,"id.resp_h":"10.18.20.8","id.resp_p":135,"rtt":0.00014901161193847656,"named_pipe":"135","endpoint":"epmapper","operation":"ept_map"}
+{"ts":1575413186.259201,"uid":"C2PkHY2U2D5K69yYA8","id.orig_h":"10.18.20.97","id.orig_p":49260,"id.resp_h":"10.18.20.8","id.resp_p":49155,"rtt":0.0004799365997314453,"named_pipe":"49155","endpoint":"lsarpc","operation":"LsarLookupSids3"}

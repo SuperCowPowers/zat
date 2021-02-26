@@ -1,5 +1,5 @@
 """Cache class for key/value pairs"""
-from __future__ import print_function
+
 import time
 from collections import OrderedDict
 import pickle

@@ -1,5 +1,5 @@
 """ReverseDNS, Perform a reverse dns lookup on fields in the ip_field_list."""
-from __future__ import print_function
+
 import socket
 
 # Local imports

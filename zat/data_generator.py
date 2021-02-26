@@ -1,6 +1,6 @@
 """Silly data generator (Faker (https://github.com/joke2k/faker) and others
    are much better, but we just need something simple"""
-from __future__ import print_function
+
 import string
 
 # Third Party

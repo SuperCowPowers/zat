@@ -5,7 +5,7 @@ import sys
 import argparse
 
 # Local imports
-from zat.log_to_dataframe import LogToDataFrame
+from zat.json_log_to_dataframe import JSONLogToDataFrame
 
 if __name__ == '__main__':
     # Example to populate a Pandas dataframe from a zeek log reader
@@ -25,7 +25,7 @@ if __name__ == '__main__':
         args.zeek_log = os.path.expanduser(args.zeek_log)
 
         # Create a Pandas dataframe from a Zeek log
-        log_to_df = LogToDataFrame()
+        log_to_df = JSONLogToDataFrame()
         zeek_df = log_to_df.create_dataframe(args.zeek_log)
 
         # Print out the head of the dataframe

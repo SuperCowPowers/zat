@@ -1,5 +1,5 @@
 """Read Kafka Streams and Print out the messages"""
-from __future__ import print_function
+
 import sys
 import argparse
 from pprint import pprint
