@@ -4,7 +4,7 @@
 ![Python package](https://github.com/SuperCowPowers/zat/workflows/Python%20package/badge.svg) [![codecov.io](http://codecov.io/github/SuperCowPowers/zat/coverage.svg?branch=master)](http://codecov.io/github/SuperCowPowers/zat?branch=master) [![supported-versions](https://img.shields.io/pypi/pyversions/zat.svg)](https://pypi.python.org/pypi/zat) [![license](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://choosealicense.com/licenses/apache-2.0)
 
 The ZAT Python package supports the processing and analysis of Zeek data
-with Pandas, scikit-learn, and Spark
+with Pandas, scikit-learn, Kafka, and Spark
 
 ### Install
 ```
@@ -37,7 +37,7 @@ machine learning, etc.. should be offloaded from Zeek so that Zeek can
 focus on the efficient processing of high volume network traffic.
 
 **Data Analysis:** We have a large set of support classes that help
-bridge from raw Zeek data to packages like Pandas, scikit-learn, and
+bridge from raw Zeek data to packages like Pandas, scikit-learn, Kafka, and
 Spark. We also have example notebooks that show step-by-step how to get
 from here to there.
 
