@@ -42,10 +42,9 @@ jobs:
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
-        directory: ./coverage/reports/
+        files: ./coverage.xml
         flags: unittests
         env_vars: PYTHON
         name: github_actions_coverage
         fail_ci_if_error: true
-        path_to_write_report: ./coverage/codecov_report.txt
         verbose: true
