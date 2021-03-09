@@ -1,5 +1,9 @@
-# Grab a docker Python 3.8 image
+# Grab a docker image with java and python
 FROM python:3.8
+
+# Install Java (for PySpark)
+RUN apt-get update
+RUN apt-get install -y default-jdk
 
 # Setup our ENV vars
 ENV INSTALL_DIR /app
