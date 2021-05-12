@@ -1,9 +1,14 @@
 """LogToSparkDF: Converts a Zeek log to a Spark DataFrame"""
 
+import sys
 
 # Third Party
-from pyspark.sql.types import StructType, StringType, IntegerType, FloatType, LongType
-from pyspark.sql.functions import col, when
+try:
+    from pyspark.sql.types import StructType, StringType, IntegerType, FloatType, LongType
+    from pyspark.sql.functions import col, when
+except ImportError:
+    print('\npip install pyspark')
+
 
 # Local
 from zat import zeek_log_reader
@@ -115,8 +120,13 @@ class LogToSparkDF(object):
 def test():
     """Test for LogToSparkDF Class"""
     import os
+    import pytest
     from zat.utils import file_utils
-    from pyspark.sql import SparkSession
+
+    try:
+        from pyspark.sql import SparkSession
+    except ImportError:
+        pytest.skip('pip install pyspark')
 
     # Spin up a local Spark Session (with 4 executors)
     spark = SparkSession.builder.master('local[4]').appName('my_awesome').getOrCreate()

@@ -8,7 +8,9 @@ with Pandas, scikit-learn, Kafka, and Spark
 
 ### Install
 ```
-$ pip install zat
+pip install zat
+pip install zat[pyspark] (includes pyspark library)
+pip install zat[all] (include pyarrow, yara-python, and tldextract)
 ```
 
 ### Getting Started
@@ -59,6 +61,11 @@ from here to there.
 ### Documentation
 <https://supercowpowers.github.io/zat/>
 
+#### Running the Tests
+```
+pip install pytest coverage pytest-cov
+pytest zat
+```
 
 ### About SuperCowPowers
 The company was formed so that its developers could follow their passion for Python, streaming data pipelines and having fun with data analysis. We also think cows are cool and should be superheros or at least carry around rayguns and burner phones. <a href="https://www.supercowpowers.com" target="_blank">Visit SuperCowPowers</a>

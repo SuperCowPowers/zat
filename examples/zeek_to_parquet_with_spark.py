@@ -3,7 +3,11 @@
 import os
 import sys
 import argparse
-from pyspark.sql import SparkSession
+try:
+    from pyspark.sql import SparkSession
+except ImportError:
+    print('pip install pyspark')
+    sys.exit(1)
 
 # Local imports
 from zat import log_to_sparkdf

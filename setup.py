@@ -36,14 +36,12 @@ setup(
     install_requires=[
         'requests',
         'watchdog',
-        'numpy',
-        'scipy',
         'pandas',
-        'scikit-learn',
-        'pyspark'
+        'scikit-learn'
     ],
     extras_require={
-        'all':  ['pyarrow', 'yara-python', 'tldextract']
+        'pyspark':  ['pyspark'],
+        'all':  ['pyspark', 'pyarrow', 'yara-python', 'tldextract']
     },
     license='Apache',
     keywords='Zeek, Bro, Python, Networking, Security, Scikit-Learn, Spark, Kafka, Parquet',

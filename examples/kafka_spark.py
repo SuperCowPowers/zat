@@ -1,18 +1,17 @@
 """Read Kafka Streams into Spark, perform simple filtering/aggregation"""
 
 import sys
-import pyspark
-from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StringType, BooleanType, IntegerType
-from pyspark.sql.functions import from_json, to_json, col, struct, udf
-
 import argparse
 from time import sleep
 
-# Local imports
-from zat.utils import signal_utils
+try:
+    from pyspark.sql import SparkSession
+    from pyspark.sql.types import StructType, StringType, BooleanType, IntegerType
+    from pyspark.sql.functions import from_json, to_json, col, struct, udf
+except ImportError:
+    print('\npip install pyspark')
+    sys.exit(1)
 
-# Third Party Imports
 try:
     import tldextract
 except ImportError:
