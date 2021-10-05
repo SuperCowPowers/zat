@@ -78,7 +78,7 @@ class GeoLookup(object):
             return {'error': error_msg}
 
         # Check for error or not-found
-        if output['type'] is None:
+        if output.get('type') is None:
             output = None
             self.query_cache.set(ip_address, output)
             return output
