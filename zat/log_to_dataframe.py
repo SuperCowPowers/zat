@@ -83,7 +83,10 @@ class LogToDataFrame(object):
 
         # Set the index
         if ts_index and not self._df.empty:
-            self._df.set_index('ts', inplace=True)
+            try:
+                self._df.set_index('ts', inplace=True)
+            except KeyError:
+                print('Could not find ts/timestamp for index...')
         return self._df
 
     def pd_column_types(self, column_names, column_types, aggressive_category=True, verbose=False):
