@@ -45,7 +45,13 @@ class LogToDataFrame(object):
 
     def _create_initial_df(self, log_filename, all_fields, usecols, dtypes):
         """Internal Method: Create the initial dataframes by using Pandas read CSV (primary types correct)"""
-        return pd.read_csv(log_filename, sep='\t', names=all_fields, usecols=usecols, dtype=dtypes, comment="#", na_values='-')
+
+        # Get the number of header rows
+        _zeek_reader = zeek_log_reader.ZeekLogReader(log_filename)
+        header_rows = _zeek_reader.num_header_rows(log_filename)
+
+        # Read in the rest of the log file
+        return pd.read_csv(log_filename, sep='\t', names=all_fields, usecols=usecols, dtype=dtypes, skiprows=header_rows, na_values='-')
 
     def create_dataframe(self, log_filename, ts_index=True, aggressive_category=True, usecols=None):
         """ Create a Pandas dataframe from a Bro/Zeek log file
@@ -130,7 +136,7 @@ def test():
 
     # Grab a test file
     data_path = file_utils.relative_dir(__file__, '../data')
-    log_path = os.path.join(data_path, 'conn.log')
+    log_path = os.path.join(data_path, 'http_with_comment.log')
 
     # Convert it to a Pandas DataFrame
     log_to_df = LogToDataFrame()

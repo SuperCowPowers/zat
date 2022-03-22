@@ -151,10 +151,34 @@ class ZeekLogReader(file_tailer.FileTailer):
         # Return the header info
         return offset, field_names, field_types, type_converters
 
+    def num_header_rows(self, zeek_log):
+        """Get the number of lines in the Zeek header.
+
+            Format example:
+                #separator \x09
+                #set_separator	,
+                #empty_field	(empty)
+                #unset_field	-
+                #path	httpheader_recon
+                #fields	ts	origin	useragent	header_events_json
+                #types	time	string	string	string
+        """
+
+        # Open the Zeek logfile
+        num_rows = 0
+        with open(zeek_log, 'r') as zeek_file:
+
+            # Read lines until you find a line that doesn't start with #
+            while zeek_file.readline().startswith('#'):
+                num_rows += 1
+
+        # Return the number of header rows
+        return num_rows
+
     def make_dict(self, field_values):
-        ''' Internal method that makes sure any dictionary elements
+        """ Internal method that makes sure any dictionary elements
             are properly cast into the correct types.
-        '''
+        """
         data_dict = {}
         for key, value, field_type, converter in zip(self.field_names, field_values, self.field_types, self.type_converters):
             try:
@@ -192,6 +216,9 @@ def test():
     reader = ZeekLogReader(test_path)
     for line in reader.readrows():
         print(line)
+
+    # Test the num of header rows method
+    print(reader.num_header_rows(test_path))
 
     # Test some of the error conditions
     reader.field_names = ['good', 'error']
