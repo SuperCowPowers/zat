@@ -13,7 +13,7 @@ if __name__ == '__main__':
     # Example to check for potential Tor connections and give a summary of different ports
     # used for SSL connections. Please note that your Zeek installation must stamp the
     # ssl.log file with the 'issuer' field. More info can be found here:
-    # https://docs.zeek.org/en/master/script-reference/proto-analyzers.html#zeek-ssl
+    # https://docs.zeek.org/en/main/script-reference/proto-analyzers.html#zeek-ssl
 
     # Set up the regex search that is used against the issuer field
     issuer_regex = re.compile('CN=www.\w+.com')

@@ -2,7 +2,7 @@
 
 This documents discusses some of the design decisions made when implementing the new DataFrameToMatrix class.
 
-- **Train/Predict Column Order:** The most important aspect of this class is that it must produce consistently ordered output between training and prediction. In particular one-hot encoding for categorical fields must keep an ordered list of categorical values that are captured during training  (fit/fit-transform) and then used during prediction (transform). SCP Labs has a great notebook describing this issue in detail [Categorical Encoding Dangers](https://nbviewer.jupyter.org/github/SuperCowPowers/scp-labs/blob/master/notebooks/Categorical_Encoding_Dangers.ipynb)
+- **Train/Predict Column Order:** The most important aspect of this class is that it must produce consistently ordered output between training and prediction. In particular one-hot encoding for categorical fields must keep an ordered list of categorical values that are captured during training  (fit/fit-transform) and then used during prediction (transform). SCP Labs has a great notebook describing this issue in detail [Categorical Encoding Dangers](https://nbviewer.jupyter.org/github/SuperCowPowers/scp-labs/blob/main/notebooks/Categorical_Encoding_Dangers.ipynb)
 
 - **NaN Handling**: In general Pandas Dataframes are great about handling NaN values in a general and robust way. The same is NOT true of Scikit-Learn (see [Scikit No NaNs](https://stackoverflow.com/questions/30317119/classifiers-in-scikit-learn-that-handle-nan-null) and [Handling Missing Data](https://machinelearningmastery.com/handle-missing-data-python/)). So NaNs must be detected and handled accordingly. Specifically we propose this logic:
   - **Categorical NaNs:** The NaNs will become another category value, this simply adds 1 column to the one-hot encoding matrix and provides the handling of NaNs in a meaningful and robust way.
@@ -14,7 +14,7 @@ This documents discusses some of the design decisions made when implementing the
 
 ### References
 
-- [Categorical Encoding Dangers](https://nbviewer.jupyter.org/github/SuperCowPowers/scp-labs/blob/master/notebooks/Categorical_Encoding_Dangers.ipynb)
+- [Categorical Encoding Dangers](https://nbviewer.jupyter.org/github/SuperCowPowers/scp-labs/blob/main/notebooks/Categorical_Encoding_Dangers.ipynb)
 - [Numpy NDarray](https://docs.scipy.org/doc/numpy/reference/arrays.ndarray.html)
 - [Scikit-Learn No NaNs](https://stackoverflow.com/questions/30317119/classifiers-in-scikit-learn-that-handle-nan-null)
 - [Handling Missing Data](https://machinelearningmastery.com/handle-missing-data-python/)

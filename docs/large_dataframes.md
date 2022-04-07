@@ -23,7 +23,7 @@ Since conn.log is typically the most voluminous, we're going to use this 2.5 Gig
 - <https://data.kitware.com/#item/58ebde398d777f16d095fd0e>
 
 **Test Script:**
-We're simply going to use the [zeek\_to\_pandas.py](https://github.com/SuperCowPowers/zat/blob/master/examples/zeek_to_pandas.py) in the examples directory for testing. We'll be using Python 3.7.
+We're simply going to use the [zeek\_to\_pandas.py](https://github.com/SuperCowPowers/zat/blob/main/examples/zeek_to_pandas.py) in the examples directory for testing. We'll be using Python 3.7.
 
 ```
 $ time python zeek_to_pandas.py ~/data/bro/conn.log
@@ -62,7 +62,7 @@ A new PR focused specifically on memory/time improvements for large data frames.
 As noted in this issue <https://github.com/SuperCowPowers/zat/issues/23> the baseline construction of a data frame is inefficient, for large data frames this inefficiency plus the time wasted on memory paging/swapping starts to dominate the load time.
 
 **Memory:**
-As we've demonstrated in some of our notebooks examples, properly encoding categorical data will provide a significant memory reduction [Categorical Notebook](https://nbviewer.jupyter.org/github/SuperCowPowers/scp-labs/blob/master/notebooks/Categorical_Data_Guide.ipynb).
+As we've demonstrated in some of our notebooks examples, properly encoding categorical data will provide a significant memory reduction [Categorical Notebook](https://nbviewer.jupyter.org/github/SuperCowPowers/scp-labs/blob/main/notebooks/Categorical_Data_Guide.ipynb).
 
 **Details:**
 The proper conversion of 'time' to datetime and 'interval' to timedelta are taken care of by PR 76. Also the 'ts' field is properly set as the index of the dataframe.

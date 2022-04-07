@@ -255,7 +255,7 @@ def yara_match(file_path, rules):
 ### Risky Domains
 
 The example will use the analysis in our [Risky
-Domains](https://github.com/SuperCowPowers/zat/blob/master/notebooks/Risky_Domains.ipynb) notebook to flag domains that are 'at risk' and conduct a Virus Total query on those domains. See zat/examples/risky\_dns.py for full code
+Domains](https://github.com/SuperCowPowers/zat/blob/main/notebooks/Risky_Domains.ipynb) notebook to flag domains that are 'at risk' and conduct a Virus Total query on those domains. See zat/examples/risky\_dns.py for full code
 listing (code simplified below)
 
 ```python
