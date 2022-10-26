@@ -40,7 +40,11 @@ class ZeekMultiLogReader(object):
             if self._filepath.endswith('.gz'):
                 tmp = tempfile.NamedTemporaryFile(delete=False)
                 with gzip.open(self._filepath, 'rb') as f_in, open(tmp.name, 'wb') as f_out:
-                    shutil.copyfileobj(f_in, f_out)
+                    try:
+                        for line in f_in:
+                            f_out.write(line)
+                    except Exception as e:
+                        print("Exception in {} : {}".format(self._filepath, e))
 
                 # Set the file path to the new temp file
                 self._filepath = tmp.name
