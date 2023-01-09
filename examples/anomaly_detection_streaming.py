@@ -69,7 +69,7 @@ if __name__ == '__main__':
         time_delta = 10
         timer = time.time() + time_delta
         FIRST_TIME = True
-        for row in reader.readrows():
+        for row in reader.rows():
             df_cache.add_row(row)
 
             # Every 30 seconds grab the dataframe from the cache
