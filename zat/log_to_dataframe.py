@@ -93,7 +93,7 @@ class LogToDataFrame(object):
         """Given a set of names and types, construct a dictionary to be used
            as the Pandas read_csv dtypes argument"""
 
-        # Agressive Category means that types not in the current type_map are
+        # Aggressive Category means that types not in the current type_map are
         # mapped to a 'category' if aggressive_category is False then they
         # are mapped to an 'object' type
         unknown_type = 'category' if aggressive_category else 'object'

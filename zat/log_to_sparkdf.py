@@ -4,7 +4,7 @@ import sys
 
 # Third Party
 try:
-    from pyspark.sql.types import StructType, StringType, IntegerType, FloatType, LongType
+    from pyspark.sql.types import StructType, StringType, IntegerType, FloatType, LongType, DoubleType
     from pyspark.sql.functions import col, when
 except ImportError:
     print('\npip install pyspark')
@@ -33,7 +33,7 @@ class LogToSparkDF(object):
                          'count': LongType(),
                          'int': IntegerType(),
                          'double': FloatType(),
-                         'time': FloatType(),    # Secondary Processing into TimestampType()
+                         'time': DoubleType(),    # Secondary Processing into TimestampType()
                          'interval': FloatType(),
                          'port': IntegerType(),
                          'enum': StringType(),

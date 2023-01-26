@@ -28,7 +28,7 @@ def log_to_parquet(log_in, parquet_out):
 
     # Read in the Parquet file
     spark_df = spark.read.parquet(parquet_out)
-    spark_df.show(5)
+    spark_df.show(5, False)
 
 
 if __name__ == '__main__':
