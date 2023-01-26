@@ -73,7 +73,7 @@ $ twine upload dist/* -r pypi
 
 ``` {.bash}
 $ git add zat/__init__.py
-$ get commit -m "zat version 1.8.7 (or whatever)"
+$ git commit -m "zat version 1.8.7 (or whatever)"
 $ git tag v1.8.7 (or whatever)
 $ git push --tags
 $ git push
