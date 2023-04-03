@@ -16,6 +16,9 @@ pip install zat[all] (include pyarrow, yara-python, and tldextract)
 ### Getting Started
 - [Examples of Using ZAT](https://supercowpowers.github.io/zat/examples.html)
 
+### AWS Data Processing and ML Modeling
+- Please see [SageWorks](https://github.com/SuperCowPowers/sageworks)
+
 ### Installing on Raspberry Pi!
 - [Raspberry Pi Instructions](https://supercowpowers.github.io/zat/raspberry_pi.html)
 
