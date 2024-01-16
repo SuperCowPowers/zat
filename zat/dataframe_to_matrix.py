@@ -106,7 +106,7 @@ class DataFrameToMatrix():
         """ONLY FIT: Convert np.NaNs to a category 'NaN'"""
         for column in df.select_dtypes(include=['category']).columns:
             if df[column].isnull().any():
-                df[column].cat.add_categories('NaN', inplace=True)
+                df[column] = df[column].cat.add_categories('NaN')
                 df[column].fillna('NaN', inplace=True)
 
     @staticmethod
