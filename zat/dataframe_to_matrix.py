@@ -246,22 +246,22 @@ def test():
     print('FIT-TRANSFORM')
     norm_matrix = to_matrix_norm.fit_transform(test_df)
     print(norm_matrix)
-    assert(norm_matrix[:, 0].min() == 0)
-    assert(norm_matrix[:, 0].max() == 1)
+    assert (norm_matrix[:, 0].min() == 0)
+    assert (norm_matrix[:, 0].max() == 1)
 
     # Make sure normalize 'does the right thing' when doing transform
     print('TRANSFORM')
     norm_matrix2 = to_matrix_norm.transform(test_df2)
-    assert(norm_matrix2[:, 0].min() == 0)
-    assert(norm_matrix2[:, 0].max() == 2)    # Normalization is based on FIT range
+    assert (norm_matrix2[:, 0].min() == 0)
+    assert (norm_matrix2[:, 0].max() == 2)    # Normalization is based on FIT range
 
     # Test div by zero in normalize
     test_df3 = test_df2.copy()
     test_df3['D'] = [1, 1, 1, 1]
     print('FIT-TRANSFORM')
     norm_matrix3 = to_matrix_norm.fit_transform(test_df3)
-    assert(norm_matrix3[:, 0].min() == 1)
-    assert(norm_matrix3[:, 0].max() == 1)
+    assert (norm_matrix3[:, 0].min() == 1)
+    assert (norm_matrix3[:, 0].max() == 1)
 
     # Test serialization
     temp = NamedTemporaryFile(delete=False)

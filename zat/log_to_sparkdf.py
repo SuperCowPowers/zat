@@ -1,7 +1,5 @@
 """LogToSparkDF: Converts a Zeek log to a Spark DataFrame"""
 
-import sys
-
 # Third Party
 try:
     from pyspark.sql.types import StructType, StringType, IntegerType, FloatType, LongType, DoubleType
