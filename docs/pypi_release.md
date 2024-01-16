@@ -45,6 +45,11 @@ $ tox
 
 If ALL the test above pass\...
 
+### Bump the version (manual for now, we'll fix this)
+```
+$ vi zat/__init__.py and bump the version
+```
+
 ### Clean any previous distribution files
 ```
 make clean
