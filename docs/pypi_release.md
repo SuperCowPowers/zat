@@ -1,7 +1,4 @@
-# Admin Notes
-
-
-## PyPI Release How-To
+# PyPI Release Notes
 
 Notes and information on how to do the PyPI release for the ZAT project. For full details on packaging you can reference this page
 [Packaging](https://packaging.python.org/tutorials/packaging-projects/#packaging-your-project)
@@ -26,19 +23,18 @@ index-servers =
   testpypi
 
 [pypi]
-repository=https://upload.pypi.org/legacy/
-username=<pypi username>
-password=<pypi password>
+username = __token__
+password = pypi-AgEIcH...
 
 [testpypi]
-repository=https://test.pypi.org/legacy/
-username=<pypi username>
-password=<pypi password>
+username = __token__
+password = pypi-AgENdG...
+
 ```
 
 ### Tox Background
 
-Tox will install the ZAT package into a blank virtualenv and then execute all the tests against the newly installed package. So if everything goes okay, you know the pypi package installed fine and the tests (which pull from the installed ZAT package) also ran okay.
+Tox will install the SageMaker Sandbox package into a blank virtualenv and then execute all the tests against the newly installed package. So if everything goes okay, you know the pypi package installed fine and the tests (which puls from the installed `sageworks` package) also ran okay.
 
 ### Make sure ALL tests pass
 
@@ -49,32 +45,37 @@ $ tox
 
 If ALL the test above pass\...
 
+### Clean any previous distribution files
+```
+make clean
+```
+### Tag the New Version
+```
+git tag v0.4.7 (or whatever)
+git push --tags
+```
+
 ### Create the TEST PyPI Release
 
 ``` {.bash}
-$ vi zat/__init__.py and bump the version
-$ python setup.py sdist bdist_wheel
-$ twine upload dist/* -r testpypi
+python setup.py sdist bdist_wheel
+twine upload dist/* -r testpypi
 ```
 
 ### Install the TEST PyPI Release
 
 ``` {.bash}
-$ pip install --index-url https://test.pypi.org/simple zat
+pip install --index-url https://test.pypi.org/simple sageworks
 ```
 
 ### Create the REAL PyPI Release
 
 ``` {.bash}
-$ twine upload dist/* -r pypi
+twine upload dist/* -r pypi
 ```
 
-### Push changes to Github
+### Push any possible changes to Github
 
 ``` {.bash}
-$ git add zat/__init__.py
-$ git commit -m "zat version 1.8.7 (or whatever)"
-$ git tag v1.8.7 (or whatever)
-$ git push --tags
-$ git push
+git push
 ```
