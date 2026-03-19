@@ -1,7 +1,7 @@
 """LogToDataFrame: Converts a Zeek log to a Polars DataFrame"""
 
 # Third Party
-from typing import Dict, Optional, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 try:
     import polars as pl

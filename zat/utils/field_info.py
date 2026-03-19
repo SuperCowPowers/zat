@@ -1,5 +1,6 @@
+from typing import List, Tuple
+
 from zat.zeek_log_reader import ZeekLogReader
-from typing import Tuple, List
 
 
 def get_field_info(log_filename: str) -> Tuple[List[str], List[str]]:
