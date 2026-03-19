@@ -9,10 +9,10 @@ except ImportError:
 
 
 # Local
-from zat import zeek_log_reader
+from zat.utils.field_info import get_field_info
 
 
-class LogToSparkDF(object):
+class LogToSparkDF:
     """LogToSparkDF: Converts a Zeek log to a Spark DataFrame"""
 
     def __init__(self, spark):
@@ -48,11 +48,9 @@ class LogToSparkDF(object):
         """
 
         # Create a Zeek log reader just to read in the header for names and types
-        _zeek_reader = zeek_log_reader.ZeekLogReader(log_filename)
-        _, field_names, field_types, _ = _zeek_reader._parse_zeek_header(log_filename)
+        field_names, field_types = get_field_info(log_filename=log_filename)
 
-        # Get the appropriate types for the Spark Dataframe
-        spark_schema = self.build_spark_schema(field_names, field_types)
+        spark_schema = self.build_spark_schema(column_names=field_names, column_types=field_types)
 
         # Now actually read the Zeek Log using Spark read CSV
         _df = self.spark.read.csv(log_filename, schema=spark_schema, sep="\t", comment="#", nullValue="-")
