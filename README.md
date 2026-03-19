@@ -8,8 +8,8 @@ with Pandas, scikit-learn, Kafka, and Spark
 
 ### Recent
 Thanks to <https://github.com/Bl4omArchie> for the Dask and Polars Zeek log converters. See examples here: 
-   - [Zeek to Dask](https://supercowpowers.github.io/zat/examples/zeek_to_dask.py)
-   - [Zeek to Polars](https://supercowpowers.github.io/zat/examples/zeek_to_polars.py)
+   - [Zeek to Dask](https://github.com/SuperCowPowers/zat/blob/main/examples/zeek_to_dask.py)
+   - [Zeek to Polars](https://github.com/SuperCowPowers/zat/blob/main/examples/zeek_to_polars.py)
 ### Install
 ```
 pip install zat
