@@ -129,7 +129,7 @@ def test():
     # Print out the datatypes
     print(my_df.dtypes)
 
-    # Test a bunch
+    # Test a bunch of logs
     tests = [
         "app_stats.log",
         "dns.log",
@@ -161,4 +161,4 @@ def test():
     # Print out the datatypes
     print(my_df.dtypes)
 
-    print("LogToDataFrame Test successful!")
+    print("LogToPolars Test successful!")

@@ -6,6 +6,10 @@
 The ZAT Python package supports the processing and analysis of Zeek data
 with Pandas, scikit-learn, Kafka, and Spark
 
+### Recent
+Thanks to <https://github.com/Bl4omArchie> for the Dask and Polars Zeek log converters. See examples here: 
+   - [Zeek to Dask](https://supercowpowers.github.io/zat/examples/zeek_to_dask.py)
+   - [Zeek to Polars](https://supercowpowers.github.io/zat/examples/zeek_to_polars.py)
 ### Install
 ```
 pip install zat

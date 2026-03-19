@@ -142,7 +142,7 @@ def test():
     # Print out the datatypes
     print(my_df.dtypes)
 
-    # Test a bunch
+    # Test a bunch of logs
     tests = [
         "app_stats.log",
         "dns.log",
@@ -166,7 +166,7 @@ def test():
 
     # Test out usecols arg
     conn_path = os.path.join(data_path, "conn.log")
-    my_df = log_to_df.create_dataframe(
+    log_to_df.create_dataframe(
         conn_path, usecols=["id.orig_h", "id.orig_p", "id.resp_h", "id.resp_p", "proto", "orig_bytes", "resp_bytes"]
     )
 
