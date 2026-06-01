@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://supercowpowers.github.io/zat/
+    about: Browse the ZAT docs and examples before filing an issue.
+  - name: Contributing guide
+    url: https://github.com/SuperCowPowers/zat/blob/main/docs/contributing.md
+    about: How to contribute, including automated/AI-assisted PRs.

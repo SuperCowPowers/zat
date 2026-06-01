@@ -77,5 +77,8 @@ pytest zat              # Quick test run
 tox                     # Full matrix (Python 3.10, 3.12, 3.13 + flake8)
 ```
 
+### Contributing
+Contributions are welcome! See the [Contributing Guide](https://github.com/SuperCowPowers/zat/blob/main/docs/contributing.md) to get started.
+
 ### About SuperCowPowers
 The company was formed so that its developers could follow their passion for Python, streaming data pipelines and having fun with data analysis. We also think cows are cool and should be superheros or at least carry around rayguns and burner phones. <a href="https://www.supercowpowers.com" target="_blank">Visit SuperCowPowers</a>

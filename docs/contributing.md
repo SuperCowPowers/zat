@@ -22,13 +22,13 @@ If you are reporting a bug, please include:
 
 ### Fix Bugs
 
-Look through the GitHub issues for bugs. Anything tagged with \"bug\" is
+Look through the GitHub issues for bugs. Anything tagged with "bug" is
 open to whoever wants to implement it.
 
 ### Implement Features
 
 Look through the GitHub issues for features. Anything tagged with
-\"feature\" is open to whoever wants to implement it.
+"feature" is open to whoever wants to implement it.
 
 ### Write Documentation
 
@@ -52,10 +52,10 @@ If you are proposing a feature:
 Get Started!
 ------------
 
-Ready to contribute? Here\'s how to set up [zat]{.title-ref} for local
+Ready to contribute? Here's how to set up `zat` for local
 development.
 
-1.  [Fork]() the [zat]{.title-ref} repo on GitHub.
+1.  Fork the `zat` repo on GitHub.
 
 2.  Clone your fork locally:
 
@@ -67,7 +67,7 @@ development.
 
 Now you can make your changes locally.
 
-4.  When you\'re done making changes, check that your changes pass style
+4.  When you're done making changes, check that your changes pass style
     and unit tests, including testing other Python versions with tox:
 
         $ tox
@@ -90,9 +90,23 @@ Before you submit a pull request, check that it meets these guidelines:
 1.  The pull request should include tests.
 2.  If the pull request adds functionality, the docs should be updated.
     Put your new functionality into a function with a docstring, and add
-    the feature to the list in README.rst.
+    the feature to the list in README.md.
 3.  The pull request should work for Python 3.10+.
     Run `tox` and make sure that the tests pass for all supported Python versions.
+
+Automated & AI-assisted Contributions
+--------------------------------------
+
+We welcome AI-assisted work, but to keep reviews productive we ask a few things:
+
+-   **Open an issue first for anything non-trivial, and link it from your PR.**
+    This lets us agree the change is a good fit before you invest time writing
+    it. PRs without a linked issue may be closed without a full review.
+-   **Please disclose if a PR was largely automated or AI-generated.**
+-   **Keep it to a few open PRs at a time.** Once those are reviewed and merged,
+    send a few more. We'd rather go deep on a handful of solid changes than
+    skim a large batch.
+-   **Make sure it runs.** Confirm `tox` passes locally before opening the PR.
 
 Tips
 ----
