@@ -91,6 +91,35 @@ Filtering out ['stats.g.doubleclick.net', 'www.googletagservices.com',
    'ajax.googleapis.com', 's0.2mdn.net', 'www.google.com']
 DF Size after whitelist: 39 rows
 ```
+### Query Zeek Logs by Example (examples/zeek\_query\_examples.py)
+
+```python
+from zat import zeek_log_reader
+...
+    reader = zeek_log_reader.ZeekLogReader(args.zeek_log)
+    rows = list(reader.readrows())
+    print_counter("Top DNS queries", top_counter(rows, "query"), args.top)
+```
+
+**Example usage/output**
+
+```
+$ python zeek_query_examples.py ../data/conn.log ../data/dns.log ../data/http.log --top 5
+
+../data/conn.log (conn)
+=======================
+Rows: 360
+
+Top responder hosts
+-------------------
+54.230.86.87                                                                  41
+192.168.33.10                                                                 20
+```
+
+The script includes pure-Python query summaries for conn, dns, http, and ssl logs,
+including top hosts, ports, services, DNS query names, response codes, HTTP user
+agents, paths, TLS server names, versions, and certificate fields.
+
 ### Zeek Log to Scikit-Learn (examples/zeek\_to\_scikit.py)
 See **zat/examples/zeek\_to\_scikit.py** for full code listing, we've shortened the code listing here to demonstrate that it's literally just a few lines of code to get to Scikit-Learn.
 
