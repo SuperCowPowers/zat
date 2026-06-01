@@ -61,6 +61,32 @@ ts
 2013-09-15 17:44:28.141795  d31qbv1cthcecs.cloudfront.net  192.168.33.10       1030   4.2.2.3
 2013-09-15 17:44:28.422704                crl.entrust.net  192.168.33.10       1030   4.2.2.3
 ```
+
+### Zeek log to S3 Parquet dataset (examples/zeek\_to\_s3\_parquet.py)
+
+```python
+from zat.log_to_dataframe import LogToDataFrame
+import awswrangler as wr
+...
+    log_to_df = LogToDataFrame()
+    zeek_df = log_to_df.create_dataframe('/path/to/http.log')
+
+    wr.s3.to_parquet(
+        df=zeek_df,
+        path='s3://my-bucket/zat/http/',
+        dataset=True,
+        database='zeek',
+        table='http',
+    )
+```
+
+**Example usage:** Install the optional AWS dependencies with
+`pip install 'zat[aws]'`, configure AWS credentials normally, and write a
+local Zeek log as an S3-backed Parquet dataset.
+
+```
+$ python zeek_to_s3_parquet.py ../data/http.log s3://my-bucket/zat/http/ --database zeek --table http
+```
 ### Filter out DNS Whitelists (examples/pandas\_whitelist.py)
 
 ```python
