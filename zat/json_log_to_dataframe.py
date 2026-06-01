@@ -1,6 +1,7 @@
 """JSONLogToDataFrame: Converts a Zeek JSON log to a Pandas DataFrame"""
 
 import os
+from collections.abc import Hashable
 
 # Third Party
 import pandas as pd
@@ -11,28 +12,65 @@ import pandas as pd
 class JSONLogToDataFrame(object):
     """JSONLogToDataFrame: Converts a Zeek JSON log to a Pandas DataFrame
     Notes:
-        Unlike the regular Zeek logs, when you dump the data to JSON you lose
-        all the type information. This means we have to guess/infer a lot
-        of the types, we HIGHLY recommend that you use the standard Zeek output
-        log format as it will result in both faster and better dataframes.
-    Todo:
-        1. Have a more formal column mapping
-        2. Convert Categorial columns
+        Zeek JSON logs do not include a #types header, so this class uses a
+        best-effort column map for common Zeek fields. You can pass
+        column_types to override or extend the default mapping.
     """
+
+    DEFAULT_ZEEK_TYPES = {
+        "ts": "time",
+        "duration": "interval",
+        "rtt": "interval",
+        "id.orig_p": "port",
+        "id.resp_p": "port",
+        "trans_id": "count",
+        "qclass": "count",
+        "qtype": "count",
+        "rcode": "count",
+        "Z": "count",
+        "orig_bytes": "count",
+        "resp_bytes": "count",
+        "missed_bytes": "count",
+        "orig_pkts": "count",
+        "orig_ip_bytes": "count",
+        "resp_pkts": "count",
+        "resp_ip_bytes": "count",
+        "AA": "bool",
+        "TC": "bool",
+        "RD": "bool",
+        "RA": "bool",
+        "rejected": "bool",
+        "local_orig": "bool",
+        "local_resp": "bool",
+        "proto": "category",
+        "service": "category",
+        "conn_state": "category",
+        "history": "category",
+        "qclass_name": "category",
+        "qtype_name": "category",
+        "rcode_name": "category",
+    }
 
     def __init__(self):
         """Initialize the JSONLogToDataFrame class"""
 
-        # Type conversion Map: This is simple for now but can/should be improved
-        self.type_map = {}
+        self.type_map = {
+            "bool": "boolean",
+            "count": "UInt64",
+            "int": "Int64",
+            "double": "float",
+            "port": "UInt16",
+        }
 
-    def create_dataframe(self, log_filename, ts_index=True, aggressive_category=True, maxrows=None):
+    def create_dataframe(self, log_filename, ts_index=True, aggressive_category=True, maxrows=None, column_types=None):
         """Create a Pandas dataframe from a Zeek JSON log file
         Args:
            log_filename (string): The full path to the Zeek log
            ts_index (bool): Set the index to the 'ts' field (default = True)
-           aggressive_category (bool): convert unknown columns to category (default = True)
+           aggressive_category (bool): convert unknown string columns to category (default = True)
            maxrows: Read in a subset of rows for testing/inspecting (default = None)
+           column_types (dict): Optional column-to-Zeek-type mapping. Supported Zeek
+               types include time, interval, bool, count, int, double, port, and category.
         """
         # Sanity check the filename
         if not os.path.isfile(log_filename):
@@ -42,16 +80,55 @@ class JSONLogToDataFrame(object):
         # Read in the JSON file as a dataframe
         _df = pd.read_json(log_filename, nrows=maxrows, lines=True)
 
-        # If we have a ts field convert it to datetime (and optionally set as index)
-        if "ts" in _df.columns:
-            _df["ts"] = pd.to_datetime(_df["ts"], unit="s")
+        # Apply type information where JSON logs do not provide a #types header.
+        resolved_types = dict(self.DEFAULT_ZEEK_TYPES)
+        if column_types:
+            resolved_types.update(column_types)
+        self._apply_column_types(_df, resolved_types, aggressive_category)
 
-            # Set the index
-            if ts_index:
-                _df.set_index("ts", inplace=True)
+        # Set the index
+        if "ts" in _df.columns and ts_index:
+            _df.set_index("ts", inplace=True)
 
         # Okay our dataframe should be ready to go
         return _df
+
+    def _apply_column_types(self, dataframe, column_types, aggressive_category):
+        """Apply Zeek-informed dtypes to a JSON dataframe."""
+        for column, zeek_type in column_types.items():
+            if column not in dataframe.columns:
+                continue
+
+            if zeek_type == "time":
+                dataframe[column] = pd.to_datetime(dataframe[column], unit="s")
+            elif zeek_type == "interval":
+                dataframe[column] = pd.to_timedelta(dataframe[column], unit="s")
+            elif zeek_type == "category":
+                dataframe[column] = dataframe[column].astype("category")
+            elif zeek_type in self.type_map:
+                dataframe[column] = pd.to_numeric(dataframe[column], errors="coerce").astype(self.type_map[zeek_type])
+            else:
+                dataframe[column] = dataframe[column].astype(zeek_type)
+
+        if not aggressive_category:
+            return
+
+        for column in dataframe.select_dtypes(include=["object", "str", "string"]).columns:
+            if self._is_identifier_column(column) or not self._can_be_category(dataframe[column]):
+                continue
+            dataframe[column] = dataframe[column].astype("category")
+
+    @staticmethod
+    def _is_identifier_column(column):
+        column_parts = column.split(".")
+        return column in {"uid", "fuid"} or column_parts[-1] in {"uid", "fuid", "guid"}
+
+    @staticmethod
+    def _can_be_category(series):
+        non_null = series.dropna()
+        if non_null.empty:
+            return True
+        return non_null.map(lambda value: isinstance(value, Hashable)).all()
 
 
 # Simple test of the functionality
@@ -106,6 +183,30 @@ def test():
     conn_path = os.path.join(data_path, "conn.log")
     my_df = log_to_df.create_dataframe(conn_path, maxrows=3)
     print(my_df.head())
+    assert len(my_df) == 3
+
+    # Test JSON type inference
+    conn_df = log_to_df.create_dataframe(conn_path, ts_index=False)
+    assert str(conn_df["ts"].dtype).startswith("datetime64")
+    assert str(conn_df["duration"].dtype) == "timedelta64[ns]"
+    assert str(conn_df["id.orig_p"].dtype) == "UInt16"
+    assert str(conn_df["orig_bytes"].dtype) == "UInt64"
+    assert str(conn_df["proto"].dtype) == "category"
+    assert str(conn_df["conn_state"].dtype) == "category"
+    assert str(conn_df["uid"].dtype) != "category"
+
+    dns_path = os.path.join(data_path, "dns.log")
+    dns_df = log_to_df.create_dataframe(dns_path, ts_index=False)
+    assert str(dns_df["rtt"].dtype) == "timedelta64[ns]"
+    assert str(dns_df["qtype"].dtype) == "UInt64"
+    assert str(dns_df["AA"].dtype) == "boolean"
+    assert str(dns_df["qtype_name"].dtype) == "category"
+    assert str(dns_df["answers"].dtype) != "category"
+
+    custom_df = log_to_df.create_dataframe(
+        conn_path, ts_index=False, aggressive_category=False, column_types={"uid": "category"}
+    )
+    assert str(custom_df["uid"].dtype) == "category"
 
     # Test an empty log (a log with header/close but no data rows)
     log_path = os.path.join(data_path, "http_empty.log")
