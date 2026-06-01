@@ -5,6 +5,7 @@ from collections.abc import Hashable
 
 # Third Party
 import pandas as pd
+from pandas.api.types import is_object_dtype, is_string_dtype
 
 # Local Imports
 
@@ -113,7 +114,10 @@ class JSONLogToDataFrame(object):
         if not aggressive_category:
             return
 
-        for column in dataframe.select_dtypes(include=["object", "str", "string"]).columns:
+        for column in dataframe.columns:
+            column_dtype = dataframe[column].dtype
+            if not (is_object_dtype(column_dtype) or is_string_dtype(column_dtype)):
+                continue
             if self._is_identifier_column(column) or not self._can_be_category(dataframe[column]):
                 continue
             dataframe[column] = dataframe[column].astype("category")
