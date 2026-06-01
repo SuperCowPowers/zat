@@ -25,6 +25,24 @@ class FileTailer(object):
         self._full_read = full_read
         self._tail = tail
 
+    @staticmethod
+    def _file_signature(file_info):
+        """Return a stable signature for comparing opened files with path stats."""
+        return (file_info.st_dev, file_info.st_ino)
+
+    def _was_rotated(self, fp, offset):
+        """Return True when the tailed file was replaced or truncated."""
+        try:
+            current_path = os.stat(self._filepath)
+        except OSError:
+            return True
+
+        open_file = os.fstat(fp.fileno())
+        if self._file_signature(current_path) != self._file_signature(open_file):
+            return True
+
+        return offset > current_path.st_size
+
     def readlines(self, offset=0):
         """Open the file for reading and yield lines as they are added"""
         try:
@@ -43,6 +61,8 @@ class FileTailer(object):
                         if row:
                             yield row
                         else:
+                            if self._was_rotated(fp, current):
+                                return
                             fp.seek(current)
                             time.sleep(self._sleep)
 
@@ -82,6 +102,52 @@ def test():
 
     except ImportError:
         print("Tailing Test not run, need interruptcow module...")
+
+
+def test_detects_copytruncate_rotation(tmp_path):
+    """A tailer should stop reading an opened file after copytruncate rotation."""
+    test_path = tmp_path / "rotating.log"
+    test_path.write_text("first\nsecond\n", encoding="utf-8")
+    tailer = FileTailer(str(test_path))
+
+    with open(test_path, "r+") as fp:
+        fp.seek(0, os.SEEK_END)
+        offset = fp.tell()
+        fp.truncate(0)
+        fp.flush()
+
+        assert tailer._was_rotated(fp, offset)
+
+
+def test_unrotated_file_is_not_reported_as_rotated(tmp_path):
+    """An unchanged tailed file should not be treated as rotated."""
+    test_path = tmp_path / "rotating.log"
+    test_path.write_text("first\n", encoding="utf-8")
+    tailer = FileTailer(str(test_path))
+
+    with open(test_path) as fp:
+        offset = fp.tell()
+
+        assert not tailer._was_rotated(fp, offset)
+
+
+def test_detects_renamed_recreated_rotation(tmp_path):
+    """A tailer should stop reading an opened file after rename/create rotation."""
+    import pytest
+
+    if os.name == "nt":
+        pytest.skip("Windows cannot rename an open file handle.")
+
+    test_path = tmp_path / "rotating.log"
+    test_path.write_text("first\n", encoding="utf-8")
+    tailer = FileTailer(str(test_path))
+
+    with open(test_path) as fp:
+        offset = fp.tell()
+        test_path.rename(tmp_path / "rotating.log.1")
+        test_path.write_text("second\n", encoding="utf-8")
+
+        assert tailer._was_rotated(fp, offset)
 
 
 if __name__ == "__main__":
