@@ -61,6 +61,29 @@ ts
 2013-09-15 17:44:28.141795  d31qbv1cthcecs.cloudfront.net  192.168.33.10       1030   4.2.2.3
 2013-09-15 17:44:28.422704                crl.entrust.net  192.168.33.10       1030   4.2.2.3
 ```
+### Plot Timedelta Columns (examples/zeek\_timedelta\_plot.py)
+
+ZAT converts Zeek `interval` fields, such as the `duration` field in
+`conn.log`, to Pandas `timedelta64[ns]`. Some Pandas/Matplotlib
+combinations do not histogram that dtype directly. Convert the timedelta
+column to explicit numeric units before plotting:
+
+```python
+from zat.log_to_dataframe import LogToDataFrame
+
+log_to_df = LogToDataFrame()
+conn_df = log_to_df.create_dataframe('/path/to/conn.log')
+
+conn_df['duration_seconds'] = conn_df['duration'].dt.total_seconds()
+conn_df['duration_seconds'].hist()
+```
+
+**Example usage**
+
+```
+$ python zeek_timedelta_plot.py ../data/conn.log --unit seconds --output duration.png
+```
+
 ### Filter out DNS Whitelists (examples/pandas\_whitelist.py)
 
 ```python
