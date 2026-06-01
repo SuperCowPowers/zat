@@ -1,5 +1,8 @@
 """LogToDataFrame: Converts a Zeek log to a Pandas DataFrame"""
 
+# Standard library
+import gzip
+
 # Third Party
 import pandas as pd
 
@@ -40,9 +43,37 @@ class LogToDataFrame:
 
     def _create_initial_df(self, log_filename, all_fields, usecols, dtypes):
         """Internal Method: Create the initial dataframes by using Pandas read CSV (primary types correct)"""
+        skiprows = self._zeek_metadata_rows(log_filename)
         return pd.read_csv(
-            log_filename, sep="\t", names=all_fields, usecols=usecols, dtype=dtypes, comment="#", na_values="-"
+            log_filename,
+            sep="\t",
+            names=all_fields,
+            usecols=usecols,
+            dtype=dtypes,
+            skiprows=skiprows,
+            na_values="-",
         )
+
+    @staticmethod
+    def _open_text_log(log_filename):
+        """Open a Zeek log as text, including gzip-compressed logs."""
+        if str(log_filename).endswith(".gz"):
+            return gzip.open(log_filename, "rt", encoding="utf-8")
+        return open(log_filename, "r", encoding="utf-8")
+
+    @classmethod
+    def _zeek_metadata_rows(cls, log_filename):
+        """Return row numbers for Zeek metadata lines.
+
+        Pandas' ``comment="#"`` also treats hashes inside data fields as comments,
+        so skip only whole-line Zeek metadata such as ``#fields`` and ``#close``.
+        """
+        skiprows = []
+        with cls._open_text_log(log_filename) as zeek_file:
+            for row_number, line in enumerate(zeek_file):
+                if line.startswith("#"):
+                    skiprows.append(row_number)
+        return skiprows
 
     def create_dataframe(self, log_filename, ts_index=True, aggressive_category=True, usecols=None):
         """Create a Pandas dataframe from a Bro/Zeek log file
@@ -118,6 +149,33 @@ class LogToDataFrame:
 
         # Return the dictionary of name: type
         return pandas_types
+
+
+def test_hash_in_data_field_is_preserved(tmp_path):
+    """Hashes inside Zeek data fields are values, not line comments."""
+    log_path = tmp_path / "http_with_hash.log"
+    log_path.write_text(
+        "\n".join(
+            [
+                "#separator \\x09",
+                "#set_separator\t,",
+                "#empty_field\t(empty)",
+                "#unset_field\t-",
+                "#path\thttp",
+                "#open\t2022-03-21-15-34-29",
+                "#fields\tts\tuid\tmethod\thost\turi\tstatus_code",
+                "#types\ttime\tstring\tstring\tstring\tstring\tcount",
+                "1647876867.668082\tC1\tGET\texample.test\t/dv/vulnerabilities/sqli/?id=1#&Submit=Submit\t200",
+                "#close\t2022-03-21-15-34-30",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    dataframe = LogToDataFrame().create_dataframe(log_path, ts_index=False)
+
+    assert dataframe.loc[0, "uri"] == "/dv/vulnerabilities/sqli/?id=1#&Submit=Submit"
+    assert dataframe.loc[0, "status_code"] == 200
 
 
 # Simple test of the functionality
