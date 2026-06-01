@@ -170,6 +170,18 @@ def test():
         conn_path, usecols=["id.orig_h", "id.orig_p", "id.resp_h", "id.resp_p", "proto", "orig_bytes", "resp_bytes"]
     )
 
+    # Test remote/fsspec paths
+    try:
+        import fsspec
+    except ImportError:
+        print("Remote Zeek path test not run, need fsspec...")
+    else:
+        remote_path = "memory://zat/logs/conn.log"
+        with open(conn_path, "r") as source_file, fsspec.open(remote_path, "wt") as remote_file:
+            remote_file.write(source_file.read())
+        my_df = log_to_df.create_dataframe(remote_path, usecols=["id.orig_h", "id.resp_h", "proto"])
+        assert not my_df.empty
+
     # Test an empty log (a log with header/close but no data rows)
     log_path = os.path.join(data_path, "http_empty.log")
     my_df = log_to_df.create_dataframe(log_path)

@@ -32,7 +32,8 @@ dependencies = [
 
 [project.optional-dependencies]
 pyspark = ["pyspark"]
-all = ["pyspark", "pyarrow", "yara-python", "tldextract"]
+s3 = ["s3fs"]
+all = ["pyspark", "pyarrow", "yara-python", "tldextract", "s3fs"]
 
 [project.urls]
 Homepage = "https://github.com/SuperCowPowers/zat"

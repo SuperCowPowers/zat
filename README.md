@@ -14,7 +14,8 @@ Thanks to <https://github.com/Bl4omArchie> for the Dask and Polars Zeek log conv
 ```
 pip install zat
 pip install zat[pyspark] (includes pyspark library)
-pip install zat[all] (include pyarrow, yara-python, and tldextract)
+pip install zat[s3] (includes S3 file access support)
+pip install zat[all] (include pyarrow, yara-python, tldextract, and S3 file access support)
 ```
 
 ### Getting Started

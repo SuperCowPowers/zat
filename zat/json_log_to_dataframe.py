@@ -6,6 +6,7 @@ import os
 import pandas as pd
 
 # Local Imports
+from zat.utils.field_info import _is_uri_path
 
 
 class JSONLogToDataFrame(object):
@@ -35,7 +36,7 @@ class JSONLogToDataFrame(object):
            maxrows: Read in a subset of rows for testing/inspecting (default = None)
         """
         # Sanity check the filename
-        if not os.path.isfile(log_filename):
+        if not _is_uri_path(log_filename) and not os.path.isfile(log_filename):
             print(f"Could not find file: {log_filename}")
             return pd.DataFrame()
 
@@ -106,6 +107,18 @@ def test():
     conn_path = os.path.join(data_path, "conn.log")
     my_df = log_to_df.create_dataframe(conn_path, maxrows=3)
     print(my_df.head())
+
+    # Test remote/fsspec paths
+    try:
+        import fsspec
+    except ImportError:
+        print("Remote JSON path test not run, need fsspec...")
+    else:
+        remote_path = "memory://zat/json/conn.log"
+        with open(conn_path, "r") as source_file, fsspec.open(remote_path, "wt") as remote_file:
+            remote_file.write(source_file.read())
+        my_df = log_to_df.create_dataframe(remote_path, maxrows=3)
+        assert len(my_df) == 3
 
     # Test an empty log (a log with header/close but no data rows)
     log_path = os.path.join(data_path, "http_empty.log")
