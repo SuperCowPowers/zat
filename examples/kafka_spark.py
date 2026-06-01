@@ -1,10 +1,11 @@
-"""Read Kafka Streams into Spark, perform simple filtering/aggregation"""
+"""Read Kafka Streams into Spark, perform simple filtering/aggregation."""
 
 import argparse
 import sys
 from time import sleep
 
 try:
+    import pyspark
     from pyspark.sql import SparkSession
     from pyspark.sql.functions import col, from_json, udf
     from pyspark.sql.types import BooleanType, IntegerType, StringType, StructType
@@ -27,50 +28,23 @@ def exit_program():
 
 def compute_domain(query):
     # Pull out the domain
+    if not query:
+        return None
     if query.endswith(".local"):
         return "local"
-    return tldextract.extract(query).registered_domain if query else None
+    return tldextract.extract(query).registered_domain or query
 
 
-if __name__ == "__main__":
-    """Read Kafka Streams into Spark, perform simple filtering/aggregation"""
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--server", type=str, default="localhost:9092", help="Specify the Kafka Server (default: localhost:9092)"
-    )
-    args, commands = parser.parse_known_args()
+def spark_kafka_package(spark_version):
+    """Return the Spark Kafka connector coordinate that matches the PySpark version."""
+    major_version = spark_version.split(".", maxsplit=1)[0]
+    scala_binary_version = {"2": "2.11", "3": "2.12", "4": "2.13"}.get(major_version, "2.12")
+    return "org.apache.spark:spark-sql-kafka-0-10_{:s}:{:s}".format(scala_binary_version, spark_version)
 
-    # Check for unknown args
-    if commands:
-        print("Unrecognized args: %s" % commands)
-        sys.exit(1)
 
-    # Grab the Kafka server
-    kserver = args.server
-
-    # Spin up a local Spark Session (with 4 executors)
-    spark = (
-        SparkSession.builder.master("local[4]")
-        .appName("my_awesome")
-        .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.4")
-        .getOrCreate()
-    )
-    spark.sparkContext.setLogLevel("ERROR")
-
-    # Optimize the conversion to Spark
-    spark.conf.set("spark.sql.execution.arrow.enable", "true")
-
-    # SUBSCRIBE: Setup connection to Kafka Stream
-    raw_data = (
-        spark.readStream.format("kafka")
-        .option("kafka.bootstrap.servers", kserver)
-        .option("subscribe", "dns")
-        .option("startingOffsets", "earliest")
-        .load()
-    )
-
-    # Define the schema for the DNS message (do this better)
-    dns_schema = (
+def dns_log_schema():
+    """Return a Spark schema for Zeek DNS JSON messages emitted by the Kafka plugin."""
+    return (
         StructType()
         .add("ts", StringType())
         .add("uid", StringType())
@@ -97,21 +71,68 @@ if __name__ == "__main__":
         .add("rejected", BooleanType())
     )
 
-    # ETL: Convert raw data into parsed and proper typed data
-    parsed_data = raw_data.select(from_json(col("value").cast("string"), dns_schema).alias("data")).select("data.*")
 
-    # FILTER: Only get DNS records that have 'query' field filled out
-    filtered_data = parsed_data.filter(parsed_data.query.isNotNull() & (parsed_data.query != ""))
+def build_dns_counts(raw_data):
+    """Parse, filter, enrich, and aggregate a Zeek DNS Kafka stream."""
+    parsed_data = raw_data.select(from_json(col("value").cast("string"), dns_log_schema()).alias("data")).select(
+        "data.*"
+    )
 
-    # FILTER 2: Remove Local/mDNS queries
-    filtered_data = filtered_data.filter(~filtered_data.query.like("%.local"))  # Note: using the '~' negation operator
+    filtered_data = parsed_data.filter(col("query").isNotNull() & (col("query") != "") & ~col("query").like("%.local"))
 
-    # COMPUTE: A new column with the 2nd level domain extracted from the query
     udf_compute_domain = udf(compute_domain, StringType())
     computed_data = filtered_data.withColumn("domain", udf_compute_domain("query"))
+    return computed_data.groupBy("`id.orig_h`", "domain", "qtype_name").count()
 
-    # AGGREGATE: In this case a simple groupby operation
-    group_data = computed_data.groupBy("`id.orig_h`", "domain", "qtype_name").count()
+
+if __name__ == "__main__":
+    """Read Kafka Streams into Spark, perform simple filtering/aggregation"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--server", type=str, default="localhost:9092", help="Specify the Kafka Server (default: localhost:9092)"
+    )
+    parser.add_argument("--topic", type=str, default="dns", help="Specify the Kafka topic to read (default: dns)")
+    parser.add_argument(
+        "--kafka-package",
+        type=str,
+        default=None,
+        help="Override the Spark Kafka package coordinate if your Spark distribution uses a different Scala build",
+    )
+    args, commands = parser.parse_known_args()
+
+    # Check for unknown args
+    if commands:
+        print("Unrecognized args: %s" % commands)
+        sys.exit(1)
+
+    # Grab the Kafka server
+    kserver = args.server
+
+    kafka_package = args.kafka_package or spark_kafka_package(pyspark.__version__)
+
+    # Spin up a local Spark Session (with 4 executors)
+    spark = (
+        SparkSession.builder.master("local[4]")
+        .appName("zeek_streaming_etl")
+        .config("spark.jars.packages", kafka_package)
+        .getOrCreate()
+    )
+    spark.sparkContext.setLogLevel("ERROR")
+
+    # Optimize the conversion to Spark
+    spark.conf.set("spark.sql.execution.arrow.enable", "true")
+
+    # SUBSCRIBE: Setup connection to Kafka Stream
+    raw_data = (
+        spark.readStream.format("kafka")
+        .option("kafka.bootstrap.servers", kserver)
+        .option("subscribe", args.topic)
+        .option("startingOffsets", "earliest")
+        .load()
+    )
+
+    # ETL/FILTER/COMPUTE/AGGREGATE: Build the DNS count streaming pipeline
+    group_data = build_dns_counts(raw_data)
 
     # At any point in the pipeline you can see what you're getting out
     group_data.printSchema()
@@ -122,7 +143,7 @@ if __name__ == "__main__":
     )
 
     # Let the pipeline pull some data
-    print("Pulling pipline...Please wait...")
+    print("Pulling pipeline...Please wait...")
 
     # Create a Pandas Dataframe by querying the in memory table and converting
     # Loop around every 5 seconds to update output

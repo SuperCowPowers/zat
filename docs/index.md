@@ -14,7 +14,7 @@
 - [Zeek to Spark](https://nbviewer.jupyter.org/github/SuperCowPowers/zat/blob/main/notebooks/Zeek_to_Spark.ipynb)
 - [Spark Clustering](https://nbviewer.jupyter.org/github/SuperCowPowers/zat/blob/main/notebooks/Spark_Clustering.ipynb)
 - [Zeek to Kafka](https://nbviewer.jupyter.org/github/SuperCowPowers/zat/blob/main/notebooks/Zeek_to_Kafka.ipynb)
-- [Zeek to Kafka to Spark (need updating)](https://nbviewer.jupyter.org/github/SuperCowPowers/zat/blob/main/notebooks/Zeek_to_Kafka_to_Spark.ipynb)
+- [Zeek to Kafka to Spark](https://nbviewer.jupyter.org/github/SuperCowPowers/zat/blob/main/notebooks/Zeek_to_Kafka_to_Spark.ipynb)
 - [Clustering: Picking K (or not)](https://nbviewer.jupyter.org/github/SuperCowPowers/zat/blob/main/notebooks/Clustering_Picking_K.ipynb)
 - [Anomaly Detection Exploration](https://nbviewer.jupyter.org/github/SuperCowPowers/zat/blob/main/notebooks/Anomaly_Detection.ipynb)
 - [Risky Domains Stats and Deployment](https://nbviewer.jupyter.org/github/SuperCowPowers/zat/blob/main/notebooks/Risky_Domains.ipynb)
